@@ -2647,7 +2647,6 @@ function cerrarModalIngreso() {
   document.getElementById('productoDropdown').classList.remove('open');
 }
 
-function cargarFormulario() { /* no-op */ }
 
 // ── CARRITO DE PRODUCTOS ──
 let carrito = [];         // [{ nombre, precio, cantidad, categoria }]
@@ -2806,7 +2805,10 @@ function registrarIngreso() {
     nota = `${notaBase}ADELANTO — Total: S/ ${totalProductos.toFixed(2)} · Pendiente: S/ ${pendiente.toFixed(2)}`;
   }
 
-  const categoria = carrito[0].categoria;
+  // categoría más frecuente del carrito
+  const freqCat = {};
+  carrito.forEach(p => { freqCat[p.categoria] = (freqCat[p.categoria]||0) + 1; });
+  const categoria = Object.entries(freqCat).sort((a,b) => b[1]-a[1])[0][0];
 
   const ingreso = {
     id: uid(),
@@ -2941,7 +2943,12 @@ function renderDashboard() {
   // ── CATEGORÍAS ──
   const CAT_COLORS = { Pesca:'#0096FF', Caza:'#FF6432', Buceo:'#00C2E0', 'Náutica':'#5B5BD6', Accesorios:'#D4A010', Otros:'#9664DC' };
   const porCat = {};
-  ingresos.forEach(i => { porCat[i.categoria] = (porCat[i.categoria]||0) + Number(i.monto); });
+  ingresos.forEach(i => {
+    const prods = (i.productos && i.productos.length)
+      ? i.productos
+      : [{ categoria: i.categoria, precio: i.monto, cantidad: 1 }];
+    prods.forEach(p => { porCat[p.categoria] = (porCat[p.categoria]||0) + (p.precio * p.cantidad); });
+  });
   const cats = Object.entries(porCat).sort((a,b) => b[1]-a[1]);
   const maxCat = cats.length ? cats[0][1] : 1;
   document.getElementById('dashCategorias').innerHTML = cats.length
@@ -2978,7 +2985,7 @@ function renderIngresos(fecha) {
 
   div.innerHTML = ingresos.map(i => {
     const catClass = `cat-${(i.categoria||'Otros').replace(/á/g,'a').replace(/ú/g,'u')}`;
-    const prods = i.productos || [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
+    const prods = (i.productos && i.productos.length) ? i.productos : [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
     const itemsHtml = prods.map(p => `
       <div class="ingreso-prod-row">
         <span class="ingreso-prod-nombre">${p.nombre}${p.cantidad > 1 ? ` <span class="ingreso-prod-cant">×${p.cantidad}</span>` : ''}</span>
@@ -3119,24 +3126,31 @@ function verDia(fecha) {
 
   const lista = ingresos.map(i => {
     const catClass = `cat-${(i.categoria||'Otros').replace(/á/g,'a').replace(/ú/g,'u')}`;
+    const prods = (i.productos && i.productos.length)
+      ? i.productos
+      : [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
+    const itemsHtml = prods.map(p => `
+      <div class="ingreso-prod-row">
+        <span class="ingreso-prod-nombre">${p.nombre}${p.cantidad > 1 ? ` <span class="ingreso-prod-cant">×${p.cantidad}</span>` : ''}</span>
+        <span class="ingreso-prod-sub">S/ ${(p.precio * p.cantidad).toFixed(2)}</span>
+      </div>`).join('');
     return `
       <div class="ingreso-item">
         <div class="ingreso-info">
           <div class="ingreso-top">
             <span class="ingreso-monto">S/ ${Number(i.monto).toFixed(2)}</span>
             <span class="ingreso-metodo">${i.metodo}</span>
-            <span class="badge-cat ${catClass}">${i.categoria}</span>
             <span class="ingreso-hora">${i.hora}</span>
           </div>
-          <div class="ingreso-bottom">
+          <div class="ingreso-vend-row">
             <span class="ingreso-vendedor">${i.vendedor}</span>
-            <span>·</span>
-            <span class="ingreso-producto">${i.producto}</span>
-            ${i.nota ? `<span class="ingreso-nota">📝 ${i.nota}</span>` : ''}
+            <span class="badge-cat ${catClass}">${i.categoria}</span>
           </div>
+          <div class="ingreso-prods">${itemsHtml}</div>
+          ${i.esAdelanto ? `<div class="badge-pendiente">⏳ PENDIENTE S/ ${Number(i.pendiente).toFixed(2)} · Total S/ ${Number(i.totalProductos).toFixed(2)}</div>` : ''}
+          ${i.nota && !i.esAdelanto ? `<div class="ingreso-nota">📝 ${i.nota}</div>` : ''}
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 
   document.getElementById('modalDiaContenido').innerHTML = `
@@ -3165,10 +3179,20 @@ function exportarCSV(fecha) {
   const [y,m,d] = fecha.split('-');
   const fechaFmt = `${d}/${m}/${y}`;
 
-  const header = 'Fecha,Hora,Vendedor,Producto,Categoría,Monto,Método de pago,Nota\n';
-  const rows = ingresos.map(i =>
-    `"${fechaFmt}","${i.hora}","${i.vendedor}","${i.producto}","${i.categoria}","${Number(i.monto).toFixed(2)}","${i.metodo}","${(i.nota||'').replace(/"/g,'""')}"`
-  ).join('\n');
+  const header = 'Fecha,Hora,Vendedor,Producto,Categoría,Cantidad,Precio Unit.,Subtotal,Total Venta,Método de pago,Tipo,Nota\n';
+  const rows = ingresos.flatMap(i => {
+    const prods = (i.productos && i.productos.length)
+      ? i.productos
+      : [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
+    const tipo = i.esAdelanto ? 'Adelanto' : 'Completo';
+    // nota limpia: si es adelanto, mostrar solo la parte del usuario (antes del separador)
+    const notaLimpia = i.esAdelanto
+      ? (i.nota||'').split(' · ADELANTO')[0].replace(/^ADELANTO.*$/,'').trim()
+      : (i.nota||'');
+    return prods.map((p, idx) =>
+      `"${fechaFmt}","${i.hora}","${i.vendedor}","${p.nombre}","${p.categoria}","${p.cantidad}","${Number(p.precio).toFixed(2)}","${(p.precio*p.cantidad).toFixed(2)}","${idx===0?Number(i.monto).toFixed(2):''}","${i.metodo}","${tipo}","${notaLimpia.replace(/"/g,'""')}"`
+    );
+  }).join('\n');
 
   const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
