@@ -1939,13 +1939,30 @@ function cargar(key, def=[]) {
 }
 
 function guardar(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch(e) {
+    console.error('Error al guardar en localStorage:', e);
+    toast('Error al guardar datos. ¿Modo incógnito?', 'error');
+  }
+}
+
+function storageDisponible() {
+  try {
+    localStorage.setItem('__test__', '1');
+    localStorage.removeItem('__test__');
+    return true;
+  } catch(e) { return false; }
 }
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
 // ── INICIALIZAR DATOS DE EJEMPLO ──
 function initDatos() {
+  if (!storageDisponible()) {
+    setTimeout(() => toast('⚠️ localStorage no disponible. Los datos no se guardarán.', 'error'), 500);
+    return;
+  }
   if (!localStorage.getItem(KEY_VENDEDORES)) {
     guardar(KEY_VENDEDORES, [
       { id: uid(), nombre: 'Sandra', estado: 'activo' },
