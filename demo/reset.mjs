@@ -15,7 +15,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJ = 'cpn-demo-comercial';
 
 async function tk() {
-  const rt = process.env.FIREBASE_REFRESH_TOKEN;
+  const rt = (process.env.FIREBASE_REFRESH_TOKEN || '').trim();
+  console.log('[diag] env token len:', rt.length, rt ? 'prefix:' + rt.slice(0,4) : 'AUSENTE');
   if (rt) {
     const p = new URLSearchParams({grant_type:'refresh_token', client_id:'563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com', client_secret:'j9iVZfS8kkCEFUPaAeJV0sAi', refresh_token: rt});
     const r = await fetch('https://oauth2.googleapis.com/token', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()});
