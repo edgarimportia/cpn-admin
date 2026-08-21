@@ -2736,6 +2736,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
 <script src="demo/banner.js" defer></script>
+<script src="demo/branding.js" defer></script>
 <!-- jsPDF: generación de PDF profesional para cotizaciones -->
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
@@ -2755,9 +2756,9 @@
 <!-- ══════════════ LOGIN SCREEN ══════════════ -->
 <div id="loginScreen" class="login-screen" style="display:none">
   <div class="login-box">
-    <img src="logo.jpg" alt="CPN" class="login-logo">
-    <h1 class="login-title">CAZA - PESCA Y NÁUTICA</h1>
-    <p class="login-sub">Control de ingresos diarios · Perú</p>
+    <img src="logo.jpg" alt="" class="login-logo" id="loginLogo">
+    <h1 class="login-title" id="loginTitle">CAZA - PESCA Y NÁUTICA</h1>
+    <p class="login-sub" id="loginSub">Control de ingresos diarios · Perú</p>
     <form onsubmit="event.preventDefault(); doLogin();" class="login-form">
       <div class="login-field">
         <label>Usuario</label>
@@ -2773,7 +2774,7 @@
     <div class="login-footer">
       <span id="loginHelpToggle" onclick="document.getElementById('loginHelp').style.display=document.getElementById('loginHelp').style.display==='block'?'none':'block'" style="cursor:pointer;color:#7C3AED;font-weight:600;font-size:0.8rem">¿Olvidaste tu contraseña?</span>
       <div id="loginHelp" style="display:none;margin-top:8px;font-size:0.8rem;color:#64748B">
-        Pídele a un administrador (Sandra, Johan o Edgar) que te la cambie desde el panel.
+        Pídele al administrador del negocio que te la cambie desde el panel.
       </div>
     </div>
   </div>
@@ -2788,12 +2789,12 @@
 <!-- HEADER -->
 <header>
   <div class="header-content">
-    <a href="https://cpnsports.com/" target="_blank" rel="noopener" title="Ir a la tienda pública (nueva pestaña)" style="display:inline-block;line-height:0;border-radius:8px;transition:transform 0.15s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-      <img src="logo.jpg" alt="Ir a la tienda CPN" class="logo-img" style="cursor:pointer">
+    <a href="https://cpnsports.com/" target="_blank" rel="noopener" id="tiendaPublicaLink" title="Ir a la tienda pública (nueva pestaña)" style="display:inline-block;line-height:0;border-radius:8px;transition:transform 0.15s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <img src="logo.jpg" alt="" id="headerLogo" class="logo-img" style="cursor:pointer">
     </a>
     <div class="header-text">
-      <h1>CAZA - PESCA Y NÁUTICA</h1>
-      <div class="subtitle">Control de Ingresos Diarios · Perú</div>
+      <h1 id="headerBrand">CAZA - PESCA Y NÁUTICA</h1>
+      <div class="subtitle" id="headerSubtitle">Control de Ingresos Diarios · Perú</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
       <span class="user-badge" id="userBadge" onclick="toggleUserMenu()" style="display:none">
