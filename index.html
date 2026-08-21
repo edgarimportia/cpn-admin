@@ -1,5 +1,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Si es demo, mostrar landing SaaS en vez de la tienda pública.
+  (function(){
+    var h = location.hostname;
+    if (h.startsWith('demo.') || h.indexOf('cpn-demo') !== -1 || h.indexOf('bazar-don-pepe') !== -1) {
+      location.replace('/landing');
+    }
+  })();
+</script>
 <title>CAZA PESCA Y NÁUTICA — Tienda</title>
 <meta name="description" content="Tu tienda especializada en pesca, caza, náutica y buceo. Cañas, carretes, señuelos, combos y más.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
