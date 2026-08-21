@@ -1,0 +1,20 @@
+name: Reset demo comercial (Bazar Don Pepe)
+
+# Corre a las 04:00 Lima (09:00 UTC) todos los días
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch: {}  # Permite gatillarlo manual desde la UI de GitHub
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Reset Firestore demo
+        env:
+          FIREBASE_REFRESH_TOKEN: ${{ secrets.FIREBASE_REFRESH_TOKEN }}
+        run: node demo/reset.mjs

@@ -1,3417 +1,614 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Caza Pesca y Náutica — Control de Ingresos</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAZA PESCA Y NÁUTICA — Tienda</title>
+<meta name="description" content="Tu tienda especializada en pesca, caza, náutica y buceo. Cañas, carretes, señuelos, combos y más.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #EEF2FF;
-    --bg2: #E8EDFF;
-    --surface: #FFFFFF;
-    --surface2: #F5F7FF;
-    --surface3: #EDF0FF;
-    --accent: #5B5BD6;
-    --accent2: #7B7FE8;
-    --accent-glow: rgba(91,91,214,0.18);
-    --cyan: #00C2E0;
-    --cyan-glow: rgba(0,194,224,0.15);
-    --verde: #00C896;
-    --verde-glow: rgba(0,200,150,0.15);
-    --verde-flash: #00C896;
-    --rojo: #F0455A;
-    --rojo-glow: rgba(240,69,90,0.2);
-    --text: #1A1A3E;
-    --text2: #4A4A7A;
-    --text3: #8888B8;
-    --border: rgba(91,91,214,0.15);
-    --border2: rgba(91,91,214,0.3);
-    --sombra: rgba(91,91,214,0.12);
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Rajdhani', 'Libre Baskerville', sans-serif;
-    background: var(--bg);
-    background-image:
-      radial-gradient(ellipse at 10% 0%, rgba(91,91,214,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse at 90% 100%, rgba(0,194,224,0.07) 0%, transparent 60%);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 80px;
-  }
-
-  /* ── HEADER ── */
-  header {
-    background: linear-gradient(135deg, #3730A3 0%, #4F46E5 50%, #6366F1 100%);
-    border-bottom: none;
-    padding: 14px 18px 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 24px rgba(79,70,229,0.35);
-    overflow: hidden;
-  }
-
-  header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 60px,
-        rgba(255,255,255,0.04) 60px,
-        rgba(255,255,255,0.04) 61px
-      ),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 20px,
-        rgba(255,255,255,0.02) 20px,
-        rgba(255,255,255,0.02) 21px
-      );
-    pointer-events: none;
-  }
-
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--cyan), var(--verde), transparent);
-  }
-
-  .header-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-  }
-
-  .logo-icon {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-  }
-
-  .header-text h1 {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 2px;
-    text-shadow: 0 0 20px rgba(255,255,255,0.3);
-    line-height: 1.2;
-    text-transform: uppercase;
-  }
-
-  .header-text .subtitle {
-    font-size: 0.65rem;
-    color: rgba(165,180,252,0.9);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-
-  .header-date {
-    margin-left: auto;
-    text-align: right;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: rgba(199,210,254,0.85);
-    line-height: 1.6;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(16px);
-    border-top: 1px solid var(--border);
-    display: flex;
-    z-index: 100;
-    box-shadow: 0 -4px 24px rgba(91,91,214,0.12);
-  }
-
-  .nav-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 10px 4px 8px;
-    background: none;
-    border: none;
-    color: var(--text3);
-    cursor: pointer;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    border-top: 3px solid transparent;
-    position: relative;
-  }
-
-  .nav-btn svg { width: 22px; height: 22px; }
-
-  .nav-btn.active {
-    color: var(--accent);
-    border-top-color: var(--accent);
-  }
-
-  .nav-btn.active::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--cyan));
-    border-radius: 0 0 3px 3px;
-  }
-
-  .nav-btn:active { transform: scale(0.95); }
-
-  /* ── SECTIONS ── */
-  .section { display: none; padding: 14px; }
-  .section.active { display: block; }
-
-  /* ── CARDS ── */
-  .card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 2px 16px var(--sombra);
-  }
-
-  .card-title {
-    font-size: 0.7rem;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .card-title svg { width: 16px; height: 16px; }
-
-  /* ── DASHBOARD TOTAL ── */
-  .total-card {
-    background: linear-gradient(135deg, #4F46E5 0%, #6366F1 50%, #818CF8 100%);
-    border: none;
-    text-align: center;
-    padding: 22px 20px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(79,70,229,0.35);
-  }
-
-  .total-card::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 120px; height: 120px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 50%;
-  }
-
-  .total-card::after {
-    content: '';
-    position: absolute;
-    bottom: -20px; left: -20px;
-    width: 80px; height: 80px;
-    background: rgba(0,194,224,0.1);
-    border-radius: 50%;
-  }
-
-  .total-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.68rem;
-    color: rgba(199,210,254,0.85);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-
-  .total-amount {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 2.8rem;
-    font-weight: 600;
-    color: #fff;
-    text-shadow: 0 0 30px rgba(255,255,255,0.4);
-    line-height: 1;
-    position: relative;
-    z-index: 1;
-  }
-
-  .total-count {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    color: rgba(199,210,254,0.7);
-    margin-top: 8px;
-    letter-spacing: 1px;
-  }
-
-  /* ── SUBTOTALES GRID ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .stat-item {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    border: 1px solid var(--border);
-  }
-
-  .stat-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.65rem;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-    font-weight: 600;
-  }
-
-  .stat-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    color: var(--text);
-    font-weight: 600;
-  }
-
-  /* ── VENDOR RANKING ── */
-  .vendor-bar-item { margin-bottom: 10px; }
-
-  .vendor-bar-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: var(--text);
-  }
-
-  .vendor-bar-track {
-    height: 8px;
-    background: var(--surface3);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .vendor-bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--cyan));
-    transition: width 0.5s ease;
-    box-shadow: 0 0 8px var(--accent-glow);
-  }
-
-  /* ── FORMULARIO ── */
-  .form-group { margin-bottom: 13px; }
-
-  label {
-    display: block;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 5px;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 11px 12px;
-    color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    -webkit-appearance: none;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: #fff;
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
-
-  select option {
-    background: #fff;
-    color: var(--text);
-  }
-
-  textarea { resize: vertical; min-height: 60px; }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  /* ── BOTONES ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    padding: 12px 18px;
-    border-radius: var(--radius-sm);
-    border: none;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    width: 100%;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .btn:active { transform: scale(0.97); }
-
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent) 0%, #6366F1 100%);
-    color: #fff;
-    box-shadow: 0 4px 16px var(--accent-glow);
-  }
-
-  .btn-primary:hover {
-    box-shadow: 0 6px 20px rgba(91,91,214,0.35);
-    transform: translateY(-1px);
-  }
-
-  .btn-secondary {
-    background: var(--surface2);
-    color: var(--accent);
-    border: 1.5px solid var(--border2);
-    box-shadow: none;
-  }
-
-  .btn-danger {
-    background: var(--rojo);
-    color: #fff;
-    width: auto;
-    padding: 7px 12px;
-    font-size: 0.75rem;
-    box-shadow: 0 2px 8px var(--rojo-glow);
-  }
-
-  .btn-sm {
-    width: auto;
-    padding: 8px 14px;
-    font-size: 0.78rem;
-  }
-
-  .btn-outline {
-    background: transparent;
-    border: 1.5px solid var(--accent);
-    color: var(--accent);
-    width: auto;
-  }
-
-  /* ── TABLA INGRESOS ── */
-  .ingreso-item {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    margin-bottom: 8px;
-    border-left: 3px solid var(--accent);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
-    transition: all 0.3s;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-  }
-
-  .ingreso-item.flash {
-    animation: flashGreen 0.8s ease;
-  }
-
-  @keyframes flashGreen {
-    0% { background: rgba(0,200,150,0.15); border-left-color: var(--verde); box-shadow: 0 0 16px var(--verde-glow); }
-    100% { background: var(--surface2); border-left-color: var(--accent); box-shadow: none; }
-  }
-
-  .ingreso-info { flex: 1; min-width: 0; }
-
-  .ingreso-top {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-
-  .ingreso-monto {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  .ingreso-metodo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.68rem;
-    font-weight: 700;
-    background: var(--accent-glow);
-    color: var(--accent);
-    padding: 2px 8px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    border: 1px solid var(--border2);
-  }
-
-  .ingreso-hora {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--text3);
-  }
-
-  .ingreso-bottom {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text2);
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .ingreso-vendedor { color: var(--text3); font-size: 0.78rem; }
-  .ingreso-producto { color: var(--text); font-weight: 600; }
-  .ingreso-nota { font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; color: var(--text3); font-style: italic; margin-top: 4px; }
-
-  .ingreso-vend-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-  }
-
-  .ingreso-prods { border-top: 1px solid var(--border); padding-top: 6px; }
-
-  .ingreso-prod-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3px 0;
-    font-family: 'Rajdhani', sans-serif;
-  }
-
-  .ingreso-prod-nombre {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .ingreso-prod-cant {
-    font-size: 0.75rem;
-    color: var(--accent);
-    background: var(--accent-glow);
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-weight: 700;
-    margin-left: 4px;
-  }
-
-  .ingreso-prod-sub {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
-    color: var(--text2);
-    font-weight: 600;
-  }
-
-  /* ── BADGE CATEGORÍA ── */
-  .badge-cat {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.62rem;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .cat-Pesca    { background: rgba(0,150,255,0.1);  color: #0096FF; border: 1px solid rgba(0,150,255,0.2); }
-  .cat-Caza     { background: rgba(255,100,50,0.1);  color: #FF6432; border: 1px solid rgba(255,100,50,0.2); }
-  .cat-Buceo    { background: rgba(0,194,224,0.1);   color: #00C2E0; border: 1px solid rgba(0,194,224,0.2); }
-  .cat-Nautica  { background: rgba(91,91,214,0.1);   color: #5B5BD6; border: 1px solid rgba(91,91,214,0.2); }
-  .cat-Accesorios { background: rgba(250,190,50,0.1); color: #D4A010; border: 1px solid rgba(250,190,50,0.2); }
-  .cat-Otros    { background: rgba(150,100,220,0.1); color: #9664DC; border: 1px solid rgba(150,100,220,0.2); }
-
-  /* ── HISTORIAL ── */
-  .history-day {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 2px 10px var(--sombra);
-  }
-
-  .history-day:hover {
-    border-color: var(--accent);
-    box-shadow: 0 4px 18px var(--accent-glow);
-    transform: translateY(-1px);
-  }
-
-  .history-day-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-
-  .history-date {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--text);
-    letter-spacing: 0.5px;
-  }
-
-  .history-total {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .history-meta {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.75rem;
-    color: var(--text3);
-    font-weight: 500;
-  }
-
-  /* ── CRUD ── */
-  .crud-item {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid var(--border);
-  }
-
-  .crud-info { flex: 1; min-width: 0; }
-
-  .crud-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.95rem;
-    color: var(--text);
-    font-weight: 700;
-    letter-spacing: 0.3px;
-  }
-
-  .crud-meta {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.75rem;
-    color: var(--text3);
-    margin-top: 2px;
-    font-weight: 500;
-  }
-
-  .status-badge {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.62rem;
-    padding: 3px 9px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-  }
-
-  .status-activo   { background: rgba(0,200,150,0.12); color: #00A87A; border: 1px solid rgba(0,200,150,0.25); }
-  .status-inactivo { background: rgba(240,69,90,0.1);  color: var(--rojo); border: 1px solid rgba(240,69,90,0.2); }
-
-  .crud-actions { display: flex; gap: 6px; }
-
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(30,30,80,0.45);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    align-items: flex-end;
-    padding: 0;
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: #fff;
-    border-radius: 22px 22px 0 0;
-    padding: 24px 20px 30px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    border-top: 3px solid var(--accent);
-    box-shadow: 0 -8px 40px rgba(91,91,214,0.2);
-    animation: slideUp 0.3s ease;
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  .modal-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .modal-close {
-    margin-left: auto;
-    background: var(--surface3);
-    border: none;
-    color: var(--text3);
-    font-size: 1rem;
-    cursor: pointer;
-    line-height: 1;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: 700;
-  }
-
-  /* ── RESUMEN PERÍODOS ── */
-  .periodo-card {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 13px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    border: 1px solid var(--border);
-  }
-
-  .periodo-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.85rem;
-    color: var(--text2);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-
-  .periodo-valor {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  /* ── PRODUCTO SEARCH ── */
-  .search-box { position: relative; }
-  .search-box input { padding-right: 36px; }
-
-  .search-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text3);
-    pointer-events: none;
-  }
-
-  .dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0; right: 0;
-    background: #fff;
-    border: 1.5px solid var(--border2);
-    border-top: none;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    max-height: 220px;
-    overflow-y: auto;
-    z-index: 50;
-    display: none;
-    box-shadow: 0 8px 24px var(--sombra);
-  }
-
-  .dropdown-list.open { display: block; }
-
-  .dropdown-item {
-    padding: 10px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-
-  .dropdown-item:hover { background: var(--surface3); }
-
-  .dropdown-item-name {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .dropdown-item-meta {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    color: var(--text3);
-    margin-top: 1px;
-    font-weight: 500;
-  }
-
-  /* ── FILTROS ── */
-  .filter-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .filter-row select, .filter-row input {
-    flex: 1;
-    min-width: 120px;
-  }
-
-  /* ── DIVIDER ── */
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 14px 0;
-  }
-
-  .section-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: 0.5px;
-  }
-
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center;
-    padding: 30px 20px;
-    color: var(--text3);
-  }
-
-  .empty-state svg { width: 48px; height: 48px; margin-bottom: 10px; opacity: 0.35; }
-  .empty-state p { font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 500; }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: linear-gradient(135deg, var(--accent), #6366F1);
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 30px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    z-index: 300;
-    opacity: 0;
-    transition: all 0.3s;
-    pointer-events: none;
-    white-space: nowrap;
-    box-shadow: 0 4px 20px var(--accent-glow);
-  }
-
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .toast.error {
-    background: linear-gradient(135deg, var(--rojo), #FF6B7A);
-    box-shadow: 0 4px 20px var(--rojo-glow);
-  }
-
-  /* ── RESUMEN METODOS ── */
-  .metodo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .metodo-item {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid var(--border);
-  }
-
-  .metodo-nombre {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text2);
-  }
-
-  .metodo-valor {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.88rem;
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  /* ── PRECIO DISPLAY ── */
-  .precio-hint {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.7rem;
-    color: var(--accent);
-    margin-top: 3px;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--surface3); }
-  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
-
-  /* ══ DASHBOARD ══ */
-
-  /* KPI ROW */
-  .kpi-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .kpi-hero {
-    flex: 1.4;
-    background: linear-gradient(135deg, #3730A3 0%, #4F46E5 55%, #6366F1 100%);
-    border-radius: 16px;
-    padding: 18px 16px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 28px rgba(79,70,229,0.32);
-  }
-
-  .kpi-hero::before {
-    content:''; position:absolute; top:-30px; right:-30px;
-    width:110px; height:110px; background:rgba(255,255,255,0.07); border-radius:50%;
-  }
-
-  .kpi-hero-label {
-    font-family:'Rajdhani',sans-serif; font-size:0.62rem; font-weight:700;
-    color:rgba(199,210,254,0.8); letter-spacing:3px; margin-bottom:4px;
-  }
-
-  .kpi-hero-value {
-    font-family:'JetBrains Mono',monospace; font-size:1.9rem; font-weight:600;
-    color:#fff; line-height:1; text-shadow:0 0 20px rgba(255,255,255,0.25);
-  }
-
-  .kpi-hero-sub {
-    font-family:'Rajdhani',sans-serif; font-size:0.7rem;
-    color:rgba(199,210,254,0.65); margin-top:5px; letter-spacing:0.5px;
-  }
-
-  .kpi-side { flex:1; display:flex; flex-direction:column; gap:10px; }
-
-  .kpi-mini {
-    flex:1; background:#fff; border:1px solid var(--border);
-    border-radius:12px; padding:12px 12px 10px;
-    box-shadow:0 2px 10px var(--sombra);
-  }
-
-  .kpi-mini-mes { border-top:2px solid var(--cyan); }
-
-  .kpi-mini-label {
-    font-family:'Rajdhani',sans-serif; font-size:0.62rem; font-weight:700;
-    color:var(--text3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:3px;
-  }
-
-  .kpi-mini-value {
-    font-family:'JetBrains Mono',monospace; font-size:0.95rem;
-    font-weight:600; color:var(--accent);
-  }
-
-  /* DASH CARDS */
-  .dash-card {
-    background:#fff; border:1px solid var(--border); border-radius:14px;
-    padding:14px 14px 12px; margin-bottom:12px;
-    box-shadow:0 2px 12px var(--sombra);
-  }
-
-  .dash-card-title {
-    font-family:'Rajdhani',sans-serif; font-size:0.68rem; font-weight:700;
-    color:var(--text3); text-transform:uppercase; letter-spacing:2px;
-    margin-bottom:12px; display:flex; align-items:center; gap:6px;
-  }
-
-  .dash-row2 {
-    display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;
-  }
-
-  .dash-row2 .dash-card { margin-bottom:0; }
-
-  /* CHART 7 DÍAS */
-  .chart-bar-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-
-  .chart-bar-wrap::-webkit-scrollbar { display:none; }
-
-  /* MÉTODOS HORIZONTAL BARS */
-  .metodo-bar-item { margin-bottom:9px; }
-
-  .metodo-bar-header {
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:4px;
-  }
-
-  .metodo-bar-name {
-    font-family:'Rajdhani',sans-serif; font-size:0.78rem; font-weight:600;
-    color:var(--text2);
-  }
-
-  .metodo-bar-val {
-    font-family:'JetBrains Mono',monospace; font-size:0.75rem;
-    font-weight:600; color:var(--accent);
-  }
-
-  .metodo-bar-track {
-    height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;
-  }
-
-  .metodo-bar-fill {
-    height:100%; border-radius:3px;
-    background:linear-gradient(90deg,var(--accent),var(--cyan));
-    transition:width .5s ease;
-  }
-
-  /* VENDOR BARS */
-  .vend-bar-item { margin-bottom:9px; }
-
-  .vend-bar-header {
-    display:flex; justify-content:space-between; align-items:center;
-    font-family:'Rajdhani',sans-serif; font-size:0.78rem; font-weight:600;
-    color:var(--text); margin-bottom:4px;
-  }
-
-  .vend-bar-val {
-    font-family:'JetBrains Mono',monospace; font-size:0.75rem;
-    font-weight:600; color:var(--text2);
-  }
-
-  .vend-bar-track {
-    height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;
-  }
-
-  .vend-bar-fill {
-    height:100%; border-radius:3px;
-    background:linear-gradient(90deg,#6366F1,var(--verde));
-    transition:width .5s ease;
-  }
-
-  /* CAT BARS */
-  .cat-bar-item {
-    display:flex; align-items:center; gap:8px; margin-bottom:7px;
-  }
-
-  .cat-bar-label {
-    min-width:80px; font-family:'Rajdhani',sans-serif; font-size:0.72rem;
-    font-weight:700; color:var(--text2);
-  }
-
-  .cat-bar-track {
-    flex:1; height:8px; background:var(--surface3); border-radius:4px; overflow:hidden;
-  }
-
-  .cat-bar-fill {
-    height:100%; border-radius:4px; transition:width .5s ease;
-  }
-
-  .cat-bar-val {
-    min-width:58px; text-align:right; font-family:'JetBrains Mono',monospace;
-    font-size:0.72rem; font-weight:600; color:var(--accent);
-  }
-
-  /* ── HERO TOTAL ── */
-  .hero-total {
-    background: linear-gradient(135deg, #4F46E5 0%, #6366F1 55%, #818CF8 100%);
-    border-radius: 18px;
-    padding: 28px 20px 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(79,70,229,0.3);
-    margin-bottom: 14px;
-  }
-
-  .hero-total::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 140px; height: 140px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 50%;
-  }
-
-  .hero-total::after {
-    content: '';
-    position: absolute;
-    bottom: -25px; left: -25px;
-    width: 100px; height: 100px;
-    background: rgba(0,194,224,0.08);
-    border-radius: 50%;
-  }
-
-  .hero-total .total-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.66rem;
-    color: rgba(199,210,254,0.8);
-    letter-spacing: 3px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .hero-total .total-amount {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 3rem;
-    font-weight: 600;
-    color: #fff;
-    text-shadow: 0 0 30px rgba(255,255,255,0.3);
-    line-height: 1;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-total .total-count {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.75rem;
-    color: rgba(199,210,254,0.65);
-    margin-top: 8px;
-    letter-spacing: 1px;
-    font-weight: 500;
-  }
-
-  /* ── STATS ROW ── */
-  .stats-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 18px;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .stats-row::-webkit-scrollbar { display: none; }
-
-  .stat-chip {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 16px;
-    min-width: 110px;
-    flex-shrink: 0;
-    box-shadow: 0 2px 10px var(--sombra);
-  }
-
-  .stat-chip-label {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-
-  .stat-chip-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  /* ── LIST HEADER ── */
-  .list-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 0 2px;
-  }
-
-  .list-header-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-  }
-
-  .btn-icon-text {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--text2);
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-  }
-
-  .btn-icon-text:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* ── FAB ── */
-  .fab {
-    position: fixed;
-    bottom: 86px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #4F46E5, #6366F1);
-    color: #fff;
-    border: none;
-    border-radius: 30px;
-    padding: 14px 28px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 6px 28px rgba(79,70,229,0.45);
-    z-index: 90;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-
-  .fab:active {
-    transform: translateX(-50%) scale(0.96);
-    box-shadow: 0 3px 14px rgba(79,70,229,0.4);
-  }
-
-  /* ── CARRITO ── */
-  .carrito-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .carrito-count {
-    background: var(--accent-glow);
-    color: var(--accent);
-    border: 1px solid var(--border2);
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: 0.68rem;
-    letter-spacing: 0.5px;
-  }
-
-  .add-product-row {
-    background: var(--surface3);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border);
-  }
-
-  .btn-agregar-item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-agregar-item:active { transform: scale(0.97); }
-
-  .carrito-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    margin-bottom: 6px;
-  }
-
-  .carrito-item-info { flex: 1; min-width: 0; }
-
-  .carrito-item-nombre {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .carrito-item-meta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--text3);
-    margin-top: 1px;
-  }
-
-  .carrito-item-precio {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--accent);
-    white-space: nowrap;
-  }
-
-  .carrito-item-del {
-    background: none;
-    border: none;
-    color: var(--text3);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: 4px;
-    transition: all 0.15s;
-    line-height: 1;
-  }
-
-  .carrito-item-del:hover { background: rgba(240,69,90,0.1); color: var(--rojo); }
-
-  .carrito-total {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    background: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(99,102,241,0.06));
-    border: 1.5px solid var(--border2);
-    border-radius: var(--radius-sm);
-    margin-top: 4px;
-    margin-bottom: 2px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .carrito-total-valor {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  /* ── PAGO PARCIAL TOGGLE ── */
-  .pago-toggle {
-    margin: 10px 0 2px;
-  }
-
-  .toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .toggle-label input[type=checkbox] { display: none; }
-
-  .toggle-track {
-    width: 42px;
-    height: 24px;
-    background: var(--border);
-    border-radius: 12px;
-    position: relative;
-    transition: background 0.25s;
-    flex-shrink: 0;
-    border: 1.5px solid var(--border2);
-  }
-
-  .toggle-thumb {
-    position: absolute;
-    top: 3px; left: 3px;
-    width: 16px; height: 16px;
-    background: #fff;
-    border-radius: 50%;
-    transition: transform 0.25s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
-
-  input[type=checkbox]:checked + .toggle-track {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
-  input[type=checkbox]:checked + .toggle-track .toggle-thumb {
-    transform: translateX(18px);
-  }
-
-  .toggle-text {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--text2);
-    letter-spacing: 0.3px;
-  }
-
-  /* ── ADELANTO PANEL ── */
-  .adelanto-box {
-    background: rgba(240,69,90,0.04);
-    border: 1.5px solid rgba(240,69,90,0.2);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    margin: 8px 0 4px;
-  }
-
-  .adelanto-aviso {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 0.75rem;
-    color: var(--rojo);
-    font-weight: 600;
-    margin-top: 8px;
-    letter-spacing: 0.3px;
-  }
-
-  /* ── BADGE PENDIENTE en lista ── */
-  .badge-pendiente {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: rgba(240,69,90,0.1);
-    color: var(--rojo);
-    border: 1px solid rgba(240,69,90,0.25);
-    border-radius: 5px;
-    padding: 2px 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    margin-top: 5px;
-  }
-
-  .badge-cobrado {
-    background: rgba(0,200,150,0.1);
-    color: #00A87A;
-    border-color: rgba(0,200,150,0.25);
-  }
-
-  /* ── EXPORT BTN ── */
-  .export-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .export-row .btn { flex: 1; }
+:root{--brand-dark:#3E2A1E;--brand-mid:#6B4423;--accent:#0EA5E9;--accent-h:#0284C7;--wa:#25D366;--wa-h:#128C7E;--bg:#FFFFFF;--bg-alt:#FAFAFA;--bg-sunk:#F5F5F4;--text:#0F172A;--text-2:#334155;--text-3:#64748B;--text-4:#94A3B8;--border:#E5E7EB;--border-h:#D1D5DB;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 10px rgba(15,23,42,.06),0 2px 4px rgba(15,23,42,.04);--shadow-lg:0 20px 40px rgba(15,23,42,.12);--radius:12px;--radius-lg:20px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+header.site-header{background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.header-inner{max-width:1400px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;cursor:pointer}
+.brand img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.brand-name{font-weight:800;font-size:.98rem;color:var(--brand-dark);line-height:1.1;letter-spacing:.02em}
+.brand-sub{font-size:.7rem;color:var(--text-3);letter-spacing:.05em;text-transform:uppercase;font-weight:600;margin-top:2px}
+
+.search-wrap{flex:1;max-width:620px;position:relative}
+.search-input{width:100%;padding:12px 46px;border:1.5px solid var(--border);border-radius:999px;background:var(--bg-alt);font-family:inherit;font-size:.95rem;color:var(--text);transition:.15s}
+.search-input:focus{outline:none;background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,.15)}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-4);pointer-events:none}
+.search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--bg-sunk);border:none;border-radius:50%;width:28px;height:28px;color:var(--text-3);display:none;align-items:center;justify-content:center}
+.search-clear.show{display:flex}
+
+.header-wa{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:var(--wa);color:#fff;border-radius:999px;font-weight:600;font-size:.85rem;transition:.15s;white-space:nowrap}
+.header-wa:hover{background:var(--wa-h)}
+
+.nav-cats-bar{background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.nav-cats-bar::-webkit-scrollbar{display:none}
+.nav-cats-inner{max-width:1400px;margin:0 auto;padding:10px 24px;display:flex;gap:6px;white-space:nowrap;align-items:center}
+.nav-chip{padding:7px 14px;border-radius:999px;font-size:.8rem;font-weight:600;color:var(--text-2);cursor:pointer;transition:.15s;flex-shrink:0;border:1.5px solid transparent}
+.nav-chip:hover{background:var(--bg-alt);color:var(--brand-dark)}
+.nav-chip.active{background:var(--brand-dark);color:#fff}
+.nav-chip.home{color:var(--brand-dark);font-weight:700}
+
+main{max-width:1400px;margin:0 auto;padding:32px 24px}
+
+/* ═══════════════ LANDING CATEGORÍAS ═══════════════ */
+.hero{
+  background:linear-gradient(135deg,#F0F9FF,#E0F2FE);
+  border-radius:var(--radius-lg);
+  padding:44px 32px;
+  text-align:center;
+  margin-bottom:36px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{content:'';position:absolute;top:-40%;right:-10%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.15),transparent 70%);pointer-events:none}
+.hero-title{font-size:2rem;font-weight:800;color:var(--brand-dark);margin-bottom:8px;letter-spacing:-.02em;line-height:1.15;position:relative}
+.hero-sub{color:var(--text-2);font-size:1rem;max-width:640px;margin:0 auto;position:relative}
+
+.section-title{font-size:1.5rem;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.01em}
+.section-sub{color:var(--text-3);font-size:.95rem;margin-bottom:24px}
+
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.cat-card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;cursor:pointer;transition:.2s;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow-sm);
+}
+.cat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--accent)}
+.cat-img-wrap{aspect-ratio:16/10;background:var(--bg-sunk);overflow:hidden;position:relative}
+.cat-img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.cat-card:hover .cat-img{transform:scale(1.05)}
+.cat-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#F0F9FF,#E0F2FE);color:var(--accent)}
+.cat-count-badge{position:absolute;top:12px;right:12px;background:var(--accent);color:#fff;padding:5px 12px;border-radius:999px;font-size:.8rem;font-weight:700;box-shadow:0 2px 8px rgba(14,165,233,.4)}
+.cat-body{padding:18px 20px 20px;flex:1;display:flex;flex-direction:column}
+.cat-name{font-size:1.15rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.cat-desc{color:var(--text-3);font-size:.85rem;line-height:1.5;flex:1}
+.cat-link{margin-top:14px;color:var(--accent);font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.cat-card:hover .cat-link{gap:12px}
+
+/* ═══════════════ VISTA PRODUCTOS ═══════════════ */
+.breadcrumb{display:flex;align-items:center;gap:8px;color:var(--text-3);font-size:.88rem;margin-bottom:16px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent);font-weight:600;cursor:pointer}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb-sep{color:var(--border-h)}
+.breadcrumb-current{color:var(--text);font-weight:700}
+
+.results-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.results-count{color:var(--text-3);font-size:.9rem}
+.results-count b{color:var(--text);font-weight:700}
+.sort-select{padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-family:inherit;font-size:.85rem;font-weight:600;color:var(--text-2);cursor:pointer}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:.15s;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--border-h)}
+.card-img-wrap{aspect-ratio:1/1;background:var(--bg-sunk);position:relative;overflow:hidden}
+.card-img{width:100%;height:100%;object-fit:contain;padding:12px;transition:transform .3s}
+.card:hover .card-img{transform:scale(1.04)}
+/* Placeholder profesional cuando no hay imagen */
+.card-img-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#F0F9FF 0%, #E0F2FE 60%, #BAE6FD 100%);
+  color:#0369A1;padding:14px;text-align:center;position:relative;overflow:hidden;
+}
+.card-img-ph::before{
+  content:'';position:absolute;inset:-40%;
+  background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.6) 0%, transparent 40%);
+  pointer-events:none;
+}
+.card-img-ph-icon{font-size:2.6rem;filter:drop-shadow(0 2px 4px rgba(3,105,161,0.15));margin-bottom:4px}
+.card-img-ph-brand{
+  font-family:'Fraunces',Georgia,serif;font-weight:800;font-size:0.78rem;
+  letter-spacing:0.05em;color:#075985;line-height:1.15;
+  text-transform:uppercase;opacity:0.85;
+}
+.card-img-ph-name{
+  font-family:'Inter',sans-serif;font-weight:600;font-size:0.68rem;
+  color:#0C4A6E;margin-top:6px;opacity:0.75;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;line-height:1.2;
+}
+.card-body{padding:14px 14px 16px;display:flex;flex-direction:column;flex:1}
+.card-cat{font-size:.65rem;color:var(--text-4);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:4px}
+.card-name{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.card-sku{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-4);font-weight:600;margin-bottom:auto;padding-bottom:8px}
+.card-price-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:8px}
+.card-price{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:700;color:var(--brand-dark)}
+.card-wa{background:var(--wa);color:#fff;border:none;padding:6px 12px;border-radius:999px;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;transition:.15s}
+.card-wa:hover{background:var(--wa-h)}
+
+.modal-back{position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s}
+.modal-back.show{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;border-radius:var(--radius-lg);max-width:920px;width:100%;max-height:92vh;overflow:hidden;display:grid;grid-template-columns:1.1fr 1fr;box-shadow:var(--shadow-lg);animation:slide .25s cubic-bezier(.16,1,.3,1)}
+@keyframes slide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media (max-width:700px){.modal{grid-template-columns:1fr;max-height:96vh}}
+.modal-img-side{background:var(--bg-sunk);position:relative;min-height:320px}
+.modal-img{width:100%;height:100%;object-fit:contain;padding:24px}
+.modal-thumbs{position:absolute;bottom:12px;left:12px;right:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.modal-thumb{width:44px;height:44px;border-radius:6px;border:2px solid transparent;overflow:hidden;cursor:pointer;background:#fff;transition:.15s;padding:2px}
+.modal-thumb.active{border-color:var(--accent)}
+.modal-thumb img{width:100%;height:100%;object-fit:contain}
+.modal-info{padding:32px;overflow-y:auto}
+.modal-cat{font-size:.7rem;color:var(--text-4);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.modal-title{font-size:1.5rem;font-weight:800;color:var(--text);margin:4px 0 12px;line-height:1.25}
+.modal-sku{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-3);background:var(--bg-alt);display:inline-block;padding:4px 10px;border-radius:6px;margin-bottom:16px;font-weight:600}
+.modal-price{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:800;color:var(--brand-dark);margin-bottom:20px}
+.modal-desc{color:var(--text-2);font-size:.9rem;line-height:1.6;white-space:pre-line;margin-bottom:24px}
+.modal-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text);z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.modal-close:hover{background:#fff}
+.modal-wa-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--wa);color:#fff;border:none;padding:14px;border-radius:999px;font-size:1rem;font-weight:700;transition:.15s}
+.modal-wa-btn:hover{background:var(--wa-h)}
+
+.loading,.empty{text-align:center;padding:80px 24px;color:var(--text-3)}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--brand-dark);border-radius:50%;margin:0 auto 16px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.load-more-wrap{text-align:center;margin-top:32px}
+.load-more{padding:12px 32px;background:#fff;border:1.5px solid var(--border);border-radius:999px;color:var(--text-2);font-weight:600;transition:.15s}
+.load-more:hover{border-color:var(--brand-dark);color:var(--brand-dark)}
+
+footer{border-top:1px solid var(--border);padding:40px 24px 32px;background:var(--bg-alt);color:var(--text-3);font-size:.82rem;text-align:center;margin-top:40px}
+footer a{color:var(--brand-dark);font-weight:600}
+footer a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .header-inner{padding:10px 14px;gap:10px;flex-wrap:wrap}
+  .brand img{width:38px;height:38px}
+  .brand-name{font-size:.82rem}
+  .brand-sub{display:none}
+  .search-wrap{order:3;width:100%;max-width:100%}
+  .search-input{padding:10px 40px;font-size:.9rem}
+  .search-icon{left:12px}
+  .header-wa{padding:8px 12px;font-size:.8rem}
+  main{padding:20px 14px}
+  .hero{padding:32px 20px;margin-bottom:24px}
+  .hero-title{font-size:1.5rem}
+  .hero-sub{font-size:.9rem}
+  .section-title{font-size:1.2rem}
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .cat-img-wrap{aspect-ratio:1/1}
+  .cat-body{padding:12px}
+  .cat-name{font-size:.9rem}
+  .cat-desc{font-size:.72rem;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+  .cat-count-badge{padding:3px 8px;font-size:.68rem;top:8px;right:8px}
+  .cat-link{font-size:.78rem}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .card-body{padding:10px}
+  .card-name{font-size:.8rem;min-height:2.2em}
+  .card-price{font-size:1rem}
+  .card-wa{padding:5px 10px;font-size:.68rem}
+  .modal-info{padding:20px}
+  .modal-title{font-size:1.2rem}
+  .modal-price{font-size:1.5rem}
+}
 </style>
-</head>
-<body>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- HEADER -->
-<header>
-  <div class="header-content">
-    <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="22" cy="22" r="21" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
-      <!-- ancla -->
-      <path d="M22 10 L22 34" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M16 15 Q22 12 28 15" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <circle cx="22" cy="13" r="2.5" fill="#fff"/>
-      <path d="M16 34 Q22 37 28 34" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <!-- pez -->
-      <ellipse cx="31" cy="22" rx="4" ry="2.5" fill="rgba(165,243,252,0.85)"/>
-      <path d="M35 22 L38 19 L38 25 Z" fill="rgba(165,243,252,0.85)"/>
-      <circle cx="30" cy="21.5" r="0.8" fill="#3730A3"/>
-    </svg>
-    <div class="header-text">
-      <h1>CAZA PESCA Y NÁUTICA</h1>
-      <div class="subtitle">Control de Ingresos Diarios</div>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand" onclick="goHome()">
+      <img src="logo.jpg" alt="CPN">
+      <div>
+        <div class="brand-name">CAZA · PESCA · NÁUTICA</div>
+        <div class="brand-sub">Tienda especializada · Perú</div>
+      </div>
     </div>
-    <div class="header-date" id="headerDate">--/--/----<br>--:--</div>
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="search" class="search-input" id="q" placeholder="Buscar producto, SKU o categoría...">
+      <button class="search-clear" id="qClear" aria-label="Limpiar">✕</button>
+    </div>
+    <a href="https://wa.me/51908808912?text=Hola,%20quisiera%20consultar" class="header-wa" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+      WhatsApp
+    </a>
   </div>
+  <div class="nav-cats-bar"><div class="nav-cats-inner" id="navCats"></div></div>
 </header>
 
-<!-- NAV -->
-<nav>
-  <button class="nav-btn active" onclick="goTo('hoy')" id="nav-hoy">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-    </svg>
-    Hoy
-  </button>
-  <button class="nav-btn" onclick="goTo('historial')" id="nav-historial">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-      <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
-    </svg>
-    Historial
-  </button>
-  <button class="nav-btn" onclick="goTo('productos')" id="nav-productos">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-      <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
-    </svg>
-    Productos
-  </button>
-  <button class="nav-btn" onclick="goTo('vendedores')" id="nav-vendedores">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-    </svg>
-    Vendedores
-  </button>
-</nav>
-
-<!-- ══════════════ SECCIÓN HOY — DASHBOARD ══════════════ -->
-<section class="section active" id="sec-hoy">
-
-  <!-- KPI ROW -->
-  <div class="kpi-row" style="margin-top:4px">
-    <div class="kpi-hero">
-      <div class="kpi-hero-label">HOY</div>
-      <div class="kpi-hero-value" id="dashTotal">S/ 0.00</div>
-      <div class="kpi-hero-sub" id="dashCount">0 ventas</div>
+<main>
+  <!-- Vista LANDING (categorías) -->
+  <section id="viewHome">
+    <div class="hero">
+      <h1 class="hero-title">Bienvenido a CAZA · PESCA · NÁUTICA</h1>
+      <p class="hero-sub">Tu tienda especializada. Explora nuestra amplia gama de productos para pesca, caza y náutica.</p>
     </div>
-    <div class="kpi-side">
-      <div class="kpi-mini">
-        <div class="kpi-mini-label">Semana</div>
-        <div class="kpi-mini-value" id="kpiSemana">S/ 0.00</div>
-      </div>
-      <div class="kpi-mini kpi-mini-mes">
-        <div class="kpi-mini-label">Mes</div>
-        <div class="kpi-mini-value" id="kpiMes">S/ 0.00</div>
-      </div>
-    </div>
-  </div>
+    <h2 class="section-title">Nuestras Categorías</h2>
+    <p class="section-sub" id="totalCats">Descubre todos los productos organizados por categoría</p>
+    <div class="cat-grid" id="catGrid"></div>
+  </section>
 
-  <!-- GRÁFICO 7 DÍAS -->
-  <div class="dash-card">
-    <div class="dash-card-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Últimos 7 días
-    </div>
-    <div id="chart7dias"></div>
-  </div>
-
-  <!-- MÉTODOS + VENDEDORES -->
-  <div class="dash-row2">
-    <div class="dash-card">
-      <div class="dash-card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-        Métodos de pago
-      </div>
-      <div id="dashMetodos"></div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-card-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-        Vendedores · Hoy
-      </div>
-      <div id="dashVendedores"></div>
-    </div>
-  </div>
-
-  <!-- CATEGORÍAS -->
-  <div class="dash-card">
-    <div class="dash-card-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-      Por categoría · Hoy
-    </div>
-    <div id="dashCategorias"></div>
-  </div>
-
-  <!-- MOVIMIENTOS HOY -->
-  <div class="list-header">
-    <span class="list-header-title">Movimientos de hoy</span>
-    <button class="btn-icon-text" onclick="exportarCSV()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      CSV
-    </button>
-  </div>
-  <div id="listaIngresos"></div>
-
-</section>
-
-<!-- FAB AGREGAR INGRESO -->
-<button class="fab" onclick="abrirModalIngreso()">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
-    <path d="M12 5v14M5 12h14"/>
-  </svg>
-  Agregar ingreso
-</button>
-
-<!-- ══════════════ SECCIÓN HISTORIAL ══════════════ -->
-<section class="section" id="sec-historial">
-
-  <div class="card" style="margin-top:4px">
-    <div class="card-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-      </svg>
-      Resumen períodos
-    </div>
-    <div class="periodo-card">
-      <span class="periodo-label">Esta semana</span>
-      <span class="periodo-valor" id="resumenSemana">S/ 0.00</span>
-    </div>
-    <div class="periodo-card">
-      <span class="periodo-label">Este mes</span>
-      <span class="periodo-valor" id="resumenMes">S/ 0.00</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Filtrar por vendedor</div>
-    <div class="filter-row">
-      <select id="filtroVendedor" onchange="renderHistorial()">
-        <option value="">Todos los vendedores</option>
+  <!-- Vista PRODUCTOS (por categoría o búsqueda) -->
+  <section id="viewProds" style="display:none">
+    <div class="breadcrumb" id="crumb"></div>
+    <div class="results-info">
+      <div class="results-count" id="rCount">Cargando...</div>
+      <select class="sort-select" id="sort">
+        <option value="nombre">Ordenar por nombre</option>
+        <option value="precio-asc">Precio: menor a mayor</option>
+        <option value="precio-desc">Precio: mayor a menor</option>
       </select>
     </div>
-  </div>
+    <div id="loading" class="loading"><div class="spinner"></div><p>Cargando productos...</p></div>
+    <div id="grid" class="grid" style="display:none"></div>
+    <div id="empty" class="empty" style="display:none"><p style="font-size:1.1rem;font-weight:600;color:var(--text-2);margin-bottom:6px">No encontramos productos</p><p>Prueba con otro término</p></div>
+    <div class="load-more-wrap" id="lmWrap" style="display:none"><button class="load-more" id="lmBtn">Ver más productos</button></div>
+  </section>
+</main>
 
-  <div id="listaHistorial"></div>
+<footer>
+  <p>© 2026 CAZA · PESCA · NÁUTICA · Perú 🇵🇪</p>
+  <p style="margin-top:6px">Contacto: <a href="https://wa.me/51908808912">WhatsApp +51 908 808 912</a></p>
+</footer>
 
-</section>
-
-<!-- ══════════════ SECCIÓN PRODUCTOS ══════════════ -->
-<section class="section" id="sec-productos">
-
-  <div class="card" style="margin-top:4px">
-    <div class="card-title">Buscar producto</div>
-    <div class="filter-row">
-      <input type="text" id="buscarProducto" placeholder="Nombre..." oninput="renderProductos()">
-      <select id="filtroCategoria" onchange="renderProductos()">
-        <option value="">Todas las categorías</option>
-        <option>Pesca</option><option>Caza</option><option>Buceo</option>
-        <option>Náutica</option><option>Accesorios</option><option>Otros</option>
-      </select>
-    </div>
-    <button class="btn btn-primary" onclick="abrirModalProducto()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-        <path d="M12 5v14M5 12h14"/>
-      </svg>
-      Nuevo producto
-    </button>
-  </div>
-
-  <div id="listaProductos"></div>
-
-</section>
-
-<!-- ══════════════ SECCIÓN VENDEDORES ══════════════ -->
-<section class="section" id="sec-vendedores">
-
-  <div class="card" style="margin-top:4px">
-    <button class="btn btn-primary" onclick="abrirModalVendedor()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-        <path d="M12 5v14M5 12h14"/>
-      </svg>
-      Nuevo vendedor
-    </button>
-  </div>
-
-  <div id="listaVendedores"></div>
-
-</section>
-
-<!-- ══════ MODAL INGRESO ══════ -->
-<div class="modal-overlay" id="modalIngresoOverlay">
+<div class="modal-back" id="mBack">
   <div class="modal">
-    <div class="modal-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-        <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
-      </svg>
-      Nuevo ingreso
-      <button class="modal-close" onclick="cerrarModalIngreso()">✕</button>
+    <div class="modal-img-side">
+      <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
+      <img class="modal-img" id="mImg" alt="">
+      <div class="modal-thumbs" id="mThumbs"></div>
     </div>
-
-    <!-- VENDEDOR + HORA -->
-    <div class="form-row">
-      <div class="form-group">
-        <label>Vendedor *</label>
-        <select id="fVendedor">
-          <option value="">— Seleccionar —</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Hora</label>
-        <input type="time" id="fHora">
-      </div>
-    </div>
-
-    <!-- MÉTODO DE PAGO -->
-    <div class="form-group">
-      <label>Método de pago *</label>
-      <select id="fMetodo">
-        <option value="Efectivo">Efectivo</option>
-        <option value="Yape">Yape</option>
-        <option value="Plin">Plin</option>
-        <option value="BCP">BCP</option>
-        <option value="Interbank">Interbank</option>
-        <option value="BBVA">BBVA</option>
-        <option value="Banco de la Nación">Banco de la Nación</option>
-      </select>
-    </div>
-
-    <!-- SEPARADOR PRODUCTOS -->
-    <div class="carrito-header">
-      <span>Productos</span>
-      <span id="carritoCount" class="carrito-count">0 ítems</span>
-    </div>
-
-    <!-- BUSCADOR PRODUCTO -->
-    <div class="form-group">
-      <div class="search-box" style="position:relative">
-        <input type="text" id="fProductoSearch" placeholder="Buscar y agregar producto..." autocomplete="off" oninput="filtrarProductos()" onfocus="mostrarDropdown()">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-        </svg>
-        <div class="dropdown-list" id="productoDropdown"></div>
-      </div>
-      <input type="hidden" id="fProductoId">
-    </div>
-
-    <!-- PRECIO + CANT + BOTON AGREGAR (aparece al seleccionar producto) -->
-    <div id="addProductRow" class="add-product-row" style="display:none">
-      <div class="form-row" style="margin-bottom:8px">
-        <div class="form-group" style="margin-bottom:0">
-          <label>Precio S/</label>
-          <input type="number" id="fPrecioItem" step="0.50" min="0" placeholder="0.00">
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label>Cant.</label>
-          <input type="number" id="fCantidad" min="1" value="1" placeholder="1">
-        </div>
-      </div>
-      <button class="btn-agregar-item" onclick="agregarItemAlCarrito()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-          <path d="M12 5v14M5 12h14"/>
-        </svg>
-        Agregar a la lista
-      </button>
-    </div>
-
-    <!-- LISTA CARRITO -->
-    <div id="carritoLista"></div>
-
-    <!-- TOTAL CARRITO -->
-    <div class="carrito-total" id="carritoTotal" style="display:none">
-      <span>Total productos</span>
-      <span id="carritoTotalValor" class="carrito-total-valor">S/ 0.00</span>
-    </div>
-
-    <!-- TOGGLE PAGO PARCIAL -->
-    <div class="pago-toggle" id="pagoToggleWrap" style="display:none">
-      <label class="toggle-label">
-        <input type="checkbox" id="checkAdelanto" onchange="toggleAdelanto()">
-        <span class="toggle-track">
-          <span class="toggle-thumb"></span>
-        </span>
-        <span class="toggle-text">Pago parcial (adelanto)</span>
-      </label>
-    </div>
-
-    <!-- PANEL ADELANTO (aparece si activa el toggle) -->
-    <div id="adelantoPanel" style="display:none">
-      <div class="adelanto-box">
-        <div class="form-row" style="margin-bottom:8px">
-          <div class="form-group" style="margin-bottom:0">
-            <label>Monto recibido S/ *</label>
-            <input type="number" id="fAdelanto" step="0.50" min="0" placeholder="0.00" oninput="calcularPendiente()">
-          </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label>Pendiente S/</label>
-            <input type="text" id="fPendiente" readonly placeholder="0.00" style="background:rgba(240,69,90,0.06);color:var(--rojo);font-family:'JetBrains Mono',monospace;font-weight:600">
-          </div>
-        </div>
-        <div class="adelanto-aviso">
-          Solo se registrará el monto recibido. El pendiente queda en la nota automáticamente.
-        </div>
-      </div>
-    </div>
-
-    <!-- NOTA -->
-    <div class="form-group" style="margin-top:12px">
-      <label>Nota</label>
-      <textarea id="fNota" placeholder="Nota opcional..." style="min-height:50px"></textarea>
-    </div>
-
-    <div style="display:flex;gap:10px;margin-top:6px">
-      <button class="btn btn-secondary" onclick="cerrarModalIngreso()" style="flex:1">Cancelar</button>
-      <button class="btn btn-primary" onclick="registrarIngreso()" style="flex:1">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-          <path d="M12 5v14M5 12h14"/>
-        </svg>
-        Guardar
-      </button>
+    <div class="modal-info">
+      <div class="modal-cat" id="mCat"></div>
+      <h1 class="modal-title" id="mTit"></h1>
+      <div class="modal-sku" id="mSku"></div>
+      <div class="modal-price" id="mPrice"></div>
+      <div class="modal-desc" id="mDesc"></div>
+      <a class="modal-wa-btn" id="mWa" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+        Consultar por WhatsApp
+      </a>
     </div>
   </div>
 </div>
 
-<!-- ══════ MODAL PRODUCTO ══════ -->
-<div class="modal-overlay" id="modalProductoOverlay">
-  <div class="modal">
-    <div class="modal-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-      </svg>
-      <span id="modalProductoTitulo">Nuevo producto</span>
-      <button class="modal-close" onclick="cerrarModalProducto()">✕</button>
-    </div>
-    <input type="hidden" id="mpId">
-    <div class="form-group">
-      <label>Nombre del producto *</label>
-      <input type="text" id="mpNombre" placeholder="Ej: Carrete Shimano 2500">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Precio sugerido (S/)</label>
-        <input type="number" id="mpPrecio" step="0.50" min="0" placeholder="0.00">
-      </div>
-      <div class="form-group">
-        <label>Categoría *</label>
-        <select id="mpCategoria">
-          <option>Pesca</option><option>Caza</option><option>Buceo</option>
-          <option>Náutica</option><option>Accesorios</option><option>Otros</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Estado</label>
-      <select id="mpEstado">
-        <option value="activo">Activo</option>
-        <option value="inactivo">Inactivo</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:6px">
-      <button class="btn btn-secondary" onclick="cerrarModalProducto()" style="flex:1">Cancelar</button>
-      <button class="btn btn-primary" onclick="guardarProducto()" style="flex:1">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ MODAL VENDEDOR ══════ -->
-<div class="modal-overlay" id="modalVendedorOverlay">
-  <div class="modal">
-    <div class="modal-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-      <span id="modalVendedorTitulo">Nuevo vendedor</span>
-      <button class="modal-close" onclick="cerrarModalVendedor()">✕</button>
-    </div>
-    <input type="hidden" id="mvId">
-    <div class="form-group">
-      <label>Nombre del vendedor *</label>
-      <input type="text" id="mvNombre" placeholder="Ej: Edgar">
-    </div>
-    <div class="form-group">
-      <label>Estado</label>
-      <select id="mvEstado">
-        <option value="activo">Activo</option>
-        <option value="inactivo">Inactivo</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:6px">
-      <button class="btn btn-secondary" onclick="cerrarModalVendedor()" style="flex:1">Cancelar</button>
-      <button class="btn btn-primary" onclick="guardarVendedor()" style="flex:1">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ MODAL DETALLE DÍA ══════ -->
-<div class="modal-overlay" id="modalDiaOverlay">
-  <div class="modal">
-    <div class="modal-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-        <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-      </svg>
-      <span id="modalDiaTitulo">Detalle del día</span>
-      <button class="modal-close" onclick="cerrarModalDia()">✕</button>
-    </div>
-    <div id="modalDiaContenido"></div>
-  </div>
-</div>
-
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="demo/banner.js" defer></script>
 <script>
-// ═══════════════════════════════════════
-//  DATOS & STORAGE
-// ═══════════════════════════════════════
-const KEY_VENDEDORES = 'cpn_vendedores';
-const KEY_PRODUCTOS  = 'cpn_productos';
+firebase.initializeApp(window.APP_CONFIG.firebase);
+const DB=firebase.firestore();
+const WA='51908808912';
+const PAGE=24;
+let PRODS=[],CATS=[],CAT_BY_NAME={},fCat='',fQ='',sort='nombre',page=1;
+const norm=s=>(s||'').toString().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
 
-function fechaHoy() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+// Icono representativo por categoría (para placeholder de productos sin imagen)
+function _iconoCategoria(cat){
+  const c = norm(cat);
+  if (/anzuelo/.test(c)) return '🪝';
+  if (/plomo/.test(c)) return '⚓';
+  if (/nylon|multifilamento|elasticor/.test(c)) return '🧵';
+  if (/carrete/.test(c)) return '🎣';
+  if (/caña|cana/.test(c)) return '🎣';
+  if (/binocular|visor/.test(c)) return '🔭';
+  if (/airsoft/.test(c)) return '🎯';
+  if (/traje.*neopreno|neopreno/.test(c)) return '🩱';
+  if (/mascara.*buceo/.test(c)) return '🤿';
+  if (/aleta/.test(c)) return '🐟';
+  if (/linterna/.test(c)) return '🔦';
+  if (/wader/.test(c)) return '👢';
+  if (/chaleco.*salv|salvavida/.test(c)) return '🦺';
+  if (/boya.*aro|aro.*salv/.test(c)) return '🛟';
+  if (/banana.*inflab/.test(c)) return '🍌';
+  if (/pisc.*inflab/.test(c)) return '🏊';
+  if (/juego.*inflab|inflab.*juego/.test(c)) return '🎪';
+  if (/tabla.*agua/.test(c)) return '🏄';
+  if (/bote.*inflab|zodiac|kayak|kayat/.test(c)) return '🛶';
+  if (/popper/.test(c)) return '🎣';
+  if (/cucharilla|maripos/.test(c)) return '🥄';
+  if (/silicona/.test(c)) return '🎣';
+  if (/pvc/.test(c)) return '🎣';
+  if (/señuelo|senuelo/.test(c)) return '🎣';
+  if (/combo/.test(c)) return '🎣';
+  if (/buceo/.test(c)) return '🤿';
+  if (/nautica|nautico/.test(c)) return '⛵';
+  if (/accesorio/.test(c)) return '🧰';
+  return '🐟';
 }
+const fmt=n=>'S/ '+Number(n).toFixed(2);
+const waURL=p=>`https://wa.me/${WA}?text=`+encodeURIComponent(`Hola! Estoy interesado en:\n\n📌 *${p.nombre}*\n${p.sku?`Código: ${p.sku}\n`:''}Precio: ${fmt(p.precio)}\n\n¿Sigue disponible?`);
 
-function keyIngresos(fecha) { return `cpn_ingresos_${fecha}`; }
+// Mapa slug categoria web -> nombre categoria CPN
+const SLUG_TO_CPN_CAT = {
+  'combos-de-pesca': ['Pesca'],
+  'canas-de-pescar': ['Pesca'],
+  'carretes': ['Pesca'],
+  'accesorios': ['Accesorios','Pesca'],
+  'senuelos-de-silicona': ['Pesca'],
+  'senuelos-de-pvc': ['Pesca'],
+  'senuelos-poppers': ['Pesca'],
+  'cucharillas-mariposas': ['Pesca'],
+  'anzuelos': ['Pesca'],
+  'plomos-de-pesca': ['Pesca'],
+  'nylon-multifilamento-elasticor-etc': ['Pesca'],
+  'articulos-de-buceo': ['Buceo','Pesca'],
+  'trajes-de-neopreno': ['Buceo','Pesca'],
+  'mascaras-de-buceo': ['Buceo'],
+  'wader-de-pesca': ['Pesca'],
+  'aletas-de-natacion-y-buseo': ['Buceo'],
+  'linternas-acuaticas': ['Buceo','Náutica'],
+  'airsoft': ['Caza'],
+  'binoculares-y-visores': ['Otros'],
+  'botes-inflables-zodiac-balsas-y-kayat': ['Náutica'],
+  'bananas-inflables': ['Náutica'],
+  'juegos-acuaticos-inflables': ['Náutica'],
+  'picinas-inflables': ['Náutica'],
+  'tablas-para-agua': ['Náutica'],
+  'boyas-y-aros-salvavidas': ['Náutica'],
+  'chalecos-salvavidas': ['Náutica'],
+};
 
-function cargar(key, def=[]) {
-  try { return JSON.parse(localStorage.getItem(key)) || def; } catch { return def; }
-}
-
-function guardar(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch(e) {
-    console.error('Error al guardar en localStorage:', e);
-    toast('Error al guardar datos. ¿Modo incógnito?', 'error');
-  }
-}
-
-function storageDisponible() {
-  try {
-    localStorage.setItem('__test__', '1');
-    localStorage.removeItem('__test__');
-    return true;
-  } catch(e) { return false; }
-}
-
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-
-// ── INICIALIZAR DATOS DE EJEMPLO ──
-function initDatos() {
-  if (!storageDisponible()) {
-    setTimeout(() => toast('⚠️ localStorage no disponible. Los datos no se guardarán.', 'error'), 500);
-    return;
-  }
-  if (!localStorage.getItem(KEY_VENDEDORES)) {
-    guardar(KEY_VENDEDORES, [
-      { id: uid(), nombre: 'Sandra', estado: 'activo' },
-      { id: uid(), nombre: 'Paul',   estado: 'activo' },
-      { id: uid(), nombre: 'Ana',    estado: 'activo' },
-      { id: uid(), nombre: 'Edgar',  estado: 'activo' },
+async function cargar(){
+  try{
+    // Cargar categorías y colección plural de productos en paralelo
+    const [snapCats, snapProds] = await Promise.all([
+      DB.collection('cpn_config').doc('categorias').get(),
+      DB.collection('cpn_productos').get(),  // ← post-migración a colección plural
     ]);
+    CATS = (snapCats.exists ? (snapCats.data().lista||[]) : []).sort((a,b) => (a.orden||0)-(b.orden||0));
+    PRODS = [];
+    snapProds.forEach(doc => {
+      const p = doc.data();
+      if (p && p.nombre && p.precio > 0 && p.estado !== 'inactivo') PRODS.push(p);
+    });
+    // Fallback: si la colección plural está vacía, leer del doc gigante viejo
+    if (!PRODS.length) {
+      try {
+        const legacy = await DB.collection('cpn_config').doc('productos').get();
+        if (legacy.exists) PRODS = (legacy.data().lista||[]).filter(p=>p.nombre&&p.precio>0&&p.estado!=='inactivo');
+      } catch(e) { console.warn('Fallback productos:', e.message); }
+    }
+
+    // Mapa nombre categoría web → slug (para filtrar productos)
+    // También ligamos por keywords en el nombre del producto
+    CAT_BY_NAME = {};
+    CATS.forEach(c => { CAT_BY_NAME[c.slug] = c; });
+
+    renderNavCats();
+    // Router simple por hash
+    aplicarHash();
+    window.addEventListener('hashchange', aplicarHash);
+  }catch(e){console.error(e);document.getElementById('viewHome').innerHTML='<p style="color:#DC2626;text-align:center;padding:40px">Error cargando productos. Recarga la página.</p>'}
+}
+
+function goHome(){location.hash = ''}
+function goCat(slug){location.hash = 'c/'+slug}
+
+function aplicarHash(){
+  const h = location.hash.replace(/^#/, '').trim();
+  if (h.startsWith('c/')) {
+    const slug = h.slice(2);
+    mostrarCategoria(slug);
+  } else {
+    mostrarHome();
   }
-  if (!localStorage.getItem(KEY_PRODUCTOS)) {
-    guardar(KEY_PRODUCTOS, [{id:"p0001",nombre:"BOYA ANARANJADA",precio:5.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0002",nombre:"BOYA DE 10 G",precio:3.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0003",nombre:"BOYA DE 25 G",precio:5.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0004",nombre:"BOYA DE 3 G",precio:4.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0005",nombre:"CAJA PARA ACCESORIOS DOBLE COMPARTIMIENTO",precio:30.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0006",nombre:"CAJA PARA SEÑUELOS",precio:40.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0007",nombre:"CAJA PARA SEÑUELOS",precio:3.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0008",nombre:"CAJA PARA SEÑUELOS",precio:20.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0009",nombre:"CAJA PARA SEÑUELOS",precio:35.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0010",nombre:"CAJA PARA SEÑUELOS MEDIANA",precio:20.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0011",nombre:"CAJITA PARA ACCESORIOS",precio:1.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0012",nombre:"Cabezales de Pesca con señuelo suave 15 g",precio:10.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0013",nombre:"DEDAL CAMUFLADO",precio:10.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0014",nombre:"DEDAL DE PESCA",precio:10.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0015",nombre:"ESTUCHE DE CAÑA DE DOBLE COMPARTIMIENTO",precio:70.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0016",nombre:"FUNDA DE CAÑA",precio:30.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0017",nombre:"FUNDA DE CAÑA NACIONAL",precio:40.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0018",nombre:"KIT DE 140 PIEZAS DE PESCA",precio:40.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0019",nombre:"LEADER",precio:2.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0020",nombre:"MANIJA DE CARRETE",precio:40.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0021",nombre:"PAQUETE DE BOYAS",precio:15.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0022",nombre:"PAQUETE DE SACAVUELTAS",precio:10.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0023",nombre:"PERLA FLOTANTE (boya)",precio:10.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0024",nombre:"PERLITAS PARA ARMAR LINEAS",precio:1.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0025",nombre:"REPUESTO DE PUNTA",precio:2.5,categoria:"Accesorios",estado:"activo"},
-      {id:"p0026",nombre:"SABIKI",precio:15.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0027",nombre:"SACAVUELTA",precio:1.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0028",nombre:"SACAVUELTAS",precio:1.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0029",nombre:"SINTURON PARA CAÑAS",precio:30.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0030",nombre:"SNAT",precio:1.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0031",nombre:"TABLITA POR UND",precio:5.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0032",nombre:"TAMBOR DE 3 LADOS",precio:1.5,categoria:"Accesorios",estado:"activo"},
-      {id:"p0033",nombre:"TAMBOR DE 3 LADOS",precio:1.5,categoria:"Accesorios",estado:"activo"},
-      {id:"p0034",nombre:"TAMBOR DE PESCA",precio:1.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0035",nombre:"TIJERAS DE PESCA",precio:25.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0036",nombre:"ZIPLO DE ANZUELOS",precio:2.0,categoria:"Accesorios",estado:"activo"},
-      {id:"p0037",nombre:"CARABINA AN500 + MIRA 4*20 + BALINES",precio:430.0,categoria:"Caza",estado:"activo"},
-      {id:"p0038",nombre:"CARABINA B2-4 + MIRA DE 4*20 + BALINES",precio:450.0,categoria:"Caza",estado:"activo"},
-      {id:"p0039",nombre:"CARABINA WF600 + MIRA 4*20 + BALINES",precio:500.0,categoria:"Caza",estado:"activo"},
-      {id:"p0040",nombre:"CARABINA WF600P + MIRA 4*20 + BALINES",precio:500.0,categoria:"Caza",estado:"activo"},
-      {id:"p0041",nombre:"LATA DE BALINES DE 4.5",precio:40.0,categoria:"Caza",estado:"activo"},
-      {id:"p0042",nombre:"LATA DE BALINES DE 5.5",precio:40.0,categoria:"Caza",estado:"activo"},
-      {id:"p0043",nombre:"SEÑUELO CABEZA DE PLOMO",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0044",nombre:"TRIPLE PUNTA CARBONADO POR  MEDIDA",precio:0.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0045",nombre:"ANZUELO CON CABEZA DE PLOMO 7G",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0046",nombre:"ANZUELO TIPO GANCHO",precio:0.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0047",nombre:"ANZUELOS  DE DIFERENTES TAMAÑOS  GRISES",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0048",nombre:"ANZUELOS CON PLOMO 4G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0049",nombre:"ANZUELOS DE DIFERENTES TAMAÑOS ACARBONADOS",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0050",nombre:"ANZUELOS DE DIFERENTES TAMAÑOS DORADOS",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0051",nombre:"CAJA ANZUELO OPTOPUS # 4",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0052",nombre:"CAJA ANZUELO OPTOPUS # 7",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0053",nombre:"CAJA ANZUELO OPTOPUS # 8",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0054",nombre:"CAJA DE ANZUELO OPTOPUS # 12",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0055",nombre:"CAJA DE ANZUELO OPTOPUS # 13",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0056",nombre:"CAJA DE ANZUELO OPTOPUS # 14",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0057",nombre:"CAJA DE ANZUELO OPTOPUS #3",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0058",nombre:"CAJA DE ANZUELO OPTOPUS #5",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0059",nombre:"CAJA DE ANZUELOS  #20 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0060",nombre:"CAJA DE ANZUELOS  #7 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0061",nombre:"CAJA DE ANZUELOS  #8 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0062",nombre:"CAJA DE ANZUELOS # 1",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0063",nombre:"CAJA DE ANZUELOS # 10",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0064",nombre:"CAJA DE ANZUELOS #10 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0065",nombre:"CAJA DE ANZUELOS #11",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0066",nombre:"CAJA DE ANZUELOS #11 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0067",nombre:"CAJA DE ANZUELOS #12 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0068",nombre:"CAJA DE ANZUELOS #13",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0069",nombre:"CAJA DE ANZUELOS #13 CON CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0070",nombre:"CAJA DE ANZUELOS #14 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0071",nombre:"CAJA DE ANZUELOS #15 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0072",nombre:"CAJA DE ANZUELOS #16 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0073",nombre:"CAJA DE ANZUELOS #17 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0074",nombre:"CAJA DE ANZUELOS #18 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0075",nombre:"CAJA DE ANZUELOS #2",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0076",nombre:"CAJA DE ANZUELOS #3",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0077",nombre:"CAJA DE ANZUELOS #4",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0078",nombre:"CAJA DE ANZUELOS #5",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0079",nombre:"CAJA DE ANZUELOS #6",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0080",nombre:"CAJA DE ANZUELOS #7",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0081",nombre:"CAJA DE ANZUELOS #8",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0082",nombre:"CAJA DE ANZUELOS #8",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0083",nombre:"CAJA DE ANZUELOS #9",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0084",nombre:"CAJA DE ANZUELOS #9 CABEZA PLANA",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0085",nombre:"CAJA DE ANZUELOS OPTOPUS #15",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0086",nombre:"CAJA DE OPTOPUS #10",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0087",nombre:"CAJA DE OPTOPUS #10",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0088",nombre:"CAJA DE OPTOPUS #11",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0089",nombre:"CAJA DE OPTOPUS #11",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0090",nombre:"CAJA DE OPTOPUS #12",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0091",nombre:"CAJA DE OPTOPUS #12",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0092",nombre:"CAJA DE OPTOPUS #13",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0093",nombre:"CAJA DE OPTOPUS #9",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0094",nombre:"CAJA DE TRIPLE PUNTA DORADO #4",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0095",nombre:"PAQUETE  DE ANZUELOS",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0096",nombre:"PAQUETE DE ANZUELOS",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0097",nombre:"PAQUETE DE ANZUELOS #1",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0098",nombre:"PLOMO CON ANZUELO 1G",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0099",nombre:"BINOCULARES 10-70*70",precio:130.0,categoria:"Caza",estado:"activo"},
-      {id:"p0100",nombre:"BINOCULARES KANDAR 12X42",precio:130.0,categoria:"Caza",estado:"activo"},
-      {id:"p0101",nombre:"BINOCULARES KANDAR HIGH QUALITY 12*42",precio:130.0,categoria:"Caza",estado:"activo"},
-      {id:"p0102",nombre:"MIRA 3-7*20",precio:100.0,categoria:"Caza",estado:"activo"},
-      {id:"p0103",nombre:"MIRA 4*28",precio:70.0,categoria:"Caza",estado:"activo"},
-      {id:"p0104",nombre:"MIRA DE 4*20",precio:50.0,categoria:"Caza",estado:"activo"},
-      {id:"p0105",nombre:"MIRA HOLOGRAFICA",precio:150.0,categoria:"Caza",estado:"activo"},
-      {id:"p0106",nombre:"MIRA RD1X40 KANDER",precio:150.0,categoria:"Caza",estado:"activo"},
-      {id:"p0107",nombre:"BANANA DE 8 PERSONAS",precio:5130.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0108",nombre:"BANANA INFLABLE DE 6 PERSONAS DOS FILAS",precio:3650.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0109",nombre:"BANANO INFLABLE DE 8 PERSONA DOS FILA",precio:4200.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0110",nombre:"BOTE CHALLEGER 3",precio:486.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0111",nombre:"BOTE CHALLENGER 2",precio:280.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0112",nombre:"BOTE EXCURSION 5 + REMOS + INFLADOR",precio:1014.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0113",nombre:"Bote inflable SeaHawk 4 + Remos e Inflador",precio:798.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0114",nombre:"INFLABLE DE DRAGON DE 8 PRSONAS",precio:5800.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0115",nombre:"KAYAT INFLABLE CHALLENGER K2",precio:882.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0116",nombre:"MOTOR FUERA DE BORDA 2 TIEMPOS DE 4 HP EJE CORTO",precio:2646.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0117",nombre:"Soporte Motor fueraborda 20 x 22 cm",precio:85.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0118",nombre:"DW 5000",precio:170.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0119",nombre:"ANGEL SHARK TSS6000",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0120",nombre:"CARRETE 200",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0121",nombre:"CARRETE CH4000",precio:60.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0122",nombre:"CARRETE COBRA CB240",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0123",nombre:"CARRETE DOBLE MANIJA",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0124",nombre:"CARRETE HB 7000",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0125",nombre:"CARRETE HQ 6000",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0126",nombre:"CARRETE KD. GTF 4000 KAIDA",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0127",nombre:"CARRETE OKUMA EXIDE PRO EXP-30",precio:85.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0128",nombre:"CARRETE OKUMA EXIDE PRO EXP-40",precio:95.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0129",nombre:"CARRETE OKUMA RV-25",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0130",nombre:"CARRETE OKUMA RV-30",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0131",nombre:"CARRETE REELKING 4000",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0132",nombre:"CARRETE SG5000",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0133",nombre:"CARRETE TH 5000",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0134",nombre:"Carrete Shimano FX 4000",precio:150.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0135",nombre:"DEUKIO AC 10000",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0136",nombre:"DEUKIO DA 4000",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0137",nombre:"DEUKIO DA 5000",precio:150.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0138",nombre:"DEUKO AC 9000",precio:180.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0139",nombre:"DUBAI CP6000",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0140",nombre:"KAIDA  CAM4000",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0141",nombre:"KAIDA  NAT 4000",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0142",nombre:"KAIDA EGT4000",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0143",nombre:"KAIDA EHQ02-40",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0144",nombre:"KAIDA HORNET 4000",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0145",nombre:"OKUMA EXIDE PRO EXP - 55",precio:105.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0146",nombre:"OKUMA EXIDE PRO EXP-80",precio:210.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0147",nombre:"REELKING 6000",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0148",nombre:"ST 5000",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0149",nombre:"VICTORIA ASSANGO GP6000",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0150",nombre:"VICTORIA FISHING REEL KP80",precio:170.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0151",nombre:"VICTORIA HYD4000",precio:160.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0152",nombre:"YUMOSHI LC500",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0153",nombre:"CAÑA 2 T 1.80 M COCODRILO",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0154",nombre:"CAÑA 2 T 2.10 M COCODRILO",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0155",nombre:"CAÑA 2 T 2.40 M COCODRILO",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0156",nombre:"CAÑA 2 T 2.70 M COCODRILO",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0157",nombre:"CAÑA AREZZO DE 2.70",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0158",nombre:"CAÑA DE 2.40 FIBRA DE CARBONO",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0159",nombre:"CAÑA DE 2.70 FIBRA DE CARBONO",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0160",nombre:"CAÑA DE FIBRA DE CARBONO 1.80",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0161",nombre:"CAÑA DE FIBRA DE CARBONO 1.80 JUPITER STIK",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0162",nombre:"CAÑA DE FIBRA DE CARBONO 2.10 TRAMBOYO",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0163",nombre:"CAÑA DE FIBRA DE CARBONO 2.10 WORLD CLASS",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0164",nombre:"CAÑA DE FIBRA DE CARBONO 2.40 WORLD CLASS",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0165",nombre:"CAÑA DE FIBRA DE CARBONO 2.70 WORLD CLASS",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0166",nombre:"CAÑA DE FIBRA DE CARBONO 3.00 M ABUSHA",precio:150.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0167",nombre:"CAÑA DE FIBRA DE CARBONO 3.00 M WORLD CLASS",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0168",nombre:"CAÑA DE FIBRA DE CARBONO 3.60 WORLD CLASS",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0169",nombre:"CAÑA DE FIBRA DE CARBONO DE 1.50 JUPITER STIK",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0170",nombre:"CAÑA DE FIBRA DE CARBONO DE 1.80",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0171",nombre:"CAÑA DE FIBRA DE CARBONO DE 2.10",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0172",nombre:"CAÑA NOVARA DE 2.70",precio:140.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0173",nombre:"CAÑA OKUMA DE 1.98 2T",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0174",nombre:"CAÑA OKUMA DE 2.10 2T",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0175",nombre:"CAÑA OKUMA DE 2.70 2T",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0176",nombre:"CAÑA OKUMA DE 3.00 M 2T",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0177",nombre:"CAÑA OKUMA TELESCOPICA DE 1.65 M",precio:40.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0178",nombre:"CAÑA OKUMA TELESCOPICA DE 1.80M REVENGER",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0179",nombre:"CAÑA TELESCOPICA 2.40 M MIRACLE FISH",precio:60.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0180",nombre:"CAÑA TELESCOPICA 2.70 M MIRACLE FISH",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0181",nombre:"CAÑA TELESCOPICA 3.00M MIRACLE FISH",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0182",nombre:"CAÑA TELESCOPICA 3.60 M MIRACLE FISH",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0183",nombre:"CAÑA TELESCOPICA DE 1.80 HENGJIU",precio:40.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0184",nombre:"CAÑA TELESCOPICA DE 1.80 R",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0185",nombre:"CAÑA TELESCOPICA DE 2.10 N",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0186",nombre:"CAÑA TELESCOPICA DE 2.10 R",precio:40.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0187",nombre:"CAÑA TELESCOPICA DE 2.40 R",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0188",nombre:"CAÑA TELESCOPICA OKUMA DE 1.80 M",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0189",nombre:"CAÑA TELESCOPICA OKUMA DE 1.95 M",precio:60.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0190",nombre:"CAÑA TELESCOPICA OKUMA DE 2.10 M",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0191",nombre:"CAÑA TELESCOPICA OKUMA DE 2.70 M",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0192",nombre:"CAÑA TELESCOPICA OKUMA DE 3.00 M",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0193",nombre:"CAÑA TELESCOPICA OKUMA DE 3.60 M",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0194",nombre:"CAÑA VICTORIA DE 4.50 M 3 T",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0195",nombre:"COMBO DE 70  2.10 R",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0196",nombre:"COMB0 DE 110 2.70",precio:110.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0197",nombre:"COMBO 3.60 TELESCÓPICA",precio:270.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0198",nombre:"COMBO 3.60 TELESCÓPICA",precio:280.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0199",nombre:"COMBO 3.90 M TELESCÓPICA",precio:290.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0200",nombre:"COMBO 320 SOLES VICTORIA DE 3.60 M",precio:320.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0201",nombre:"COMBO 350 4.50 M VICTORIA",precio:350.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0202",nombre:"COMBO 4.50 TELESCÓPICA",precio:300.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0203",nombre:"COMBO 50 DE 1.80N R",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0204",nombre:"COMBO DE 1.80 M FIBRA DE CARBONO",precio:170.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0205",nombre:"COMBO DE 1.80 M VICTORIA",precio:170.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0206",nombre:"COMBO DE 100 2.40 M",precio:100.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0207",nombre:"COMBO DE 120 2.70 M",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0208",nombre:"COMBO DE 120 3.00 M",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0209",nombre:"COMBO DE 130 3.00 M",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0210",nombre:"COMBO DE 140 3.60 M",precio:140.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0211",nombre:"COMBO DE 150 1.80 M 2 TRAMOS",precio:150.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0212",nombre:"COMBO DE 155 SOLES 2.40 M",precio:155.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0213",nombre:"COMBO DE 160 2.10 2 TRAMOS",precio:160.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0214",nombre:"COMBO DE 170 2.40 2 TRAMOS",precio:170.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0215",nombre:"COMBO DE 180 2.70 2 TRAMOS",precio:180.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0216",nombre:"COMBO DE 190 SOLES 3.00 M",precio:190.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0217",nombre:"COMBO DE 2.10 2T FIBRA DE CARBONO",precio:180.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0218",nombre:"COMBO DE 2.40 FIBRA DE CARBONO CAMUFLADO",precio:220.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0219",nombre:"COMBO DE 2.70 FIBRA DE CARBONO CAMUFLADO",precio:250.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0220",nombre:"COMBO DE 2.70 M FIBRA DE CARBONO",precio:190.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0221",nombre:"COMBO DE 2.70 VICTORIA AREZZO",precio:190.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0222",nombre:"COMBO DE 3 M FIBRA DE CARBONO",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0223",nombre:"COMBO DE 3 M VICTORIA BRECIA",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0224",nombre:"COMBO DE 3.00 M EN FIBRA DE CARBONO",precio:270.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0225",nombre:"COMBO DE 3.60 VICTORIA",precio:220.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0226",nombre:"COMBO DE 4.50 VICTORIA",precio:250.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0227",nombre:"COMBO DE 60 1.80 M R",precio:60.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0228",nombre:"COMBO DE 60 1.80 N",precio:60.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0229",nombre:"COMBO DE 60 2.10 R",precio:60.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0230",nombre:"COMBO DE 70 1.80 N",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0231",nombre:"COMBO DE 70 2.10 M",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0232",nombre:"COMBO DE 70 2.40 R",precio:70.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0233",nombre:"COMBO DE 80 2.10 M",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0234",nombre:"COMBO DE 80 2.40 R",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0235",nombre:"COMBO DE CARBONO DE 3.00 M CAMUFLADO",precio:270.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0236",nombre:"COMBO DE FIBRA DE CARBONO 2.10 NARANJA",precio:180.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0237",nombre:"COMBO DE FIBRA DE CARBONO 2.40 M",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0238",nombre:"COMBO DE PESCA DE 2.70 CAMUFLADO",precio:250.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0239",nombre:"COMBO DEN 80 2.40 N",precio:80.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0240",nombre:"COMBO FIBRA DE CARBONO 2.10",precio:180.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0241",nombre:"COMBO FIBRA DE CARBONO 2.70",precio:230.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0242",nombre:"COMBO FIBRA DE CARBONO 3 M",precio:250.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0243",nombre:"COMBO FIBRA DE CARBONO 3.60 M",precio:270.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0244",nombre:"COMBO OKUMA 1.80 M",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0245",nombre:"COMBO OKUMA 1.98 M 2T",precio:140.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0246",nombre:"COMBO OKUMA 2.10",precio:140.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0247",nombre:"COMBO OKUMA 2.10 M 2T",precio:150.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0248",nombre:"COMBO OKUMA 2.70 M",precio:180.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0249",nombre:"COMBO OKUMA 2.70 M 2 T",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0250",nombre:"COMBO OKUMA 3 M",precio:200.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0251",nombre:"COMBO OKUMA 3 M 2T",precio:220.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0252",nombre:"COMBO OKUMA 3 M TELESCOPICA",precio:260.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0253",nombre:"COMBO SHIMANO DE 2.70 M 2T",precio:300.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0254",nombre:"COMBO TABLITA",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0255",nombre:"COMBO VICTORIA DE 3.60 M TENTO",precio:220.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0256",nombre:"COMBO YOYO MAS ACCESORIOS",precio:40.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0257",nombre:"SUPER COMBO DE OFERTA LIMITADA 1.80 2T",precio:120.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0258",nombre:"SUPER COMBO DE OFERTA LIMITADA 2.10 2T",precio:130.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0259",nombre:"SUPER COMBO DE OFERTA LIMITADA 2.40 2T",precio:140.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0260",nombre:"SUPER COMBO DE OFERTA LIMITADA 2.70 2T",precio:150.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0261",nombre:"CAJA DE CUCHARAS",precio:40.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0262",nombre:"CEBO GIRATORIO DE LENTEJUELA BIONICO PARA INSECTOS 2.2G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0263",nombre:"CEBO GIRATORIO DE LENTEJUELA BIONICO PARA INSECTOS 3.2G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0264",nombre:"CEBO GIRATORIO DE LENTEJUELA BIONICO PARA INSECTOS 7 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0265",nombre:"CEBO GIRATORIO DELENTEJUELO BIONICO PARA INSECTOS 5G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0266",nombre:"CUCHARILA DE PEZ",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0267",nombre:"CUCHARILA DE RIO",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0268",nombre:"CUCHARILLA",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0269",nombre:"CUCHARILLA #2",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0270",nombre:"CUCHARILLA #3",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0271",nombre:"CUCHARILLA #4",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0272",nombre:"CUCHARILLA #4 COLORIDA",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0273",nombre:"CUCHARILLA #5 FOSFORESCENTE",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0274",nombre:"CUCHARILLA 12G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0275",nombre:"CUCHARILLA CON RALLAS",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0276",nombre:"CUCHARILLA DE CAMPANA",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0277",nombre:"CUCHARILLA DE PESCA",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0278",nombre:"CUCHARILLA DE PESCA",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0279",nombre:"CUCHARILLA DE PESCA",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0280",nombre:"CUCHARILLA DE PESCA",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0281",nombre:"CUCHARILLA DE PESCA 4G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0282",nombre:"CUCHARILLA DE PESCA DORADA",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0283",nombre:"CUCHARILLA DE PEZ",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0284",nombre:"CUCHARILLA DE PEZ",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0285",nombre:"CUCHARILLA DE PEZ",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0286",nombre:"CUCHARILLA DE PEZ 12.7 G",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0287",nombre:"CUCHARILLA DE PEZ ALARGADA",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0288",nombre:"CUCHARILLA DE PEZ DORADO",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0289",nombre:"CUCHARILLA DE PEZ S088",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0290",nombre:"CUCHARILLA DE RIO",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0291",nombre:"CUCHARILLA S087",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0292",nombre:"CUCHARILLAS DE RIO",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0293",nombre:"Cebo Giratorio Artificial",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0294",nombre:"Cuchara de metal para señuelo de pesca",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0295",nombre:"JILS 30 G",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0296",nombre:"JILS 40 G",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0297",nombre:"JILS 7 G",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0298",nombre:"JILS DE 10 G",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0299",nombre:"PAQUETE DE CUCHARAS",precio:90.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0300",nombre:"PAQUETE DE CUCHARAS",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0301",nombre:"SEÑUELO  DE PEZ GIRATORIO 6.8 G",precio:7.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0302",nombre:"SEÑUELOS DE PEZ CON CUCHARA POR UND",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0303",nombre:"MULTIFILAMENTO 0.25",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0304",nombre:"3D LINE STEALTH 0.40",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0305",nombre:"3D LINE STEALTH 0.50 MM",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0306",nombre:"3D LINE STEALTH 0.60",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0307",nombre:"ELASTICOR BLANCO",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0308",nombre:"ELASTICOR DE COLORES",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0309",nombre:"FLUROCARBON 0.35 MM",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0310",nombre:"FLUROCARBON 0.40 MM",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0311",nombre:"FLUROCARBON 0.45 MM",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0312",nombre:"FLUROCARBON 0.50 MM",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0313",nombre:"FLUROCARBON 0.60 MM",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0314",nombre:"MONOFILAMENTO",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0315",nombre:"MULTIFILAMENTO 0.18 300 M",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0316",nombre:"MULTIFILAMENTO 0.20",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0317",nombre:"MULTIFILAMENTO 0.28",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0318",nombre:"MULTIFILAMENTO 0.30",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0319",nombre:"MULTIFILAMENTO 0.35",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0320",nombre:"MULTIFILAMENTO 0.40",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0321",nombre:"MULTIFILAMENTO DE 0.25 100 M",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0322",nombre:"MULTIFILAMENTO DE 0.28 100 M",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0323",nombre:"MULTIFILAMENTO DE 0.30 100 M",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0324",nombre:"MULTIFILAMENTO DE 0.35 100 M",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0325",nombre:"MULTIFILAMENTO DE 0.40 100 M",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0326",nombre:"MULTIFILAMENTO DE 0.50 100 M",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0327",nombre:"MULTIFILAMENTO DE 300 M 0.23 mm",precio:85.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0328",nombre:"MULTIFILAMENTO DE 300 M 0.26 mm",precio:85.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0329",nombre:"MULTIFILAMENTO DE 300 M 0.28 MM",precio:85.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0330",nombre:"MULTIFILAMENTO DE 300 M 0.32 MM",precio:85.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0331",nombre:"MULTIFILAMENTO POWER PRO 0.40",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0332",nombre:"MULTIFILAMENTO POWER PRO 0.50",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0333",nombre:"NYLOM DE 0.25 100 M",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0334",nombre:"NYLOM DE 0.30 MM",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0335",nombre:"NYLOM DE 0.35 100 M",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0336",nombre:"NYLOM DE 0.35 MM",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0337",nombre:"NYLOM DE 0.35 MM CHAOYUE FISHING",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0338",nombre:"NYLOM DE 1000 0.40",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0339",nombre:"NYLOM DE 500 M 0.40",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0340",nombre:"NYLON 3D DE 100 M  0.40",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0341",nombre:"NYLON 3D DE 100 M 0.45",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0342",nombre:"NYLON 3D DE 100 M 0.50",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0343",nombre:"NYLON DE 0.30 100 M",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0344",nombre:"NYLON DE 0.40 100 M",precio:7.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0345",nombre:"NYLON DE 0.45 100 M",precio:7.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0346",nombre:"NYLON DE 0.50 100 M",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0347",nombre:"NYLON DE 0.60 100 M",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0348",nombre:"TIAGRA FLOROCARBONO 0.30 MM",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0349",nombre:"TIAGRA FLOROCARBONO 0.35 MM",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0350",nombre:"TIAGRA FLOROCARBONO 0.40 MM",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0351",nombre:"TIAGRA FLOROCARBONO 0.50 MM",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0352",nombre:"TIAGRA FLOROCARBONO 0.60 MM",precio:50.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0353",nombre:"ALETAS DE BUCEO",precio:150.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0354",nombre:"ARO SALVAVIDAS GRAVITAL",precio:85.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0355",nombre:"ARPON DE PESCA",precio:350.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0356",nombre:"BOTAS",precio:50.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0357",nombre:"BOYA INFLABLE DE  15 L",precio:40.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0358",nombre:"BOYA INFLABLE DE 20 L",precio:50.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0359",nombre:"BOYA TORPEDO",precio:140.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0360",nombre:"BOYA TORPEDO DE 6 ASAS",precio:150.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0361",nombre:"CHALECO SALVAVIDAS",precio:60.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0362",nombre:"CHALECO SALVAVIDAS AMERICANO",precio:60.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0363",nombre:"CORREA DE BUCEO",precio:100.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0364",nombre:"GUANTES CAMUFLADO",precio:80.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0365",nombre:"GUANTES CORTOS",precio:50.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0366",nombre:"GUANTES DE NEOPRENO",precio:80.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0367",nombre:"LIGA DE ARPON ARMADA",precio:70.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0368",nombre:"LIGA POR METRO",precio:70.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0369",nombre:"LINTERNA ACUATICA",precio:70.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0370",nombre:"LINTERNA ACUATICA DE MANO",precio:60.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0371",nombre:"MASCARA DE BUCEO",precio:90.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0372",nombre:"MASCARA DE BUCEO CON SNORKEL",precio:120.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0373",nombre:"MASCARA DE BUCEO CON VALVULA",precio:90.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0374",nombre:"MASCARA DE BUCEO OVALADA",precio:50.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0375",nombre:"MASCARA REDONDA DE BUCEO",precio:45.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0376",nombre:"MASCARA REDONDA DE SILICONA",precio:70.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0377",nombre:"MEDIAS DE BUCEO",precio:45.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0378",nombre:"PLOMO PARA BUCEO",precio:60.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0379",nombre:"REMOS",precio:80.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0380",nombre:"REMOS ARMABLES",precio:70.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0381",nombre:"REMOS DE KAYAK 2.18 M",precio:80.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0382",nombre:"SNORKELL",precio:50.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0383",nombre:"TABLA BODYBOARS 41 GRAVITAL",precio:250.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0384",nombre:"TABLA DE ESPUMA REMATE",precio:50.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0385",nombre:"Tornado Giratorio 8 Personas Gravital",precio:5400.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0386",nombre:"VALVULA DE BUSEO",precio:120.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0387",nombre:"WADER DE PESCA",precio:160.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0388",nombre:"WETSUIT DE 10 MM 2 PIEZAS",precio:550.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0389",nombre:"WETSUIT DE 3 MM",precio:250.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0390",nombre:"WETSUIT DE 3 MM",precio:160.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0391",nombre:"WETSUIT DE 5 MM",precio:500.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0392",nombre:"WETSUIT DE 5 MM CAMUFADO",precio:500.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0393",nombre:"WETSUIT DE 5 MM COLOR NEGRO",precio:450.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0394",nombre:"WETSUIT DE 8 MM",precio:470.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0395",nombre:"PISCINA PARA JUEGOS FORMA CAPITAN DEL MAR",precio:162.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0396",nombre:"PICINA ARMABLE DE 244 * 51  CM",precio:257.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0397",nombre:"PICINA CON ASIENTOS",precio:172.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0398",nombre:"PICINA ELIPTICA PARA NIÑOS",precio:151.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0399",nombre:"PICINA INFLABLE CON CANASTA DE BALONCESTO",precio:130.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0400",nombre:"PICINA INFLABLE RECTANGULAR",precio:140.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0401",nombre:"Piscina Armable Rectangular 220x150x60cm Intex",precio:340.0,categoria:"Náutica",estado:"activo"},
-      {id:"p0402",nombre:"PLOMO BOLITA DE 4 G",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0403",nombre:"BARRA DE PLOMO 111G",precio:7.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0404",nombre:"BARRA DE PLOMO 49 G",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0405",nombre:"DESTRABDE DE 60 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0406",nombre:"DESTRABE 108G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0407",nombre:"DESTRABE 130 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0408",nombre:"DESTRABE 145 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0409",nombre:"DESTRABE 90 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0410",nombre:"DESTRABE ALARGADO 130 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0411",nombre:"DESTRABE DE 100 G",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0412",nombre:"DESTRABE DE 100 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0413",nombre:"DESTRABE DE 105 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0414",nombre:"DESTRABE DE 125 G",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0415",nombre:"DESTRABE DE 150 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0416",nombre:"DESTRABE DE 170 G",precio:11.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0417",nombre:"DESTRABE DE 185G",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0418",nombre:"DESTRABE DE 190 G",precio:13.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0419",nombre:"DESTRABE DE 44 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0420",nombre:"DESTRABE DE 50 G",precio:4.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0421",nombre:"DESTRABE DE 70 G",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0422",nombre:"DESTRABE DE 80 G",precio:5.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0423",nombre:"DESTRABE DE 90 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0424",nombre:"DESTRABE DE 95 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0425",nombre:"KIT DE PLOMOS",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0426",nombre:"KIT DE PLOMOS",precio:13.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0427",nombre:"PLOMO  PERA 1 1/2",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0428",nombre:"PLOMO  PERA 1/2",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0429",nombre:"PLOMO  TIPO ESTRELLA 51 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0430",nombre:"PLOMO CON RESORTE 120 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0431",nombre:"PLOMO CON RESORTE 81 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0432",nombre:"PLOMO CON RESORTE 97 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0433",nombre:"PLOMO CON RESORTE DE 56 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0434",nombre:"PLOMO CON SACAVUELTA DE 10 G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0435",nombre:"PLOMO CON SACAVUELTA DE 15 G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0436",nombre:"PLOMO CON SACAVUELTA DE 20 G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0437",nombre:"PLOMO CON SACAVUELTA DE 30 G",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0438",nombre:"PLOMO CON SACAVUELTA DE 40 G",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0439",nombre:"PLOMO CON SACAVUELTA DE 50 G",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0440",nombre:"PLOMO CON SACAVUELTA DE 60 G",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0441",nombre:"PLOMO DE 5G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0442",nombre:"PLOMO DE BOLITA 7G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0443",nombre:"PLOMO EN BARRA 201 G",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0444",nombre:"PLOMO EN BARRA 458 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0445",nombre:"PLOMO ESFERA DE 0.5 G",precio:0.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0446",nombre:"PLOMO ESPERA DE 4G",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0447",nombre:"PLOMO PERA #1",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0448",nombre:"PLOMO PERA #2",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0449",nombre:"PLOMO PERA #3",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0450",nombre:"PLOMO PERA #4",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0451",nombre:"PLOMO PERA #5",precio:4.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0452",nombre:"PLOMO PERA #6",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0453",nombre:"PLOMO PERA 1/4",precio:1.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0454",nombre:"PLOMO PERA 3/4",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0455",nombre:"PLOMO PERA 3/8",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0456",nombre:"PLOMO PERA 7/8",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0457",nombre:"PLOMO PERA DE 1/8",precio:1.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0458",nombre:"PLOMO PIRAMIDE  55 G",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0459",nombre:"PLOMO PIRAMIDE #2",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0460",nombre:"PLOMO PIRAMIDE #3",precio:3.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0461",nombre:"PLOMO PIRAMIDE #4",precio:4.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0462",nombre:"PLOMO PIRAMIDE #5",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0463",nombre:"PLOMO PIRAMIDE 140 G",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0464",nombre:"PLOMO PIRAMIDE 30G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0465",nombre:"PLOMO PIRAMIDE 80 G",precio:3.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0466",nombre:"PLOMO TIPO BALA 3G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0467",nombre:"PLOMO TIPO BALA 5G",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0468",nombre:"PLOMO TURCAMA 145 G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0469",nombre:"ABEJA DE SILICONA CON ANZUELO",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0470",nombre:"ABEJORRO S027",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0471",nombre:"BARBA DE CHIVO",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0472",nombre:"CABEZA DE PLOMO CON DOBLE REPUESTO",precio:35.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0473",nombre:"CABEZA DE PLOMO CON REPUESTO",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0474",nombre:"CAJA DE KRILLS",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0475",nombre:"CALAMAR DE COLORES",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0476",nombre:"CANGREJO 3D",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0477",nombre:"CANGREJO DE SILICONA ROJO",precio:4.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0478",nombre:"CEBO BAGRE  S041",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0479",nombre:"CEBO DURA PARA ATUN S075",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0480",nombre:"GUSANO CON ANZUELO",precio:4.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0481",nombre:"GUSANO CON PLOMO",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0482",nombre:"GUSANO LARGO PARA PESCA",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0483",nombre:"JUEGO DE SEÑUELOS DE COLORES",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0484",nombre:"KIT DE GUSANOS CON PLOMO",precio:35.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0485",nombre:"KIT DE SEÑUELOS",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0486",nombre:"KRILL MEDIANO",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0487",nombre:"KRILLS AMARILLO",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0488",nombre:"KRILLS DE COLORES",precio:0.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0489",nombre:"KRILLS FOSFORECENTES CON ANZUELO",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0490",nombre:"KRILLS MOSTAZA S/A",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0491",nombre:"KRILLS ROJO",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0492",nombre:"LANGOSTINO CON CABEZA DE PLOMO",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0493",nombre:"MINI POPPER S0102",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0494",nombre:"MOSCA BIONICA",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0495",nombre:"MOSCA CON ELICE",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0496",nombre:"MOSCA DE SILICONA CON ANZUELO",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0497",nombre:"MOSCA DE SILICONA ROJA",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0498",nombre:"MOSQUITO POR UND",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0499",nombre:"MOSQUITO S046",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0500",nombre:"MOSQUITOS",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0501",nombre:"MOSQUITOS DE ABEJA",precio:3.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0502",nombre:"PAQUETE  DE SEÑUELOS DE SILICONA 4G",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0503",nombre:"PAQUETE  DE SEÑUELOS DE SILICONA COLORIDO",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0504",nombre:"PAQUETE  DE SEÑUELOS DE SILICONA VERDE",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0505",nombre:"PAQUETE DE GUSANOS",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0506",nombre:"PAQUETE DE GUSANOS DE SILICONA 1G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0507",nombre:"PAQUETE DE KRILLS ROJOS",precio:30.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0508",nombre:"PAQUETE DE MOSQUITOS DE 12 UND",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0509",nombre:"PAQUETE DE PEZ CABEZA DE PLOMO",precio:40.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0510",nombre:"PAQUETE DE SEÑUELOS CON DOBLE REPUESTO",precio:35.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0511",nombre:"PAQUETE DE SEÑUELOS DE SILICONA",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0512",nombre:"PAQUETE DE SEÑUELOS DE SILICONA",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0513",nombre:"PAQUETE DE SEÑUELOS DE SILICONA 3G",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0514",nombre:"PAQUETE DE SEÑULOS DE SILICONA 9 CM",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0515",nombre:"PAQUETE SEÑUELOS DE SILICONA BLANCOS",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0516",nombre:"PAQUETES DE SILICONA FOSTORECENTE 7 G",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0517",nombre:"PAR DE KRILLS MORADOS",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0518",nombre:"PECECILLO COLORIDO PROVEROS 9 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0519",nombre:"PECESILLO COLORIDO PROVEROS PICO LARGO",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0520",nombre:"PECESILLO S068",precio:17.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0521",nombre:"PEGESAPO",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0522",nombre:"PEZ ARTICULADO",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0523",nombre:"PEZ BLANCO",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0524",nombre:"PEZ CABEZA DE PLOMO",precio:7.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0525",nombre:"PEZ CABEZA DE PLOMO ALARGADO",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0526",nombre:"PEZ CON COLA GIRATORIA PROBEROS",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0527",nombre:"PEZ FOSFORECENTE S010",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0528",nombre:"PEZ PLANO  S003",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0529",nombre:"PLANTILLAS DE PESCADOS",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0530",nombre:"POPPER  ALARGADO",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0531",nombre:"POPPER ALARGAD",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0532",nombre:"POPPER ALARGADO S018",precio:16.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0533",nombre:"POPPER ALARGADO S036",precio:17.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0534",nombre:"POPPER FOSFORECENTE S030",precio:14.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0535",nombre:"POPPER S032",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0536",nombre:"POPPER S034",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0537",nombre:"POPPER S076",precio:17.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0538",nombre:"POPPER TIPO MOSCA",precio:4.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0539",nombre:"RENACUAJO DE SILICONA",precio:6.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0540",nombre:"RENACUAJO DE SILICONA PEQUEÑO",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0541",nombre:"SEBO PEQUEÑO S008",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0542",nombre:"SEÑUELO  DE PEZ CON COLA GIRATORIA",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0543",nombre:"SEÑUELO  DE PEZ S063",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0544",nombre:"SEÑUELO  DE SILICONA 4G",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0545",nombre:"SEÑUELO DE CALAMAR S069",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0546",nombre:"SEÑUELO DE CALAMAR S094",precio:5.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0547",nombre:"SEÑUELO DE GUSANOS DE SILICONA POR UND",precio:1.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0548",nombre:"SEÑUELO DE KRILL S051",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0549",nombre:"SEÑUELO DE MOSQUITO CON ELICE",precio:8.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0550",nombre:"SEÑUELO DE PESCA Minnow S071",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0551",nombre:"SEÑUELO DE PESCA Minnow S072",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0552",nombre:"SEÑUELO DE PEZ  S004",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0553",nombre:"SEÑUELO DE PEZ  S006",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0554",nombre:"SEÑUELO DE PEZ 15 G",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0555",nombre:"SEÑUELO DE PEZ CON CABEZA DE PLOMO",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0556",nombre:"SEÑUELO DE PEZ CON COLA GIRATORIA ALARGADO S020",precio:17.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0557",nombre:"SEÑUELO DE PEZ CON COLA GIRATORIA S020",precio:17.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0558",nombre:"SEÑUELO DE PEZ CON VIBRACION",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0559",nombre:"SEÑUELO DE PEZ FLORANTE",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0560",nombre:"SEÑUELO DE PEZ FOSFORECENTES",precio:1.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0561",nombre:"SEÑUELO DE PEZ KAIDA",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0562",nombre:"SEÑUELO DE PEZ PARA AGUA PROFUNDAS S074",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0563",nombre:"SEÑUELO DE PEZ S005",precio:14.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0564",nombre:"SEÑUELO DE PEZ S007",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0565",nombre:"SEÑUELO DE PEZ S0100",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0566",nombre:"SEÑUELO DE PEZ S011",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0567",nombre:"SEÑUELO DE PEZ S013",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0568",nombre:"SEÑUELO DE PEZ S014",precio:14.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0569",nombre:"SEÑUELO DE PEZ S015",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0570",nombre:"SEÑUELO DE PEZ S017",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0571",nombre:"SEÑUELO DE PEZ S019",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0572",nombre:"SEÑUELO DE PEZ S021",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0573",nombre:"SEÑUELO DE PEZ S022",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0574",nombre:"SEÑUELO DE PEZ S023",precio:14.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0575",nombre:"SEÑUELO DE PEZ S024",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0576",nombre:"SEÑUELO DE PEZ S026",precio:14.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0577",nombre:"SEÑUELO DE PEZ S028",precio:14.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0578",nombre:"SEÑUELO DE PEZ S029",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0579",nombre:"SEÑUELO DE PEZ S035",precio:16.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0580",nombre:"SEÑUELO DE PEZ S038",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0581",nombre:"SEÑUELO DE PEZ S039",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0582",nombre:"SEÑUELO DE PEZ S042",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0583",nombre:"SEÑUELO DE PEZ S044",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0584",nombre:"SEÑUELO DE PEZ S047",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0585",nombre:"SEÑUELO DE PEZ S052",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0586",nombre:"SEÑUELO DE PEZ S056",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0587",nombre:"SEÑUELO DE PEZ S058",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0588",nombre:"SEÑUELO DE PEZ S060",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0589",nombre:"SEÑUELO DE PEZ S064",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0590",nombre:"SEÑUELO DE PEZ S066",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0591",nombre:"SEÑUELO DE PEZ S067",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0592",nombre:"SEÑUELO DE PEZ S073",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0593",nombre:"SEÑUELO DE PEZ S078",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0594",nombre:"SEÑUELO DE PEZ S078",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0595",nombre:"SEÑUELO DE PEZ S080",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0596",nombre:"SEÑUELO DE PEZ S081",precio:18.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0597",nombre:"SEÑUELO DE PEZ S091",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0598",nombre:"SEÑUELO DE PEZ S092",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0599",nombre:"SEÑUELO DE PEZ S093",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0600",nombre:"SEÑUELO DE PEZ S096",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0601",nombre:"SEÑUELO DE PEZ S098",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0602",nombre:"SEÑUELO DE PEZ S099",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0603",nombre:"SEÑUELO DE PEZ Wobbler Minnow S070",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0604",nombre:"SEÑUELO DE SILICONA DE PEZ",precio:2.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0605",nombre:"SEÑUELO PARA CALAMARES",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0606",nombre:"SEÑUELO PEZ S009",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0607",nombre:"SEÑUELO POPPER S097",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0608",nombre:"SEÑUELO S0101",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0609",nombre:"SEÑUELO TIPO RANA S043",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0610",nombre:"SEÑUELO TIPO RANA S095",precio:12.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0611",nombre:"SEÑUELO TIPO RATON S0103",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0612",nombre:"SEÑUELOS DE PEZ",precio:25.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0613",nombre:"SEÑUELOS DE PEZ S065",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0614",nombre:"SEÑUELOS DE PEZ S090",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0615",nombre:"SEÑUELOS DE SILICONA COLORIDOS",precio:10.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0616",nombre:"SEÑUELOS DE SILICONA DE COLORES",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0617",nombre:"SEÑUELOS DURO MINNOW S012",precio:15.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0618",nombre:"SEÑUELOS POR UND DE PEZ",precio:9.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0619",nombre:"ZALT S077",precio:20.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0620",nombre:"ZIPLO DE GUSANO",precio:1.0,categoria:"Pesca",estado:"activo"},
-      {id:"p0621",nombre:"ZIPLO DE GUSANOS BLANCOS",precio:2.5,categoria:"Pesca",estado:"activo"},
-      {id:"p0622",nombre:"ZIPLO DE SEÑUELOS",precio:2.5,categoria:"Pesca",estado:"activo"}]);
-  }
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-// ═══════════════════════════════════════
-//  RELOJ / FECHA HEADER
-// ═══════════════════════════════════════
-function actualizarReloj() {
-  const d = new Date();
-  const fecha = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  const hora  = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-  document.getElementById('headerDate').innerHTML = `${fecha}<br>${hora}`;
+function renderNavCats(){
+  const el = document.getElementById('navCats');
+  const top = CATS.filter(c => c.cantidad > 0).slice(0, 20);
+  el.innerHTML = `<button class="nav-chip home" onclick="goHome()">🏠 Inicio</button>` +
+    top.map(c => `<button class="nav-chip" onclick="goCat('${c.slug}')">${c.nombre}</button>`).join('');
 }
 
-// ═══════════════════════════════════════
-//  NAVEGACIÓN
-// ═══════════════════════════════════════
-const secciones = ['hoy','historial','productos','vendedores'];
+function mostrarHome(){
+  document.getElementById('viewHome').style.display = 'block';
+  document.getElementById('viewProds').style.display = 'none';
+  document.querySelectorAll('.nav-chip').forEach(x => x.classList.remove('active'));
 
-function goTo(sec) {
-  secciones.forEach(s => {
-    document.getElementById(`sec-${s}`).classList.toggle('active', s === sec);
-    document.getElementById(`nav-${s}`).classList.toggle('active', s === sec);
-  });
-  document.querySelector('.fab').style.display = sec === 'hoy' ? 'flex' : 'none';
-  if (sec === 'hoy')        { renderDashboard(); renderIngresos(); }
-  if (sec === 'historial')  { renderHistorial(); }
-  if (sec === 'productos')  { renderProductos(); }
-  if (sec === 'vendedores') { renderVendedores(); }
-  document.getElementById('productoDropdown').classList.remove('open');
-}
+  const catGrid = document.getElementById('catGrid');
+  const conProds = CATS.filter(c => c.cantidad > 0);
+  document.getElementById('totalCats').textContent = `${conProds.length} categorías · ${PRODS.length} productos disponibles`;
 
-// ═══════════════════════════════════════
-//  MODAL INGRESO
-// ═══════════════════════════════════════
-function abrirModalIngreso() {
-  // reset carrito
-  carrito = [];
-  productoTemp = null;
-  renderCarrito();
-  document.getElementById('fProductoSearch').value = '';
-  document.getElementById('fProductoId').value = '';
-  document.getElementById('addProductRow').style.display = 'none';
-  document.getElementById('fNota').value = '';
-  document.getElementById('checkAdelanto').checked = false;
-  document.getElementById('adelantoPanel').style.display = 'none';
-  document.getElementById('fAdelanto').value = '';
-  document.getElementById('fPendiente').value = '';
-  document.getElementById('pagoToggleWrap').style.display = 'none';
-
-  // vendedores activos
-  const vendedores = cargar(KEY_VENDEDORES).filter(v => v.estado === 'activo');
-  const sel = document.getElementById('fVendedor');
-  sel.innerHTML = '<option value="">— Seleccionar vendedor —</option>';
-  vendedores.forEach(v => {
-    sel.innerHTML += `<option value="${v.nombre}">${v.nombre}</option>`;
-  });
-
-  // hora actual
-  const d = new Date();
-  document.getElementById('fHora').value =
-    `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-
-  document.getElementById('modalIngresoOverlay').classList.add('open');
-}
-
-function cerrarModalIngreso() {
-  document.getElementById('modalIngresoOverlay').classList.remove('open');
-  document.getElementById('productoDropdown').classList.remove('open');
-}
-
-
-// ── CARRITO DE PRODUCTOS ──
-let carrito = [];         // [{ nombre, precio, cantidad, categoria }]
-let productoTemp = null;  // producto seleccionado antes de agregar
-
-function filtrarProductos() {
-  const q = document.getElementById('fProductoSearch').value.toLowerCase().trim();
-  const productos = cargar(KEY_PRODUCTOS).filter(p => p.estado === 'activo');
-  const filtrados = q
-    ? productos.filter(p => p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q))
-    : productos;
-  renderDropdown(filtrados);
-  mostrarDropdown();
-}
-
-function mostrarDropdown() {
-  const q = document.getElementById('fProductoSearch').value.toLowerCase().trim();
-  const productos = cargar(KEY_PRODUCTOS).filter(p => p.estado === 'activo');
-  const filtrados = q
-    ? productos.filter(p => p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q))
-    : productos;
-  renderDropdown(filtrados);
-  document.getElementById('productoDropdown').classList.add('open');
-}
-
-function renderDropdown(lista) {
-  const dd = document.getElementById('productoDropdown');
-  if (!lista.length) {
-    dd.innerHTML = '<div class="dropdown-item" style="color:var(--text3);font-size:0.8rem">Sin resultados</div>';
-    return;
-  }
-  dd.innerHTML = lista.map(p => `
-    <div class="dropdown-item" onclick="seleccionarProducto('${p.id}')">
-      <div class="dropdown-item-name">${p.nombre}</div>
-      <div class="dropdown-item-meta">${p.categoria} · S/ ${Number(p.precio).toFixed(2)}</div>
-    </div>
-  `).join('');
-}
-
-function seleccionarProducto(id) {
-  const p = cargar(KEY_PRODUCTOS).find(x => x.id === id);
-  if (!p) return;
-  productoTemp = p;
-  document.getElementById('fProductoSearch').value = p.nombre;
-  document.getElementById('fProductoId').value = p.id;
-  document.getElementById('fPrecioItem').value = Number(p.precio).toFixed(2);
-  document.getElementById('fCantidad').value = '1';
-  document.getElementById('addProductRow').style.display = 'block';
-  document.getElementById('productoDropdown').classList.remove('open');
-}
-
-function agregarItemAlCarrito() {
-  if (!productoTemp) { toast('Selecciona un producto', 'error'); return; }
-  const precio = parseFloat(document.getElementById('fPrecioItem').value) || 0;
-  const cantidad = parseInt(document.getElementById('fCantidad').value) || 1;
-  if (precio <= 0) { toast('Precio inválido', 'error'); return; }
-
-  carrito.push({ nombre: productoTemp.nombre, precio, cantidad, categoria: productoTemp.categoria });
-  productoTemp = null;
-  document.getElementById('fProductoSearch').value = '';
-  document.getElementById('fProductoId').value = '';
-  document.getElementById('addProductRow').style.display = 'none';
-  renderCarrito();
-}
-
-function quitarItemCarrito(idx) {
-  carrito.splice(idx, 1);
-  renderCarrito();
-}
-
-function renderCarrito() {
-  const lista = document.getElementById('carritoLista');
-  const totalEl = document.getElementById('carritoTotal');
-  const totalValor = document.getElementById('carritoTotalValor');
-  const count = document.getElementById('carritoCount');
-  const toggleWrap = document.getElementById('pagoToggleWrap');
-
-  count.textContent = `${carrito.length} ítem${carrito.length !== 1 ? 's' : ''}`;
-
-  if (!carrito.length) {
-    lista.innerHTML = '';
-    totalEl.style.display = 'none';
-    toggleWrap.style.display = 'none';
-    document.getElementById('adelantoPanel').style.display = 'none';
-    document.getElementById('checkAdelanto').checked = false;
-    return;
-  }
-
-  lista.innerHTML = carrito.map((item, idx) => `
-    <div class="carrito-item">
-      <div class="carrito-item-info">
-        <div class="carrito-item-nombre">${item.nombre}</div>
-        <div class="carrito-item-meta">${item.cantidad > 1 ? `${item.cantidad} × S/ ${item.precio.toFixed(2)}` : `S/ ${item.precio.toFixed(2)}`} · ${item.categoria}</div>
+  catGrid.innerHTML = conProds.map(c => {
+    const img = c.imagen
+      ? `<img class="cat-img" src="${c.imagen}" alt="${c.nombre}" loading="lazy">`
+      : `<div class="cat-img-ph">📦</div>`;
+    const desc = c.descripcion || `Descubre nuestros productos de ${c.nombre.toLowerCase()}`;
+    return `<div class="cat-card" onclick="goCat('${c.slug}')">
+      <div class="cat-img-wrap">
+        ${img}
+        <span class="cat-count-badge">${c.cantidad} productos</span>
       </div>
-      <span class="carrito-item-precio">S/ ${(item.precio * item.cantidad).toFixed(2)}</span>
-      <button class="carrito-item-del" onclick="quitarItemCarrito(${idx})">✕</button>
-    </div>
-  `).join('');
-
-  const total = carrito.reduce((s, i) => s + i.precio * i.cantidad, 0);
-  totalValor.textContent = `S/ ${total.toFixed(2)}`;
-  totalEl.style.display = 'flex';
-  toggleWrap.style.display = 'block';
-  calcularPendiente();
-}
-
-function toggleAdelanto() {
-  const activo = document.getElementById('checkAdelanto').checked;
-  document.getElementById('adelantoPanel').style.display = activo ? 'block' : 'none';
-  if (activo) {
-    document.getElementById('fAdelanto').focus();
-    calcularPendiente();
-  }
-}
-
-function calcularPendiente() {
-  const total = carrito.reduce((s, i) => s + i.precio * i.cantidad, 0);
-  const adelanto = parseFloat(document.getElementById('fAdelanto').value) || 0;
-  const pendiente = Math.max(0, total - adelanto);
-  document.getElementById('fPendiente').value = `S/ ${pendiente.toFixed(2)}`;
-}
-
-// Cerrar dropdown al hacer click fuera
-document.addEventListener('click', e => {
-  const box = document.querySelector('.search-box');
-  if (box && !box.contains(e.target)) {
-    document.getElementById('productoDropdown').classList.remove('open');
-  }
-});
-
-// ═══════════════════════════════════════
-//  REGISTRAR INGRESO
-// ═══════════════════════════════════════
-function registrarIngreso() {
-  const vendedor = document.getElementById('fVendedor').value.trim();
-  const metodo   = document.getElementById('fMetodo').value;
-  const hora     = document.getElementById('fHora').value;
-  let nota       = document.getElementById('fNota').value.trim();
-
-  if (!vendedor)       { toast('Selecciona un vendedor', 'error'); return; }
-  if (!carrito.length) { toast('Agrega al menos un producto', 'error'); return; }
-  if (!hora)           { toast('Indica la hora', 'error'); return; }
-
-  const totalProductos = carrito.reduce((s, i) => s + i.precio * i.cantidad, 0);
-  const esAdelanto = document.getElementById('checkAdelanto').checked;
-  let monto = totalProductos;
-  let pendiente = 0;
-
-  if (esAdelanto) {
-    monto = parseFloat(document.getElementById('fAdelanto').value) || 0;
-    if (monto <= 0) { toast('Ingresa el monto recibido', 'error'); return; }
-    if (monto > totalProductos) { toast('El adelanto no puede superar el total', 'error'); return; }
-    pendiente = totalProductos - monto;
-    // auto-agregar nota de pendiente
-    const notaBase = nota ? nota + ' · ' : '';
-    nota = `${notaBase}ADELANTO — Total: S/ ${totalProductos.toFixed(2)} · Pendiente: S/ ${pendiente.toFixed(2)}`;
-  }
-
-  // categoría más frecuente del carrito
-  const freqCat = {};
-  carrito.forEach(p => { freqCat[p.categoria] = (freqCat[p.categoria]||0) + 1; });
-  const categoria = Object.entries(freqCat).sort((a,b) => b[1]-a[1])[0][0];
-
-  const ingreso = {
-    id: uid(),
-    vendedor,
-    productos: carrito.slice(),
-    producto: carrito.map(i => i.cantidad > 1 ? `${i.nombre} ×${i.cantidad}` : i.nombre).join(', '),
-    monto,
-    totalProductos: esAdelanto ? totalProductos : null,
-    pendiente: esAdelanto ? pendiente : 0,
-    esAdelanto,
-    metodo,
-    categoria,
-    hora,
-    nota,
-    ts: Date.now()
-  };
-
-  const key = keyIngresos(fechaHoy());
-  const ingresos = cargar(key);
-  ingresos.push(ingreso);
-  guardar(key, ingresos);
-
-  cerrarModalIngreso();
-  toast('¡Ingreso registrado!');
-  renderDashboard();
-  renderIngresos();
-}
-
-// ═══════════════════════════════════════
-//  DASHBOARD
-// ═══════════════════════════════════════
-function renderDashboard() {
-  const hoy = fechaHoy();
-  const ingresos = cargar(keyIngresos(hoy));
-  const total = ingresos.reduce((s, i) => s + Number(i.monto), 0);
-
-  // ── KPI principal ──
-  document.getElementById('dashTotal').textContent = `S/ ${total.toFixed(2)}`;
-  document.getElementById('dashCount').textContent =
-    `${ingresos.length} venta${ingresos.length !== 1 ? 's' : ''}`;
-
-  // ── KPI semana / mes ──
-  const ahora = new Date();
-  const iniSemana = new Date(ahora); iniSemana.setDate(ahora.getDate() - ahora.getDay()); iniSemana.setHours(0,0,0,0);
-  const iniMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-  let totalSemana = 0, totalMes = 0;
-  obtenerTodasFechas().concat([hoy]).forEach(f => {
-    const d = new Date(f + 'T00:00:00');
-    const t = cargar(keyIngresos(f)).reduce((s,i) => s + Number(i.monto), 0);
-    if (d >= iniSemana) totalSemana += t;
-    if (d >= iniMes)    totalMes    += t;
-  });
-  document.getElementById('kpiSemana').textContent = `S/ ${totalSemana.toFixed(2)}`;
-  document.getElementById('kpiMes').textContent    = `S/ ${totalMes.toFixed(2)}`;
-
-  // ── GRÁFICO 7 DÍAS ──
-  const dias7 = [];
-  const DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(ahora); d.setDate(ahora.getDate() - i);
-    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    dias7.push({ label: DIAS[d.getDay()], total: cargar(keyIngresos(key)).reduce((s,x) => s + Number(x.monto), 0), isToday: i === 0 });
-  }
-  const maxDia = Math.max(...dias7.map(d => d.total), 1);
-  const BW = 34, GAP = 10, PL = 8, H = 120, BARMAX = 72;
-  const svgW = dias7.length * (BW + GAP) + PL * 2 - GAP;
-  const barsHTML = dias7.map((d, i) => {
-    const x = PL + i * (BW + GAP);
-    const bh = Math.max(3, (d.total / maxDia) * BARMAX);
-    const by = H - 22 - bh;
-    const fill = d.isToday ? 'url(#gBar)' : '#E0E7FF';
-    const txtFill = d.isToday ? '#4F46E5' : '#8888B8';
-    const fw = d.isToday ? '700' : '400';
-    const valStr = d.total > 0 ? (d.total >= 1000 ? (d.total/1000).toFixed(1)+'k' : d.total.toFixed(0)) : '';
-    return `
-      <rect x="${x}" y="${by}" width="${BW}" height="${bh}" rx="6" fill="${fill}"/>
-      ${valStr ? `<text x="${x+BW/2}" y="${by-5}" text-anchor="middle" font-size="8.5" fill="${txtFill}" font-family="JetBrains Mono,monospace" font-weight="700">${valStr}</text>` : ''}
-      <text x="${x+BW/2}" y="${H-4}" text-anchor="middle" font-size="10" fill="${txtFill}" font-family="Rajdhani,sans-serif" font-weight="${fw}">${d.label}</text>
-    `;
-  }).join('');
-  document.getElementById('chart7dias').innerHTML = `
-    <div class="chart-bar-wrap">
-      <svg viewBox="0 0 ${svgW} ${H}" width="100%" style="min-width:280px">
-        <defs>
-          <linearGradient id="gBar" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#6366F1"/>
-            <stop offset="100%" stop-color="#818CF8"/>
-          </linearGradient>
-        </defs>
-        ${barsHTML}
-      </svg>
+      <div class="cat-body">
+        <div class="cat-name">${c.nombre}</div>
+        <div class="cat-desc">${desc}</div>
+        <div class="cat-link">Ver productos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
     </div>`;
-
-  // ── MÉTODOS DE PAGO ──
-  const METODOS = ['Efectivo','Yape','Plin','BCP','Interbank','BBVA','Banco de la Nación'];
-  const porMetodo = {};
-  ingresos.forEach(i => { porMetodo[i.metodo] = (porMetodo[i.metodo]||0) + Number(i.monto); });
-  const metActivos = METODOS.filter(m => (porMetodo[m]||0) > 0).sort((a,b) => porMetodo[b]-porMetodo[a]);
-  const maxMet = metActivos.length ? porMetodo[metActivos[0]] : 1;
-  document.getElementById('dashMetodos').innerHTML = metActivos.length
-    ? metActivos.map(m => `
-        <div class="metodo-bar-item">
-          <div class="metodo-bar-header">
-            <span class="metodo-bar-name">${m}</span>
-            <span class="metodo-bar-val">S/ ${porMetodo[m].toFixed(2)}</span>
-          </div>
-          <div class="metodo-bar-track">
-            <div class="metodo-bar-fill" style="width:${(porMetodo[m]/maxMet*100).toFixed(1)}%"></div>
-          </div>
-        </div>`).join('')
-    : `<div style="color:var(--text3);font-size:0.78rem;font-family:Rajdhani,sans-serif;padding:4px 0">Sin datos hoy</div>`;
-
-  // ── RANKING VENDEDORES ──
-  const porVend = {};
-  ingresos.forEach(i => { porVend[i.vendedor] = (porVend[i.vendedor]||0) + Number(i.monto); });
-  const vends = Object.entries(porVend).sort((a,b) => b[1]-a[1]);
-  const maxVend = vends.length ? vends[0][1] : 1;
-  const medals = ['🥇','🥈','🥉'];
-  document.getElementById('dashVendedores').innerHTML = vends.length
-    ? vends.map(([nombre, val], idx) => `
-        <div class="vend-bar-item">
-          <div class="vend-bar-header">
-            <span>${medals[idx]||'  '} ${nombre}</span>
-            <span class="vend-bar-val">S/ ${val.toFixed(2)}</span>
-          </div>
-          <div class="vend-bar-track">
-            <div class="vend-bar-fill" style="width:${(val/maxVend*100).toFixed(1)}%"></div>
-          </div>
-        </div>`).join('')
-    : `<div style="color:var(--text3);font-size:0.78rem;font-family:Rajdhani,sans-serif;padding:4px 0">Sin ventas hoy</div>`;
-
-  // ── CATEGORÍAS ──
-  const CAT_COLORS = { Pesca:'#0096FF', Caza:'#FF6432', Buceo:'#00C2E0', 'Náutica':'#5B5BD6', Accesorios:'#D4A010', Otros:'#9664DC' };
-  const porCat = {};
-  ingresos.forEach(i => {
-    const prods = (i.productos && i.productos.length)
-      ? i.productos
-      : [{ categoria: i.categoria, precio: i.monto, cantidad: 1 }];
-    prods.forEach(p => { porCat[p.categoria] = (porCat[p.categoria]||0) + (p.precio * p.cantidad); });
-  });
-  const cats = Object.entries(porCat).sort((a,b) => b[1]-a[1]);
-  const maxCat = cats.length ? cats[0][1] : 1;
-  document.getElementById('dashCategorias').innerHTML = cats.length
-    ? cats.map(([cat, val]) => `
-        <div class="cat-bar-item">
-          <span class="cat-bar-label">${cat}</span>
-          <div class="cat-bar-track">
-            <div class="cat-bar-fill" style="width:${(val/maxCat*100).toFixed(1)}%;background:${CAT_COLORS[cat]||'#8888B8'}"></div>
-          </div>
-          <span class="cat-bar-val">S/ ${val.toFixed(2)}</span>
-        </div>`).join('')
-    : `<div style="color:var(--text3);font-size:0.78rem;font-family:Rajdhani,sans-serif;padding:4px 0">Sin datos hoy</div>`;
-}
-
-// ═══════════════════════════════════════
-//  LISTA INGRESOS HOY
-// ═══════════════════════════════════════
-function renderIngresos(fecha) {
-  fecha = fecha || fechaHoy();
-  const ingresos = cargar(keyIngresos(fecha)).slice().reverse();
-  const div = document.getElementById('listaIngresos');
-
-  if (!ingresos.length) {
-    div.innerHTML = `
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/>
-        </svg>
-        <p>Aún no hay ingresos registrados hoy</p>
-      </div>
-    `;
-    return;
-  }
-
-  div.innerHTML = ingresos.map(i => {
-    const catClass = `cat-${(i.categoria||'Otros').replace(/á/g,'a').replace(/ú/g,'u')}`;
-    const prods = (i.productos && i.productos.length) ? i.productos : [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
-    const itemsHtml = prods.map(p => `
-      <div class="ingreso-prod-row">
-        <span class="ingreso-prod-nombre">${p.nombre}${p.cantidad > 1 ? ` <span class="ingreso-prod-cant">×${p.cantidad}</span>` : ''}</span>
-        <span class="ingreso-prod-sub">S/ ${(p.precio * p.cantidad).toFixed(2)}</span>
-      </div>
-    `).join('');
-    return `
-      <div class="ingreso-item" id="item-${i.id}">
-        <div class="ingreso-info">
-          <div class="ingreso-top">
-            <span class="ingreso-monto">S/ ${Number(i.monto).toFixed(2)}</span>
-            <span class="ingreso-metodo">${i.metodo}</span>
-            <span class="ingreso-hora">${i.hora}</span>
-          </div>
-          <div class="ingreso-vend-row">
-            <span class="ingreso-vendedor">${i.vendedor}</span>
-            <span class="badge-cat ${catClass}">${i.categoria}</span>
-          </div>
-          <div class="ingreso-prods">${itemsHtml}</div>
-          ${i.esAdelanto ? `<div class="badge-pendiente">⏳ PENDIENTE S/ ${Number(i.pendiente).toFixed(2)} · Total S/ ${Number(i.totalProductos).toFixed(2)}</div>` : ''}
-          ${i.nota && !i.esAdelanto ? `<div class="ingreso-nota">📝 ${i.nota}</div>` : ''}
-        </div>
-        <button class="btn btn-danger" onclick="eliminarIngreso('${fecha}','${i.id}')">✕</button>
-      </div>
-    `;
   }).join('');
 }
 
-function eliminarIngreso(fecha, id) {
-  if (!confirm('¿Eliminar este ingreso?')) return;
-  const key = keyIngresos(fecha);
-  const ingresos = cargar(key).filter(i => i.id !== id);
-  guardar(key, ingresos);
-  if (fecha === fechaHoy()) {
-    renderDashboard();
-    renderIngresos();
-  }
-  toast('Ingreso eliminado');
+function mostrarCategoria(slug){
+  const cat = CAT_BY_NAME[slug];
+  document.getElementById('viewHome').style.display = 'none';
+  document.getElementById('viewProds').style.display = 'block';
+  document.querySelectorAll('.nav-chip').forEach(x => x.classList.toggle('active', x.textContent.trim() === (cat?.nombre||'')));
+
+  fCat = slug;
+  page = 1;
+  document.getElementById('q').value = '';
+  fQ = '';
+  document.getElementById('qClear').classList.remove('show');
+
+  const crumb = document.getElementById('crumb');
+  crumb.innerHTML = `<a onclick="goHome()">🏠 Inicio</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">${cat ? cat.nombre : slug}</span>`;
+
+  render();
 }
 
-// ═══════════════════════════════════════
-//  HISTORIAL
-// ═══════════════════════════════════════
-function obtenerTodasFechas() {
-  const fechas = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k && k.startsWith('cpn_ingresos_')) {
-      fechas.push(k.replace('cpn_ingresos_',''));
+function filtrar(){
+  const q = norm(fQ);
+  let arr = PRODS;
+  // Filtro por categoría:
+  //   1º match exacto de p.categoriaWeb (86% de productos lo tienen bien poblado)
+  //   2º SOLO productos sin categoriaWeb: fallback keyword del slug
+  // NO usamos SLUG_TO_CPN_CAT como catch-all porque incluía 'Pesca' y traía todo el catálogo.
+  if (fCat) {
+    const catObj = CAT_BY_NAME[fCat];
+    if (catObj) {
+      const nombreCatN = norm(catObj.nombre);
+      // Keywords específicas del slug (palabras largas para evitar falsos positivos)
+      const slugKw = fCat.split('-').filter(k => k.length > 4 && !['pesca','buceo','otros'].includes(k));
+      arr = arr.filter(p => {
+        // 1) Match exacto por categoriaWeb
+        if (norm(p.categoriaWeb) === nombreCatN) return true;
+        // 2) Fallback SOLO para productos sin categoriaWeb: keyword del slug en el nombre
+        if (!p.categoriaWeb && slugKw.length) {
+          const nP = norm(p.nombre);
+          return slugKw.some(k => nP.includes(k));
+        }
+        return false;
+      });
     }
   }
-  return fechas.sort().reverse();
+  if (q) arr = arr.filter(p => norm(p.nombre).includes(q) || norm(p.sku).includes(q) || norm(p.categoria).includes(q));
+
+  if (sort === 'nombre') arr.sort((a,b) => (a.nombre||'').localeCompare(b.nombre||''));
+  else if (sort === 'precio-asc')  arr.sort((a,b) => Number(a.precio) - Number(b.precio));
+  else if (sort === 'precio-desc') arr.sort((a,b) => Number(b.precio) - Number(a.precio));
+  return arr;
 }
 
-function renderHistorial() {
-  const filtroVend = document.getElementById('filtroVendedor').value;
-
-  // cargar opciones vendedor
-  const vendedores = cargar(KEY_VENDEDORES);
-  const selFiltro = document.getElementById('filtroVendedor');
-  const valActual = selFiltro.value;
-  selFiltro.innerHTML = '<option value="">Todos los vendedores</option>';
-  vendedores.forEach(v => {
-    selFiltro.innerHTML += `<option value="${v.nombre}" ${v.nombre===valActual?'selected':''}>${v.nombre}</option>`;
-  });
-
-  const fechas = obtenerTodasFechas();
-  const hoy = fechaHoy();
-
-  let totalSemana = 0, totalMes = 0;
-  const ahora = new Date();
-  const iniSemana = new Date(ahora);
-  iniSemana.setDate(ahora.getDate() - ahora.getDay());
-  iniSemana.setHours(0,0,0,0);
-  const iniMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-
-  const div = document.getElementById('listaHistorial');
-
-  if (!fechas.length) {
-    div.innerHTML = '<div class="empty-state"><p>Sin historial aún</p></div>';
-    document.getElementById('resumenSemana').textContent = 'S/ 0.00';
-    document.getElementById('resumenMes').textContent = 'S/ 0.00';
-    return;
-  }
-
-  div.innerHTML = fechas.filter(f => f !== hoy).map(fecha => {
-    let ingresos = cargar(keyIngresos(fecha));
-    if (filtroVend) ingresos = ingresos.filter(i => i.vendedor === filtroVend);
-    const total = ingresos.reduce((s,i) => s + Number(i.monto), 0);
-
-    // acumular
-    const d = new Date(fecha + 'T00:00:00');
-    if (d >= iniSemana) totalSemana += total;
-    if (d >= iniMes)    totalMes    += total;
-
-    const [y,m,dd2] = fecha.split('-');
-    const fechaFmt = `${dd2}/${m}/${y}`;
-    const diasSemana = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    const diaSem = diasSemana[d.getDay()];
-    const metodos = {};
-    ingresos.forEach(i => { metodos[i.metodo] = (metodos[i.metodo]||0) + Number(i.monto); });
-    const metodoRes = Object.entries(metodos).map(([m,v]) => `${m}: S/ ${v.toFixed(2)}`).join(' · ');
-
-    return `
-      <div class="history-day" onclick="verDia('${fecha}')">
-        <div class="history-day-header">
-          <span class="history-date">${diaSem} ${fechaFmt}</span>
-          <span class="history-total">S/ ${total.toFixed(2)}</span>
+function render(){
+  const arr = filtrar();
+  const grid = document.getElementById('grid');
+  const loading = document.getElementById('loading');
+  const empty = document.getElementById('empty');
+  const lmw = document.getElementById('lmWrap');
+  const cnt = document.getElementById('rCount');
+  loading.style.display = 'none';
+  if (!arr.length){grid.style.display='none';empty.style.display='block';lmw.style.display='none';cnt.textContent='Sin resultados';return}
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
+  const total = arr.length, show = Math.min(page*PAGE, total), vis = arr.slice(0, show);
+  cnt.innerHTML = `Mostrando <b>${vis.length}</b> de <b>${total}</b> productos${fQ?` para "<b>${fQ}</b>"`:''}`;
+  grid.innerHTML = vis.map((p,i) => {
+    // Toma la primera imagen del array `imagenes` si existe, si no `imagen` (compat)
+    const primaryUrl = (Array.isArray(p.imagenes) && p.imagenes[0]) ? p.imagenes[0] : p.imagen;
+    const hasImg = primaryUrl && /^https?:\/\//.test(primaryUrl);
+    const iconoPorCat = _iconoCategoria(p.categoriaWeb || p.categoria || '');
+    const nombreSafe = (p.nombre||'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    // Proxy images.weserv.nl para resize a 400px + WebP → tienda carga MUCHO más rápido
+    // (sirve imágenes originalmente pesadas de i.imgur/alicdn/etc a ~50 KB con CORS abierto)
+    const srcOptimizada = hasImg
+      ? `https://images.weserv.nl/?url=${encodeURIComponent(primaryUrl.replace(/^https?:\/\//,''))}&w=400&h=400&fit=inside&output=webp&q=80`
+      : '';
+    const img = hasImg
+      ? `<img class="card-img" src="${srcOptimizada}" alt="${nombreSafe}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='${primaryUrl.replace(/'/g,'&#39;')}';}else{this.parentElement.innerHTML=this.parentElement.getAttribute('data-fallback')||''}">`
+      : `<div class="card-img-ph"><div class="card-img-ph-icon">${iconoPorCat}</div><div class="card-img-ph-brand">CPN Sports</div><div class="card-img-ph-name">${nombreSafe}</div></div>`;
+    const sku = p.sku ? `<div class="card-sku">${p.sku}</div>` : `<div class="card-sku">&nbsp;</div>`;
+    return `<div class="card" data-i="${i}">
+      <div class="card-img-wrap">${img}</div>
+      <div class="card-body">
+        <div class="card-cat">${p.categoriaWeb || p.categoria || 'Otros'}</div>
+        <div class="card-name">${p.nombre}</div>
+        ${sku}
+        <div class="card-price-row">
+          <span class="card-price">${fmt(p.precio)}</span>
+          <button class="card-wa" data-w="${i}" aria-label="Pedir">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+            Pedir
+          </button>
         </div>
-        <div class="history-meta">${ingresos.length} transacciones${metodoRes ? ' · '+metodoRes : ''}</div>
       </div>
-    `;
-  }).join('') || '<div style="color:var(--text3);font-size:0.85rem;padding:12px">Sin días anteriores</div>';
-
-  // agregar hoy al total semana/mes
-  const ingresoHoy = cargar(keyIngresos(hoy));
-  const filtrados = filtroVend ? ingresoHoy.filter(i => i.vendedor === filtroVend) : ingresoHoy;
-  const totalHoy = filtrados.reduce((s,i) => s + Number(i.monto), 0);
-  const dHoy = new Date(hoy + 'T00:00:00');
-  if (dHoy >= iniSemana) totalSemana += totalHoy;
-  if (dHoy >= iniMes)    totalMes    += totalHoy;
-
-  document.getElementById('resumenSemana').textContent = `S/ ${totalSemana.toFixed(2)}`;
-  document.getElementById('resumenMes').textContent    = `S/ ${totalMes.toFixed(2)}`;
-}
-
-function verDia(fecha) {
-  const [y,m,d] = fecha.split('-');
-  document.getElementById('modalDiaTitulo').textContent = `${d}/${m}/${y}`;
-  const ingresos = cargar(keyIngresos(fecha)).slice().reverse();
-  const total = ingresos.reduce((s,i) => s + Number(i.monto), 0);
-
-  const porMetodo = {};
-  ingresos.forEach(i => { porMetodo[i.metodo] = (porMetodo[i.metodo]||0) + Number(i.monto); });
-  const metRes = Object.entries(porMetodo).map(([m,v]) =>
-    `<div class="metodo-item" style="margin-bottom:6px"><span class="metodo-nombre">${m}</span><span class="metodo-valor">S/ ${v.toFixed(2)}</span></div>`
-  ).join('');
-
-  const lista = ingresos.map(i => {
-    const catClass = `cat-${(i.categoria||'Otros').replace(/á/g,'a').replace(/ú/g,'u')}`;
-    const prods = (i.productos && i.productos.length)
-      ? i.productos
-      : [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
-    const itemsHtml = prods.map(p => `
-      <div class="ingreso-prod-row">
-        <span class="ingreso-prod-nombre">${p.nombre}${p.cantidad > 1 ? ` <span class="ingreso-prod-cant">×${p.cantidad}</span>` : ''}</span>
-        <span class="ingreso-prod-sub">S/ ${(p.precio * p.cantidad).toFixed(2)}</span>
-      </div>`).join('');
-    return `
-      <div class="ingreso-item">
-        <div class="ingreso-info">
-          <div class="ingreso-top">
-            <span class="ingreso-monto">S/ ${Number(i.monto).toFixed(2)}</span>
-            <span class="ingreso-metodo">${i.metodo}</span>
-            <span class="ingreso-hora">${i.hora}</span>
-          </div>
-          <div class="ingreso-vend-row">
-            <span class="ingreso-vendedor">${i.vendedor}</span>
-            <span class="badge-cat ${catClass}">${i.categoria}</span>
-          </div>
-          <div class="ingreso-prods">${itemsHtml}</div>
-          ${i.esAdelanto ? `<div class="badge-pendiente">⏳ PENDIENTE S/ ${Number(i.pendiente).toFixed(2)} · Total S/ ${Number(i.totalProductos).toFixed(2)}</div>` : ''}
-          ${i.nota && !i.esAdelanto ? `<div class="ingreso-nota">📝 ${i.nota}</div>` : ''}
-        </div>
-      </div>`;
+    </div>`;
   }).join('');
-
-  document.getElementById('modalDiaContenido').innerHTML = `
-    <div style="text-align:center;margin-bottom:16px">
-      <div style="font-size:0.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px">Total del día</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:2rem;color:var(--accent);font-weight:600">S/ ${total.toFixed(2)}</div>
-      <div style="font-size:0.72rem;color:var(--text3)">${ingresos.length} transacciones</div>
-    </div>
-    ${metRes}
-    <hr class="divider">
-    ${lista || '<div class="empty-state"><p>Sin ingresos</p></div>'}
-  `;
-  document.getElementById('modalDiaOverlay').classList.add('open');
+  grid.querySelectorAll('.card').forEach(c => c.addEventListener('click', e => {
+    if (e.target.closest('.card-wa')) return;
+    abrirModal(vis[+c.dataset.i]);
+  }));
+  grid.querySelectorAll('.card-wa').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    window.open(waURL(vis[+b.dataset.w]), '_blank', 'noopener');
+  }));
+  if (show < total){lmw.style.display='block';document.getElementById('lmBtn').textContent=`Ver más (${total-show} restantes)`}
+  else lmw.style.display = 'none';
 }
 
-function cerrarModalDia() {
-  document.getElementById('modalDiaOverlay').classList.remove('open');
-}
+document.getElementById('lmBtn').addEventListener('click', () => { page++; render(); });
 
-// ═══════════════════════════════════════
-//  EXPORTAR CSV
-// ═══════════════════════════════════════
-function exportarCSV(fecha) {
-  fecha = fecha || fechaHoy();
-  const ingresos = cargar(keyIngresos(fecha));
-  const [y,m,d] = fecha.split('-');
-  const fechaFmt = `${d}/${m}/${y}`;
-
-  const header = 'Fecha,Hora,Vendedor,Producto,Categoría,Cantidad,Precio Unit.,Subtotal,Total Venta,Método de pago,Tipo,Nota\n';
-  const rows = ingresos.flatMap(i => {
-    const prods = (i.productos && i.productos.length)
-      ? i.productos
-      : [{ nombre: i.producto, precio: i.monto, cantidad: 1, categoria: i.categoria }];
-    const tipo = i.esAdelanto ? 'Adelanto' : 'Completo';
-    // nota limpia: si es adelanto, mostrar solo la parte del usuario (antes del separador)
-    const notaLimpia = i.esAdelanto
-      ? (i.nota||'').split(' · ADELANTO')[0].replace(/^ADELANTO.*$/,'').trim()
-      : (i.nota||'');
-    return prods.map((p, idx) =>
-      `"${fechaFmt}","${i.hora}","${i.vendedor}","${p.nombre}","${p.categoria}","${p.cantidad}","${Number(p.precio).toFixed(2)}","${(p.precio*p.cantidad).toFixed(2)}","${idx===0?Number(i.monto).toFixed(2):''}","${i.metodo}","${tipo}","${notaLimpia.replace(/"/g,'""')}"`
-    );
-  }).join('\n');
-
-  const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `CPN_ingresos_${fecha}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast('CSV descargado');
-}
-
-// ═══════════════════════════════════════
-//  CRUD PRODUCTOS
-// ═══════════════════════════════════════
-function renderProductos() {
-  const q = (document.getElementById('buscarProducto').value||'').toLowerCase();
-  const cat = document.getElementById('filtroCategoria').value;
-  const productos = cargar(KEY_PRODUCTOS).filter(p => {
-    const matchNombre = !q || p.nombre.toLowerCase().includes(q);
-    const matchCat    = !cat || p.categoria === cat;
-    return matchNombre && matchCat;
-  });
-
-  const div = document.getElementById('listaProductos');
-  if (!productos.length) {
-    div.innerHTML = '<div class="empty-state"><p>Sin productos</p></div>';
-    return;
-  }
-
-  div.innerHTML = productos.map(p => `
-    <div class="crud-item">
-      <div class="crud-info">
-        <div class="crud-name">${p.nombre}</div>
-        <div class="crud-meta">
-          <span class="badge-cat cat-${p.categoria.replace(/á/g,'a').replace(/ú/g,'u')}">${p.categoria}</span>
-          · <span style="font-family:'JetBrains Mono',monospace">S/ ${Number(p.precio).toFixed(2)}</span>
-        </div>
-      </div>
-      <span class="status-badge status-${p.estado}">${p.estado}</span>
-      <div class="crud-actions">
-        <button class="btn btn-sm btn-outline" onclick="editarProducto('${p.id}')">✏️</button>
-        <button class="btn btn-danger" onclick="eliminarProducto('${p.id}')">✕</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function abrirModalProducto(id) {
-  document.getElementById('modalProductoTitulo').textContent = id ? 'Editar producto' : 'Nuevo producto';
-  document.getElementById('mpId').value = id || '';
-  if (id) {
-    const p = cargar(KEY_PRODUCTOS).find(x => x.id === id);
-    if (p) {
-      document.getElementById('mpNombre').value  = p.nombre;
-      document.getElementById('mpPrecio').value  = p.precio;
-      document.getElementById('mpCategoria').value = p.categoria;
-      document.getElementById('mpEstado').value  = p.estado;
+const qEl = document.getElementById('q'), qClr = document.getElementById('qClear');
+let qDeb = null;
+qEl.addEventListener('input', e => {
+  fQ = e.target.value.trim();
+  qClr.classList.toggle('show', fQ.length > 0);
+  clearTimeout(qDeb);
+  qDeb = setTimeout(() => {
+    // Si escribe algo pasa a vista productos SIN filtro de categoría
+    if (fQ) {
+      fCat = '';
+      document.getElementById('viewHome').style.display = 'none';
+      document.getElementById('viewProds').style.display = 'block';
+      document.querySelectorAll('.nav-chip').forEach(x => x.classList.remove('active'));
+      document.getElementById('crumb').innerHTML = `<a onclick="goHome()">🏠 Inicio</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Búsqueda: "${fQ}"</span>`;
+      page = 1;
+      render();
+    } else {
+      goHome();
     }
-  } else {
-    document.getElementById('mpNombre').value  = '';
-    document.getElementById('mpPrecio').value  = '';
-    document.getElementById('mpCategoria').value = 'Pesca';
-    document.getElementById('mpEstado').value  = 'activo';
-  }
-  document.getElementById('modalProductoOverlay').classList.add('open');
+  }, 200);
+});
+qClr.addEventListener('click', () => {
+  qEl.value = ''; fQ = '';
+  qClr.classList.remove('show');
+  goHome();
+  qEl.focus();
+});
+document.getElementById('sort').addEventListener('change', e => { sort = e.target.value; page = 1; render(); });
+
+// Optimiza URLs de imagen usando proxy weserv (resize + WebP + CORS abierto).
+// Sirve imágenes de i.imgur, alicdn, amazon, etc. mucho más rápido.
+function _imgOptim(url, w) {
+  if (!url || !/^https?:\/\//.test(url)) return url || '';
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//,''))}&w=${w||600}&h=${w||600}&fit=inside&output=webp&q=82`;
 }
 
-function editarProducto(id) { abrirModalProducto(id); }
-
-function cerrarModalProducto() {
-  document.getElementById('modalProductoOverlay').classList.remove('open');
+function abrirModal(p){
+  const imgs = (p.imagenes && p.imagenes.length) ? p.imagenes : (p.imagen ? [p.imagen] : []);
+  const img = document.getElementById('mImg'), th = document.getElementById('mThumbs');
+  if (imgs.length){
+    img.src = _imgOptim(imgs[0], 800);
+    img.dataset.orig = imgs[0];
+    img.onerror = () => { if (!img.dataset.fb) { img.dataset.fb=1; img.src = img.dataset.orig; } };
+    img.style.display = 'block';
+    if (imgs.length > 1){
+      th.innerHTML = imgs.map((u,i) => `<div class="modal-thumb ${i===0?'active':''}" data-i="${i}" data-orig="${u.replace(/"/g,'&quot;')}"><img src="${_imgOptim(u, 120)}" loading="lazy"></div>`).join('');
+      th.style.display = 'flex';
+      th.querySelectorAll('.modal-thumb').forEach(t => t.addEventListener('click', () => {
+        const orig = t.dataset.orig;
+        img.dataset.fb = ''; img.dataset.orig = orig;
+        img.src = _imgOptim(orig, 800);
+        th.querySelectorAll('.modal-thumb').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      }));
+    } else th.style.display = 'none';
+  } else { img.style.display = 'none'; th.style.display = 'none'; }
+  document.getElementById('mCat').textContent = p.categoriaWeb || p.categoria || '';
+  document.getElementById('mTit').textContent = p.nombre || '';
+  document.getElementById('mSku').textContent = p.sku ? `SKU: ${p.sku}` : 'Sin SKU';
+  document.getElementById('mPrice').textContent = fmt(p.precio);
+  document.getElementById('mDesc').textContent = p.descripcion || 'Contacta por WhatsApp para más información.';
+  document.getElementById('mWa').href = waURL(p);
+  document.getElementById('mBack').classList.add('show');
+  document.body.style.overflow = 'hidden';
 }
-
-function guardarProducto() {
-  const id = document.getElementById('mpId').value;
-  const nombre = document.getElementById('mpNombre').value.trim();
-  const precio = parseFloat(document.getElementById('mpPrecio').value) || 0;
-  const categoria = document.getElementById('mpCategoria').value;
-  const estado = document.getElementById('mpEstado').value;
-
-  if (!nombre) { toast('Ingresa el nombre del producto', 'error'); return; }
-
-  const productos = cargar(KEY_PRODUCTOS);
-  if (id) {
-    const idx = productos.findIndex(p => p.id === id);
-    if (idx >= 0) productos[idx] = { ...productos[idx], nombre, precio, categoria, estado };
-  } else {
-    productos.push({ id: uid(), nombre, precio, categoria, estado });
-  }
-  guardar(KEY_PRODUCTOS, productos);
-  cerrarModalProducto();
-  renderProductos();
-  toast(id ? 'Producto actualizado' : 'Producto agregado');
-}
-
-function eliminarProducto(id) {
-  if (!confirm('¿Eliminar este producto?')) return;
-  const productos = cargar(KEY_PRODUCTOS).filter(p => p.id !== id);
-  guardar(KEY_PRODUCTOS, productos);
-  renderProductos();
-  toast('Producto eliminado');
-}
-
-// ═══════════════════════════════════════
-//  CRUD VENDEDORES
-// ═══════════════════════════════════════
-function renderVendedores() {
-  const vendedores = cargar(KEY_VENDEDORES);
-  const div = document.getElementById('listaVendedores');
-
-  if (!vendedores.length) {
-    div.innerHTML = '<div class="empty-state"><p>Sin vendedores</p></div>';
-    return;
-  }
-
-  div.innerHTML = vendedores.map(v => `
-    <div class="crud-item">
-      <div class="crud-info">
-        <div class="crud-name">${v.nombre}</div>
-      </div>
-      <span class="status-badge status-${v.estado}">${v.estado}</span>
-      <div class="crud-actions">
-        <button class="btn btn-sm btn-outline" onclick="editarVendedor('${v.id}')">✏️</button>
-        <button class="btn btn-danger" onclick="eliminarVendedor('${v.id}')">✕</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function abrirModalVendedor(id) {
-  document.getElementById('modalVendedorTitulo').textContent = id ? 'Editar vendedor' : 'Nuevo vendedor';
-  document.getElementById('mvId').value = id || '';
-  if (id) {
-    const v = cargar(KEY_VENDEDORES).find(x => x.id === id);
-    if (v) {
-      document.getElementById('mvNombre').value = v.nombre;
-      document.getElementById('mvEstado').value = v.estado;
-    }
-  } else {
-    document.getElementById('mvNombre').value = '';
-    document.getElementById('mvEstado').value = 'activo';
-  }
-  document.getElementById('modalVendedorOverlay').classList.add('open');
-}
-
-function editarVendedor(id) { abrirModalVendedor(id); }
-
-function cerrarModalVendedor() {
-  document.getElementById('modalVendedorOverlay').classList.remove('open');
-}
-
-function guardarVendedor() {
-  const id = document.getElementById('mvId').value;
-  const nombre = document.getElementById('mvNombre').value.trim();
-  const estado = document.getElementById('mvEstado').value;
-
-  if (!nombre) { toast('Ingresa el nombre del vendedor', 'error'); return; }
-
-  const vendedores = cargar(KEY_VENDEDORES);
-  if (id) {
-    const idx = vendedores.findIndex(v => v.id === id);
-    if (idx >= 0) vendedores[idx] = { ...vendedores[idx], nombre, estado };
-  } else {
-    vendedores.push({ id: uid(), nombre, estado });
-  }
-  guardar(KEY_VENDEDORES, vendedores);
-  cerrarModalVendedor();
-  renderVendedores();
-  toast(id ? 'Vendedor actualizado' : 'Vendedor agregado');
-}
-
-function eliminarVendedor(id) {
-  if (!confirm('¿Eliminar este vendedor?')) return;
-  const vendedores = cargar(KEY_VENDEDORES).filter(v => v.id !== id);
-  guardar(KEY_VENDEDORES, vendedores);
-  renderVendedores();
-  toast('Vendedor eliminado');
-}
-
-// ═══════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════
-let toastTimer;
-function toast(msg, tipo='success') {
-  clearTimeout(toastTimer);
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast' + (tipo === 'error' ? ' error' : '');
-  el.classList.add('show');
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-}
-
-// ═══════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════
-initDatos();
-actualizarReloj();
-setInterval(actualizarReloj, 30000);
-renderDashboard();
-renderIngresos();
+function cerrarModal(){document.getElementById('mBack').classList.remove('show');document.body.style.overflow=''}
+document.getElementById('mBack').addEventListener('click', e => { if (e.target.id === 'mBack') cerrarModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+cargar();
 </script>
-</body>
-</html>

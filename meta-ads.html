@@ -1,0 +1,3443 @@
+<title>Informe Meta Ads — Caza Pesca y Náutica</title>
+<style>
+:root {
+  --bg: #F6F3ED;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F0ECE4;
+  --text: #1A2332;
+  --text-secondary: #5A6676;
+  --text-muted: #8B95A2;
+  --navy: #0B2545;
+  --ocean: #13588E;
+  --ocean-light: #E3EFF8;
+  --coral: #D94F3B;
+  --coral-light: #FCEAE7;
+  --sea-green: #1D7A5F;
+  --sea-green-light: #E2F3ED;
+  --amber: #C6880E;
+  --amber-light: #FFF5DC;
+  --border: #DDD6CA;
+  --border-subtle: #E8E2D8;
+  --shadow: rgba(11,37,69,0.06);
+  --shadow-md: rgba(11,37,69,0.1);
+  --kpi-gradient: linear-gradient(135deg, #0B2545 0%, #13588E 100%);
+  --table-stripe: #FAFAF6;
+  --tag-active-bg: #E2F3ED;
+  --tag-active-fg: #1D7A5F;
+  --tag-off-bg: #EDEDED;
+  --tag-off-fg: #6B7280;
+  --tag-rejected-bg: #FCEAE7;
+  --tag-rejected-fg: #D94F3B;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111820;
+    --bg-card: #1A2332;
+    --bg-card-alt: #202D3F;
+    --text: #E4E8ED;
+    --text-secondary: #9BA6B4;
+    --text-muted: #6B7A8C;
+    --navy: #B8CBE0;
+    --ocean: #5BA3D9;
+    --ocean-light: rgba(91,163,217,0.12);
+    --coral: #EF7B6A;
+    --coral-light: rgba(239,123,106,0.12);
+    --sea-green: #4CC9A0;
+    --sea-green-light: rgba(76,201,160,0.12);
+    --amber: #F0B942;
+    --amber-light: rgba(240,185,66,0.12);
+    --border: #2A3648;
+    --border-subtle: #222E3E;
+    --shadow: rgba(0,0,0,0.2);
+    --shadow-md: rgba(0,0,0,0.3);
+    --kpi-gradient: linear-gradient(135deg, #13588E 0%, #1D7A5F 100%);
+    --table-stripe: #1E2A3A;
+    --tag-active-bg: rgba(76,201,160,0.15);
+    --tag-active-fg: #4CC9A0;
+    --tag-off-bg: rgba(255,255,255,0.06);
+    --tag-off-fg: #9BA6B4;
+    --tag-rejected-bg: rgba(239,123,106,0.15);
+    --tag-rejected-fg: #EF7B6A;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111820;
+  --bg-card: #1A2332;
+  --bg-card-alt: #202D3F;
+  --text: #E4E8ED;
+  --text-secondary: #9BA6B4;
+  --text-muted: #6B7A8C;
+  --navy: #B8CBE0;
+  --ocean: #5BA3D9;
+  --ocean-light: rgba(91,163,217,0.12);
+  --coral: #EF7B6A;
+  --coral-light: rgba(239,123,106,0.12);
+  --sea-green: #4CC9A0;
+  --sea-green-light: rgba(76,201,160,0.12);
+  --amber: #F0B942;
+  --amber-light: rgba(240,185,66,0.12);
+  --border: #2A3648;
+  --border-subtle: #222E3E;
+  --shadow: rgba(0,0,0,0.2);
+  --shadow-md: rgba(0,0,0,0.3);
+  --kpi-gradient: linear-gradient(135deg, #13588E 0%, #1D7A5F 100%);
+  --table-stripe: #1E2A3A;
+  --tag-active-bg: rgba(76,201,160,0.15);
+  --tag-active-fg: #4CC9A0;
+  --tag-off-bg: rgba(255,255,255,0.06);
+  --tag-off-fg: #9BA6B4;
+  --tag-rejected-bg: rgba(239,123,106,0.15);
+  --tag-rejected-fg: #EF7B6A;
+}
+:root[data-theme="light"] {
+  --bg: #F6F3ED;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F0ECE4;
+  --text: #1A2332;
+  --text-secondary: #5A6676;
+  --text-muted: #8B95A2;
+  --navy: #0B2545;
+  --ocean: #13588E;
+  --ocean-light: #E3EFF8;
+  --coral: #D94F3B;
+  --coral-light: #FCEAE7;
+  --sea-green: #1D7A5F;
+  --sea-green-light: #E2F3ED;
+  --amber: #C6880E;
+  --amber-light: #FFF5DC;
+  --border: #DDD6CA;
+  --border-subtle: #E8E2D8;
+  --shadow: rgba(11,37,69,0.06);
+  --shadow-md: rgba(11,37,69,0.1);
+  --kpi-gradient: linear-gradient(135deg, #0B2545 0%, #13588E 100%);
+  --table-stripe: #FAFAF6;
+  --tag-active-bg: #E2F3ED;
+  --tag-active-fg: #1D7A5F;
+  --tag-off-bg: #EDEDED;
+  --tag-off-fg: #6B7280;
+  --tag-rejected-bg: #FCEAE7;
+  --tag-rejected-fg: #D94F3B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+/* Ancho extendido para secciones con tabla grande */
+.wrap.wide { max-width: 96vw; padding: 0 20px; }
+@media (max-width: 900px) { .wrap.wide { max-width: 100%; padding: 0 12px; } }
+.wrap.wide .table-wrap { max-height: 78vh; }
+
+/* ── HEADER ── */
+.report-header {
+  background: var(--kpi-gradient);
+  color: #fff;
+  padding: 24px 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+.report-header::after {
+  content: '';
+  position: absolute;
+  top: -60%; right: -10%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+.report-header h1 {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.report-header .subtitle {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+.header-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.header-meta span {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── NAV ── */
+.nav-bar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px var(--shadow);
+}
+.nav-inner {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 0;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-inner a {
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nav-inner a:hover, .nav-inner a:focus-visible {
+  color: var(--ocean);
+  border-bottom-color: var(--ocean);
+}
+
+/* ── SECTIONS ── */
+.section { padding: 22px 0; }
+.section + .section { border-top: 1px solid var(--border-subtle); }
+.section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ocean);
+  margin-bottom: 4px;
+}
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+/* ── ALERTS ── */
+.alerts {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+.alert-critical {
+  background: var(--coral-light);
+  border-left: 3px solid var(--coral);
+}
+.alert-critical .alert-icon { color: var(--coral); }
+.alert-warning {
+  background: var(--amber-light);
+  border-left: 3px solid var(--amber);
+}
+.alert-warning .alert-icon { color: var(--amber); }
+.alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.alert strong { font-weight: 600; }
+
+/* ── KPI CARDS ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.kpi-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.kpi-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.kpi-sub {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.kpi-accent .kpi-value { color: var(--ocean); }
+.kpi-good .kpi-value { color: var(--sea-green); }
+.kpi-warn .kpi-value { color: var(--coral); }
+
+/* ── CHARTS ── */
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 14px 0;
+}
+@media (max-width: 720px) { .chart-row { grid-template-columns: 1fr; gap: 10px; } }
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px var(--shadow);
+  min-height: 220px;
+}
+.chart-card h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+/* Canvas mantienen su aspect ratio pero con altura razonable; JS los repinta con DPR. */
+canvas { width: 100% !important; max-height: 260px; }
+
+/* ── TABLES ── */
+.table-wrap {
+  overflow: auto;
+  max-height: 70vh;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 4px var(--shadow);
+  background: var(--bg-card);
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+/* Scrollbar más visible para orientación */
+.table-wrap::-webkit-scrollbar { width: 12px; height: 12px; }
+.table-wrap::-webkit-scrollbar-track { background: var(--bg-card-alt); border-radius: 6px; }
+.table-wrap::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+  border: 2px solid var(--bg-card-alt);
+}
+.table-wrap::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.table-wrap::-webkit-scrollbar-corner { background: var(--bg-card-alt); }
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+thead th {
+  background: var(--bg-card-alt);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  box-shadow: 0 2px 0 0 var(--border);
+}
+thead th:hover { color: var(--ocean); }
+thead th .sort-arrow {
+  display: inline-block;
+  margin-left: 4px;
+  opacity: 0.3;
+  font-size: 0.65rem;
+}
+thead th.sorted .sort-arrow { opacity: 1; color: var(--ocean); }
+
+/* Filtros tipo Excel por columna */
+.col-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 4px;
+  opacity: 0.4;
+  transition: opacity 0.15s, background 0.15s;
+}
+.col-filter-btn:hover { opacity: 1; background: var(--ocean-light); color: var(--ocean); }
+.col-filter-btn.active {
+  opacity: 1;
+  color: var(--ocean);
+  background: var(--ocean-light);
+}
+thead th.filtered {
+  background: var(--ocean-light);
+  color: var(--ocean);
+}
+
+.col-filter-popup {
+  position: absolute;
+  z-index: 200;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px var(--shadow-md), 0 2px 6px var(--shadow);
+  width: 300px;
+  max-height: 440px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.col-filter-popup input.filter-search {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-family: inherit;
+  outline: none;
+}
+.col-filter-popup input.filter-search:focus { background: var(--bg-card-alt); }
+.filter-actions {
+  display: flex;
+  padding: 6px 8px;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card-alt);
+}
+.filter-actions button {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-family: inherit;
+}
+.filter-actions button:hover { background: var(--ocean-light); color: var(--ocean); border-color: var(--ocean); }
+.filter-values {
+  overflow-y: auto;
+  padding: 6px 4px;
+  flex: 1;
+}
+.filter-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--text);
+  user-select: none;
+}
+.filter-value:hover { background: var(--bg-card-alt); }
+.filter-value input[type="checkbox"] {
+  accent-color: var(--ocean);
+  cursor: pointer;
+}
+.filter-value .value-count {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--bg-card-alt);
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+.filter-footer {
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card-alt);
+  display: flex;
+  gap: 6px;
+}
+.filter-footer button {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+.filter-apply { background: var(--ocean); color: #fff; }
+.filter-apply:hover { background: var(--navy); }
+.filter-cancel { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border) !important; }
+.filter-cancel:hover { background: var(--bg-card-alt); }
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+tbody tr:nth-child(even) { background: var(--table-stripe); }
+tbody tr:hover { background: var(--ocean-light); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.campaign-name { font-weight: 500; max-width: 460px; min-width: 260px; }
+.wrap.wide td.campaign-name { max-width: 520px; min-width: 320px; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.tag-active { background: var(--tag-active-bg); color: var(--tag-active-fg); }
+.tag-off { background: var(--tag-off-bg); color: var(--tag-off-fg); }
+.tag-rejected { background: var(--tag-rejected-bg); color: var(--tag-rejected-fg); }
+
+/* ── BAR INLINE ── */
+.bar-cell { position: relative; min-width: 100px; }
+.bar-fill {
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  border-radius: 3px;
+  opacity: 0.18;
+  background: var(--ocean);
+}
+.bar-val { position: relative; z-index: 1; }
+
+/* ── EFFICIENCY BADGE ── */
+.eff { font-weight: 700; font-size: 0.8rem; }
+.eff-good { color: var(--sea-green); }
+.eff-mid { color: var(--amber); }
+.eff-bad { color: var(--coral); }
+
+/* ── ACTION CARDS ── */
+.action-grid {
+  display: grid;
+  gap: 12px;
+}
+.action-card {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 4px var(--shadow);
+  align-items: start;
+}
+.action-num {
+  width: 44px; height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.action-urgent .action-num { background: var(--coral-light); color: var(--coral); }
+.action-high .action-num { background: var(--amber-light); color: var(--amber); }
+.action-med .action-num { background: var(--ocean-light); color: var(--ocean); }
+.action-low .action-num { background: var(--tag-off-bg); color: var(--text-secondary); }
+.action-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+.action-detail { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* ── FOOTER ── */
+.report-footer {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ── BUSINESS CARDS ── */
+.biz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.biz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 4px var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.biz-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.biz-pesca::before { background: var(--ocean); }
+.biz-motaxi::before { background: var(--coral); }
+.biz-resto::before { background: var(--amber); }
+.biz-otro::before { background: var(--text-muted); }
+.biz-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 12px; }
+.biz-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.84rem;
+}
+.biz-stat:last-child { border-bottom: none; }
+.biz-stat-label { color: var(--text-secondary); }
+.biz-stat-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ── TOP/BOTTOM ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 720px) { .compare-grid { grid-template-columns: 1fr; } }
+.compare-panel { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 1px 4px var(--shadow); }
+.compare-header {
+  padding: 12px 18px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+}
+.compare-good .compare-header { background: var(--sea-green-light); color: var(--sea-green); }
+.compare-bad .compare-header { background: var(--coral-light); color: var(--coral); }
+.compare-list { background: var(--bg-card); }
+.compare-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  font-size: 0.84rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.compare-item:last-child { border-bottom: none; }
+.compare-rank { font-weight: 700; color: var(--text-muted); min-width: 24px; }
+.compare-name { flex: 1; margin: 0 12px; }
+.compare-cpr { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ── LINK CELL ── */
+.link-cell { white-space: nowrap; }
+.link-cell a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  line-height: 1.3;
+}
+.link-cell a:hover { opacity: 0.8; }
+.link-ads {
+  background: var(--ocean-light);
+  color: var(--ocean);
+}
+.link-lib {
+  background: var(--sea-green-light);
+  color: var(--sea-green);
+  margin-left: 4px;
+}
+.link-cell svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+/* ── UPDATE BAR ── */
+.update-bar { background:var(--bg-card); border-bottom:1px solid var(--border); padding:10px 0; position:sticky; top:48px; z-index:99; }
+.period-tabs { display:flex; gap:4px; }
+.period-tab { padding:5px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); font-size:0.78rem; cursor:pointer; font-weight:500; transition:all 0.15s; }
+.period-tab:hover { background:var(--ocean-light); color:var(--ocean); }
+.period-tab.active { background:var(--ocean); color:#fff; border-color:var(--ocean); }
+.period-tab.disabled { opacity:0.4; pointer-events:none; }
+.btn-update { padding:7px 16px; border-radius:8px; border:none; background:var(--sea-green); color:#fff; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.15s; }
+.btn-update:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.upload-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; }
+.upload-modal { background:var(--bg-card); border-radius:16px; padding:28px; max-width:500px; width:90%; position:relative; box-shadow:0 20px 60px var(--shadow-md); }
+.upload-close { position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer; }
+.upload-zone { border:2px dashed var(--border); border-radius:12px; padding:32px; text-align:center; transition:all 0.2s; }
+.upload-zone.dragover { border-color:var(--ocean); background:var(--ocean-light); }
+.delta-up { color:var(--sea-green); font-size:0.72rem; font-weight:600; }
+.delta-down { color:var(--coral); font-size:0.72rem; font-weight:600; }
+.delta-same { color:var(--text-muted); font-size:0.72rem; }
+.snapshot-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.7rem; font-weight:600; background:var(--sea-green-light); color:var(--sea-green); }
+
+/* ── PRINT ── */
+@media print {
+  .nav-bar, .update-bar { display: none; }
+  .section { page-break-inside: avoid; }
+}
+@media (max-width: 600px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .kpi-value { font-size: 1.3rem; }
+  .report-header { padding: 32px 0 24px; }
+  .report-header h1 { font-size: 1.4rem; }
+  .section { padding: 28px 0; }
+  .update-bar .wrap { flex-direction:column; align-items:flex-start !important; }
+  .period-tabs { flex-wrap:wrap; }
+}
+
+/* ── Banner recordatorio diario ── */
+.reminder-banner {
+  background: linear-gradient(135deg, #C6880E, #D94F3B);
+  color: #fff;
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 2px 12px rgba(217,79,59,0.25);
+}
+.reminder-banner.show { display: block; }
+.reminder-banner .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.reminder-banner-text { font-size: 0.9rem; font-weight: 600; }
+.reminder-banner-text b { font-weight: 800; }
+.reminder-banner-sub { font-size: 0.75rem; opacity: 0.9; margin-top: 2px; }
+.reminder-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn-reminder {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+.btn-reminder:hover { background: rgba(255,255,255,0.3); }
+.btn-reminder-primary { background: #fff; color: #D94F3B; border-color: #fff; }
+.btn-reminder-primary:hover { background: #FFF5DC; }
+.reminder-close {
+  background: none;
+  border: none;
+  color: #fff;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0 4px;
+}
+.reminder-close:hover { opacity: 1; }
+
+.sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--sea-green);
+  background: var(--sea-green-light);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+.sync-badge.error { color: var(--coral); background: var(--coral-light); }
+.sync-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.auto-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--sea-green-light);
+  color: var(--sea-green);
+  border: 1px solid transparent;
+}
+.auto-badge.warn {
+  background: var(--amber-light);
+  color: var(--amber);
+  border-color: var(--amber);
+}
+.auto-badge.error {
+  background: var(--coral-light);
+  color: var(--coral);
+  border-color: var(--coral);
+}
+.auto-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Select vendedor por campaña */
+.vend-select {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 22px 4px 8px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%235A6676' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-width: 100px;
+}
+.vend-select:hover { border-color: var(--ocean); }
+.vend-select:focus {
+  outline: none;
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px var(--ocean-light);
+}
+.vend-select[data-assigned="true"] {
+  background-color: var(--sea-green-light);
+  color: var(--sea-green);
+  border-color: var(--sea-green);
+}
+.vend-select.saving {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.vend-select.saved {
+  animation: savedFlash 0.6s ease;
+}
+@keyframes savedFlash {
+  0% { box-shadow: 0 0 0 4px rgba(29,122,95,0.5); }
+  100% { box-shadow: 0 0 0 0 rgba(29,122,95,0); }
+}
+
+/* Input ventas por campaña */
+.ventas-cell { min-width: 110px; }
+.ventas-input {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  width: 70px;
+  text-align: center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ventas-input:hover { border-color: var(--ocean); }
+.ventas-input:focus {
+  outline: none;
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px var(--ocean-light);
+}
+.ventas-input[data-hasvalue="true"] {
+  background: var(--sea-green-light);
+  color: var(--sea-green);
+  border-color: var(--sea-green);
+}
+.ventas-input.saving { opacity: 0.6; pointer-events: none; }
+.ventas-input.saved { animation: savedFlash 0.6s ease; }
+.ventas-cpv {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+  font-weight: 600;
+}
+.ventas-cpv.good { color: var(--sea-green); }
+.ventas-cpv.warn { color: var(--amber); }
+.ventas-cpv.bad { color: var(--coral); }
+
+/* Selector producto vinculado (multi-chips) */
+.prod-cell {
+  min-width: 220px;
+  max-width: 320px;
+}
+.prod-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.prod-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px 3px 8px;
+  background: var(--ocean-light);
+  color: var(--ocean);
+  border: 1px solid var(--ocean);
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  max-width: 100%;
+}
+.prod-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+.prod-chip-x {
+  background: transparent;
+  border: none;
+  color: var(--ocean);
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 0.85rem;
+  line-height: 1;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.prod-chip-x:hover { background: rgba(217,79,59,0.15); color: var(--coral); }
+.prod-share-badge {
+  display: inline-block;
+  font-size: 0.55rem;
+  background: var(--amber-light);
+  color: var(--amber);
+  border-radius: 3px;
+  padding: 1px 4px;
+  margin-left: 3px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.prod-input {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.prod-input:hover { border-color: var(--ocean); }
+.prod-input:focus {
+  outline: none;
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px var(--ocean-light);
+}
+.prod-input.saving { opacity: 0.6; pointer-events: none; }
+.prod-input.saved { animation: savedFlash 0.6s ease; }
+.ventas-auto-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--sea-green);
+  background: var(--sea-green-light);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+</style>
+
+<script>
+// ═══════════════════ SEGURIDAD: Solo administradores ═══════════════════
+(function verificarAcceso() {
+  const AUTH_STORAGE_KEY = 'cpn_sesion';
+  let sesion = null;
+  try {
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (raw) sesion = JSON.parse(raw);
+  } catch {}
+  const validaTTL = sesion && sesion.loggedAt && (Date.now() - sesion.loggedAt < 12 * 3600 * 1000);
+  if (!sesion || !validaTTL || sesion.rol !== 'admin') {
+    document.documentElement.innerHTML = `
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Acceso restringido</title>
+        <style>
+          body { font-family: -apple-system, system-ui, sans-serif; background: linear-gradient(135deg, #3E2A1E, #6B4423); color: #fff; margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+          .card { background: #fff; color: #0F172A; border-radius: 20px; padding: 40px 30px; max-width: 420px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+          h1 { margin: 0 0 8px; font-size: 1.4rem; color: #3E2A1E; }
+          p { color: #64748B; font-size: 0.9rem; line-height: 1.5; }
+          a { display: inline-block; margin-top: 20px; background: linear-gradient(135deg, #6D28D9, #4C1D95); color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 700; letter-spacing: 0.03em; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div style="font-size: 3rem; margin-bottom: 12px">🔒</div>
+          <h1>Acceso restringido</h1>
+          <p>Este informe es solo para administradores.<br>Ingresa con una cuenta admin para continuar.</p>
+          <a href="/">Volver al inicio</a>
+        </div>
+      </body>`;
+    throw new Error('Acceso denegado - solo administradores');
+  }
+})();
+</script>
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="demo/banner.js" defer></script>
+<script>
+firebase.initializeApp(window.APP_CONFIG.firebase);
+const META_DB = firebase.firestore();
+</script>
+
+<!-- BANNER RECORDATORIO DIARIO -->
+<div class="reminder-banner" id="reminderBanner">
+  <div class="wrap">
+    <div>
+      <div class="reminder-banner-text" id="reminderText"><b>🔔 Hora de actualizar el informe.</b></div>
+      <div class="reminder-banner-sub" id="reminderSub">Descarga el CSV de Ads Manager y súbelo aquí.</div>
+    </div>
+    <div class="reminder-actions">
+      <a class="btn-reminder" href="https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=1409972699255773" target="_blank" rel="noopener">
+        📥 Descargar CSV de Ads Manager
+      </a>
+      <button class="btn-reminder btn-reminder-primary" onclick="document.getElementById('csvUpload').click()">
+        ⬆ Subir CSV ahora
+      </button>
+      <button class="reminder-close" onclick="ocultarRecordatorio()" title="Ocultar hasta mañana">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="report-header">
+  <div class="wrap">
+    <h1>Informe de Campañas Meta Ads</h1>
+    <div class="subtitle">Caza Pesca y Náutica — Auditoría completa de rendimiento publicitario</div>
+    <div class="header-meta">
+      <span>Cuenta: 1409972699255773 (Edgar Lz)</span>
+      <span>Período: Jun 2023 – Ago 2026</span>
+      <span id="hdrFechaInforme">Fecha: 18 agosto 2026</span>
+      <span>Moneda: Soles (PEN)</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="wrap nav-inner">
+    <a href="#snapshot">Snapshot hoy</a>
+    <a href="#resumen">Resumen</a>
+    <a href="#alertas">Alertas</a>
+    <a href="#campanas">Campañas</a>
+    <a href="#activas">Activas</a>
+    <a href="#negocios">Por negocio</a>
+    <a href="#whatsapp">WhatsApp</a>
+    <a href="#ranking">Ranking</a>
+    <a href="#acciones">Plan de acción</a>
+  </div>
+</nav>
+
+<!-- UPDATE BAR -->
+<div class="update-bar" id="updateBar">
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:0.82rem;font-weight:600;color:var(--text-secondary);">Periodo:</span>
+      <div class="period-tabs" id="periodTabs">
+        <button class="period-tab active" data-period="current">Actual</button>
+        <button class="period-tab" data-period="1">Diario</button>
+        <button class="period-tab" data-period="7">7 días</button>
+        <button class="period-tab" data-period="15">15 días</button>
+        <button class="period-tab" data-period="30">30 días</button>
+      </div>
+      <span class="snapshot-count" id="snapshotCount" style="font-size:0.75rem;color:var(--text-muted);margin-left:8px;"></span>
+      <span id="syncBadge" class="sync-badge" title="Estado de sincronización con Firestore"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span id="autoBadge" class="auto-badge" style="display:none"></span>
+      <span id="lastUpdate" style="font-size:0.75rem;color:var(--text-muted);"></span>
+      <button class="btn-update" id="btnUpdate" onclick="document.getElementById('csvUpload').click()">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M8 1a.5.5 0 01.5.5v5.793l2.146-2.147a.5.5 0 01.708.708l-3 3a.5.5 0 01-.708 0l-3-3a.5.5 0 11.708-.708L7.5 7.293V1.5A.5.5 0 018 1zM2 10a.5.5 0 01.5.5v2a.5.5 0 00.5.5h10a.5.5 0 00.5-.5v-2a.5.5 0 011 0v2A1.5 1.5 0 0113 14H3a1.5 1.5 0 01-1.5-1.5v-2A.5.5 0 012 10z"/></svg>
+        Actualizar datos (CSV)
+      </button>
+      <input type="file" id="csvUpload" accept=".csv" style="display:none" onchange="handleCSVUpload(event)">
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="upload-overlay" id="uploadOverlay" style="display:none;">
+  <div class="upload-modal">
+    <button class="upload-close" onclick="closeUploadModal()">&times;</button>
+    <h3 style="margin:0 0 12px;font-size:1.1rem;">Actualizar datos del informe</h3>
+    <div class="upload-zone" id="uploadZone">
+      <svg viewBox="0 0 48 48" width="48" height="48" fill="var(--ocean)" style="opacity:0.5"><path d="M24 4l-8 8h5v12h6V12h5L24 4zm-16 28v8a4 4 0 004 4h24a4 4 0 004-4v-8H8zm28 4a2 2 0 110-4 2 2 0 010 4z"/></svg>
+      <p style="margin:10px 0 4px;font-weight:600;">Arrastra tu CSV aquí</p>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">o haz clic en "Actualizar datos (CSV)" arriba</p>
+    </div>
+    <div style="margin-top:16px;font-size:0.8rem;color:var(--text-secondary);">
+      <strong>Cómo exportar:</strong> Ads Manager → Campañas → Seleccionar todas → Exportar → Descargar CSV<br>
+      Columnas necesarias: Nombre de campaña, Resultados, Coste por resultados, Importe gastado, Impresiones, Alcance
+    </div>
+    <div id="uploadStatus" style="margin-top:12px;display:none;"></div>
+  </div>
+</div>
+
+<main>
+  <!-- ═══ SNAPSHOT 18-AGO-2026 (Ads Library pública) ═══ -->
+  <div class="section" id="snapshot" style="padding-top:24px">
+    <div class="wrap">
+      <div style="background:linear-gradient(135deg,#0F172A 0%,#1E293B 100%);border-radius:18px;padding:22px 24px;border:1px solid #334155;box-shadow:0 8px 32px rgba(0,0,0,0.25)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <div>
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.78rem;letter-spacing:0.12em;color:#F59E0B;text-transform:uppercase">Auditoría Meta · 18 agosto 2026</div>
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.4rem;color:#fff;margin-top:4px">Estado en vivo · Ads Library pública</div>
+            <div style="font-size:0.78rem;color:#94A3B8;margin-top:4px">Página: Caza Pesca y Náutica - PERÚ · Cuenta: 1409972699255773</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:2.6rem;color:#F59E0B;line-height:1">32</div>
+            <div style="font-size:0.75rem;color:#94A3B8;letter-spacing:0.05em">anuncios activos hoy</div>
+          </div>
+        </div>
+
+        <!-- Objetivo -->
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(16,185,129,0.12);border:1px solid #10B981;border-radius:10px;padding:10px 14px;margin-bottom:16px">
+          <div style="font-size:1.4rem">✅</div>
+          <div style="flex:1">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.95rem;color:#10B981">100% objetivo MENSAJES · 0 Interacción</div>
+            <div style="font-size:0.72rem;color:#94A3B8">Pivote confirmado por el usuario. Alertas anteriores de "Interacción" resueltas.</div>
+          </div>
+        </div>
+
+        <!-- Distribución por antigüedad -->
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;color:#94A3B8;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px">Distribución por antigüedad</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px">
+          <div style="background:rgba(148,163,184,0.08);border-left:3px solid #64748B;border-radius:8px;padding:10px 12px">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.6rem;color:#94A3B8">0</div>
+            <div style="font-size:0.7rem;color:#94A3B8">últimos 7 días</div>
+          </div>
+          <div style="background:rgba(16,185,129,0.08);border-left:3px solid #10B981;border-radius:8px;padding:10px 12px">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.6rem;color:#10B981">2</div>
+            <div style="font-size:0.7rem;color:#94A3B8">8–30 días</div>
+          </div>
+          <div style="background:rgba(59,130,246,0.08);border-left:3px solid #3B82F6;border-radius:8px;padding:10px 12px">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.6rem;color:#3B82F6">21</div>
+            <div style="font-size:0.7rem;color:#94A3B8">31–90 días</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.08);border-left:3px solid #F59E0B;border-radius:8px;padding:10px 12px">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.6rem;color:#F59E0B">1</div>
+            <div style="font-size:0.7rem;color:#94A3B8">91–180 días</div>
+          </div>
+          <div style="background:rgba(239,68,68,0.10);border-left:3px solid #EF4444;border-radius:8px;padding:10px 12px">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.6rem;color:#EF4444">8</div>
+            <div style="font-size:0.7rem;color:#94A3B8">+180 días · revisar</div>
+          </div>
+        </div>
+
+        <!-- Acciones sugeridas -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">
+          <div style="background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:12px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;color:#FCA5A5">🔴 Alta</div>
+            <div style="font-size:0.78rem;color:#E2E8F0;margin-top:4px">Revisar los <b>8 anuncios de +180 días</b> — pausar, refrescar creativo o mantener si CPR es bajo.</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.4);border-radius:10px;padding:12px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;color:#FCD34D">🟡 Media</div>
+            <div style="font-size:0.78rem;color:#E2E8F0;margin-top:4px">Solo <b>2 creativos nuevos en 30 días</b>. Sube el ritmo con 2–3 más para no cansar audiencia.</div>
+          </div>
+          <div style="background:rgba(59,130,246,0.10);border:1px solid rgba(59,130,246,0.4);border-radius:10px;padding:12px">
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.85rem;color:#93C5FD">🔵 Datos</div>
+            <div style="font-size:0.78rem;color:#E2E8F0;margin-top:4px">MCP API bloqueada. Subir CSV mensual desde Ads Manager para gasto/CPR/mensajes reales.</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.7rem;color:#64748B;margin-top:12px;text-align:right">
+          Último anuncio creado: 12-ago-2026 · Snapshot en Firestore: <code style="color:#94A3B8">meta_snapshots/20260818_auditoria</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESUMEN ═══ -->
+  <div class="section" id="resumen">
+    <div class="wrap">
+      <div class="section-label">Vista general</div>
+      <div class="section-title">Métricas clave de la cuenta</div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">Campañas totales</div>
+          <div class="kpi-value" id="kpiTotalCamp">133</div>
+          <div class="kpi-sub" id="kpiTotalCampSub">29 activas · 104 históricas</div>
+        </div>
+        <div class="kpi kpi-accent">
+          <div class="kpi-label">Gasto total histórico</div>
+          <div class="kpi-value" id="kpiGastoTotal">S/ 69,500+</div>
+          <div class="kpi-sub" id="kpiGastoTotalSub">Jun 2023 – Ago 2026</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Gasto últimos 7 días</div>
+          <div class="kpi-value" id="kpiGasto7d">S/ 1,532</div>
+          <div class="kpi-sub" id="kpiGasto7dSub">~S/ 6,500/mes estimado</div>
+        </div>
+        <div class="kpi kpi-good">
+          <div class="kpi-label">Mejor CPR activo</div>
+          <div class="kpi-value" id="kpiMejorCPR">S/ 0.11</div>
+          <div class="kpi-sub" id="kpiMejorCPRSub">Fiestas Patrias 🎉</div>
+        </div>
+        <div class="kpi kpi-warn">
+          <div class="kpi-label">Peor CPR activo</div>
+          <div class="kpi-value" id="kpiPeorCPR">S/ 2.00</div>
+          <div class="kpi-sub" id="kpiPeorCPRSub">Motaxi Conductores</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Alcance 7 días</div>
+          <div class="kpi-value" id="kpiAlcance7d">369,800</div>
+          <div class="kpi-sub" id="kpiAlcance7dSub">CPM S/ 2.57</div>
+        </div>
+        <div class="kpi kpi-good">
+          <div class="kpi-label">Puntuación Meta</div>
+          <div class="kpi-value" id="kpiScore">86/100</div>
+          <div class="kpi-sub" id="kpiScoreSub">14 puntos por mejorar</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Fase de aprendizaje</div>
+          <div class="kpi-value">0%</div>
+          <div class="kpi-sub">Todas las campañas optimizadas</div>
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-card">
+          <h3>Distribución del gasto por negocio</h3>
+          <canvas id="chartNegocio" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Costo por mensaje — Top 15 campañas</h3>
+          <canvas id="chartCPR" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ALERTAS ═══ -->
+  <div class="section" id="alertas">
+    <div class="wrap">
+      <div class="section-label">Requieren atención</div>
+      <div class="section-title">Alertas y riesgos detectados</div>
+      <div class="alerts">
+        <div class="alert alert-critical">
+          <span class="alert-icon">&#9888;</span>
+          <div><strong>Saldo pendiente: S/ 935.03</strong> — Múltiples intentos de cobro rechazados en 3 tarjetas (7-8 jul 2026). Meta avisó que pausará todos los anuncios si no se regulariza.</div>
+        </div>
+        <div class="alert alert-critical">
+          <span class="alert-icon">&#9888;</span>
+          <div><strong>Perfil de Facebook restringido</strong> desde 18 feb 2025 — Restricciones: no administrar cuentas publicitarias, no crear anuncios. Las campañas siguen corriendo pero el riesgo de suspensión total es alto.</div>
+        </div>
+        <div class="alert alert-warning">
+          <span class="alert-icon">&#9432;</span>
+          <div><strong>Portafolio CPN PERU restringido</strong> — Cuenta inhabilitada. No afecta las campañas activas de la cuenta personal.</div>
+        </div>
+        <div class="alert alert-warning">
+          <span class="alert-icon">&#9432;</span>
+          <div><strong>Anuncio rechazado sin atender:</strong> "MIRA LO QUE OTROS NO VEN" (telescopio) — Causa: "Página de destino no funcional" desde 23 may 2026.</div>
+        </div>
+        <div class="alert alert-warning">
+          <span class="alert-icon">&#9432;</span>
+          <div><strong>5 audiencias rotas</strong> ("No disponible"): Pesca 2025, BOYAS, Copia_Cañas de pescar, Telescopio astronómico, Copia_Pesca — opciones de segmentación deprecadas por Meta.</div>
+        </div>
+        <div class="alert alert-warning">
+          <span class="alert-icon">&#9432;</span>
+          <div><strong>2 reclamos de copyright abiertos</strong> — Video "Colors, Tema Oficial para Latinoamérica" (abril 2024). Pendiente de resolución.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CAMPAÑAS ═══ -->
+  <div class="section" id="campanas">
+    <div class="wrap wide">
+      <div class="section-label">Análisis completo</div>
+      <div class="section-title">Todas las campañas (56 de 133)</div>
+      <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:16px;">
+        Cubre más del 95% del gasto total. Las 77 restantes tienen gasto menor a S/77 o S/0 (pruebas, borradores, campañas de 2018). Haz clic en los encabezados para ordenar.
+      </p>
+
+      <!-- Ranking mensajes por vendedor (se puebla en renderMainTable) -->
+      <div id="resumenVendedores"></div>
+
+      <!-- Alerta destacada: campañas mal configuradas como Interacción -->
+      <div id="alertaInteraccion" style="display:none;background:linear-gradient(135deg,#7F1D1D,#B91C1C);color:#fff;border-radius:12px;padding:14px 18px;margin-bottom:14px;border-left:5px solid #FCA5A5">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-family:'Rajdhani',sans-serif;font-weight:800;font-size:1.05rem">⚠ <span id="alertaInterCount">0</span> campañas con objetivo INTERACCIÓN</div>
+            <div style="font-size:0.78rem;opacity:0.9;margin-top:2px">Estas campañas <b>no generan mensajes reales</b>. Optimizan para reacciones/clics aunque el post tenga botón de WhatsApp. <b>Dar de baja y recrearlas desde Ads Manager con objetivo Mensajes → WhatsApp</b>.</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:0.72rem;opacity:0.8">Gasto acumulado en Interacción</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.2rem" id="alertaInterGasto">S/ 0.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th data-col="0" data-type="num"># <span class="sort-arrow">&#9650;</span></th>
+              <th data-col="1" data-type="str">Campaña <span class="sort-arrow">&#9650;</span></th>
+              <th data-col="2" data-type="str" data-filter-field="est">Estado <span class="sort-arrow">&#9650;</span><button class="col-filter-btn" data-field="est" onclick="event.stopPropagation();toggleColFilter(this,'est','Estado')" title="Filtrar Estado"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M1.5 1.5A.5.5 0 012 1h12a.5.5 0 01.39.81L10 8.03V13a.5.5 0 01-.28.45l-3 1.5A.5.5 0 016 14.5V8.03L1.61 1.81a.5.5 0 01.06-.31z"/></svg></button></th>
+              <th data-col="3" data-type="str" data-filter-field="neg">Negocio <span class="sort-arrow">&#9650;</span><button class="col-filter-btn" data-field="neg" onclick="event.stopPropagation();toggleColFilter(this,'neg','Negocio')" title="Filtrar Negocio"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M1.5 1.5A.5.5 0 012 1h12a.5.5 0 01.39.81L10 8.03V13a.5.5 0 01-.28.45l-3 1.5A.5.5 0 016 14.5V8.03L1.61 1.81a.5.5 0 01.06-.31z"/></svg></button></th>
+              <th data-col="4" data-type="str" data-filter-field="obj">Objetivo <span class="sort-arrow">&#9650;</span><button class="col-filter-btn" data-field="obj" onclick="event.stopPropagation();toggleColFilter(this,'obj','Objetivo')" title="Filtrar Objetivo"><svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor"><path d="M1.5 1.5A.5.5 0 012 1h12a.5.5 0 01.39.81L10 8.03V13a.5.5 0 01-.28.45l-3 1.5A.5.5 0 016 14.5V8.03L1.61 1.81a.5.5 0 01.06-.31z"/></svg></button></th>
+              <th data-col="5" data-type="num">Mensajes <span class="sort-arrow">&#9650;</span></th>
+              <th data-col="6" data-type="num">Costo/msg <span class="sort-arrow">&#9650;</span></th>
+              <th data-col="7" data-type="num">Inversión <span class="sort-arrow">&#9650;</span></th>
+              <th data-col="8">WhatsApp</th>
+              <th data-col="9" style="min-width:220px">Productos vinculados</th>
+              <th data-col="10" data-type="num">Ventas 30d <span class="sort-arrow">&#9650;</span></th>
+              <th data-col="11">Ver anuncio</th>
+              <th data-col="12" data-type="str">Recomendación <span class="sort-arrow">&#9650;</span></th>
+            </tr>
+          </thead>
+          <tbody id="mainBody"></tbody>
+        </table>
+      </div>
+      <div id="filterActiveBar" style="font-size:0.78rem;color:var(--ocean);margin-top:8px;display:none">
+        <span id="filterActiveText"></span>
+        <button onclick="limpiarTodosFiltros()" style="background:none;border:none;color:var(--coral);cursor:pointer;font-weight:700;margin-left:8px;text-decoration:underline">Limpiar todos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup filtro tipo Excel -->
+  <div class="col-filter-popup" id="colFilterPopup" style="display:none">
+    <input type="text" class="filter-search" id="filterSearchInput" placeholder="Buscar...">
+    <div class="filter-actions">
+      <button onclick="filterSelectAll(true)">Seleccionar todos</button>
+      <button onclick="filterSelectAll(false)">Limpiar</button>
+    </div>
+    <div class="filter-values" id="filterValuesList"></div>
+    <div class="filter-footer">
+      <button class="filter-cancel" onclick="cerrarColFilter()">Cancelar</button>
+      <button class="filter-apply" onclick="aplicarColFilter()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- ═══ ACTIVAS ═══ -->
+  <div class="section" id="activas">
+    <div class="wrap wide">
+      <div class="section-label">Rendimiento mensual</div>
+      <div class="section-title" id="activasTitulo">Campañas activas — Mes actual</div>
+      <p id="activasSubtitulo" style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:16px;">Mes en curso (del día 1 al último). Gasto mensual estimado total: ~S/ 6,500.</p>
+
+      <div class="chart-row">
+        <div class="chart-card">
+          <h3>Inversión mes actual por campaña activa</h3>
+          <canvas id="chartActivas" height="280"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Eficiencia: mensajes vs inversión</h3>
+          <canvas id="chartEficiencia" height="280"></canvas>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:20px;">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Campaña</th>
+              <th>Negocio</th>
+              <th>Objetivo</th>
+              <th>Mensajes mes</th>
+              <th>Costo/msg</th>
+              <th>Inversión mes</th>
+              <th>WhatsApp</th>
+              <th>Vendedor</th>
+              <th>Producto vinculado</th>
+              <th>Ventas</th>
+              <th>Ver anuncio</th>
+              <th>Diagnóstico</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="activasBody"></tbody>
+          <datalist id="productosDatalist"></datalist>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NEGOCIOS ═══ -->
+  <div class="section" id="negocios">
+    <div class="wrap">
+      <div class="section-label">Segmentación</div>
+      <div class="section-title">Rendimiento por línea de negocio</div>
+      <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:20px;">Solo campañas con objetivo de mensajes. Las campañas de interacción se excluyen del cálculo de CPR.</p>
+      <div class="biz-grid" id="bizGrid"></div>
+    </div>
+  </div>
+
+  <!-- ═══ WHATSAPP ═══ -->
+  <div class="section" id="whatsapp">
+    <div class="wrap">
+      <div class="section-label">Destinos</div>
+      <div class="section-title">Números de WhatsApp vinculados a los anuncios</div>
+      <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:20px;">Cada conjunto de anuncios puede tener un número de WhatsApp diferente. Datos verificados directamente en Ads Manager el 8 ago 2026.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:24px;">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Fiestas Patrias / Aventura</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--sea-green);">+51 969 350 649</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">Fiestas Patrias (×4), TODO PARA TU AVENTURA, Inmersión, OFERTA DEL DÍA</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Wetsuit / Piscinas / Dale con todo</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--sea-green);">+51 908 808 912</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">Wetsuit, Piscinas, Seguridad acuática, Explora el mar, Dale con todo</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Ofertas / Señuelos / Reguladores</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--sea-green);">+51 912 630 912</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">OFERTA IMPERDIBLE CBO, Señuelos, Caza Pesca tienda, Reguladores</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Pesca / Máscara silicona</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--sea-green);">+51 924 719 566</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">OFERTA IMPERDIBLE DE PESCA, Máscara de silicona, Bodyboards Gravital</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Atrapa / Mira lo que otros no ven</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--sea-green);">+51 978 633 702</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">Atrapa la mejor oferta, MIRA LO QUE OTROS NO VEN</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Oferta Imperdible Pesca (ad set alterno)</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--sea-green);">+51 923 557 105</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">1 conjunto de anuncios dentro de Oferta Imperdible de Pesca</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Motaxi — Conductores</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--ocean);">+51 902 179 536</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">Todas las campañas VES de Motaxi y Conductores Amazonas</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px;">
+          <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:6px;">Interacción (sin WhatsApp)</div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--text-muted);">👍 Solo engagement</div>
+          <div style="font-size:0.76rem;color:var(--text-secondary);margin-top:4px;">Equipo de pesca completo — no recibe mensajes, solo likes/comentarios</div>
+        </div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);">Nota: Los números se configuran a nivel de conjunto de anuncios en Ads Manager. Una misma campaña puede tener distintos números en diferentes ad sets; se muestra el del ad set principal/más reciente. Datos verificados el 15 jul 2026.</p>
+    </div>
+  </div>
+
+  <!-- ═══ RANKING ═══ -->
+  <div class="section" id="ranking">
+    <div class="wrap">
+      <div class="section-label">Benchmarking</div>
+      <div class="section-title">Top 10 más eficientes vs menos eficientes</div>
+      <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:20px;">Solo campañas con objetivo de mensajes y gasto mayor a S/50.</p>
+      <div class="compare-grid">
+        <div class="compare-panel compare-good">
+          <div class="compare-header">Mejor costo por mensaje</div>
+          <div class="compare-list" id="topGood"></div>
+        </div>
+        <div class="compare-panel compare-bad">
+          <div class="compare-header">Mayor costo por mensaje</div>
+          <div class="compare-list" id="topBad"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ACCIONES ═══ -->
+  <div class="section" id="acciones">
+    <div class="wrap">
+      <div class="section-label">Próximos pasos</div>
+      <div class="section-title">Plan de acción priorizado</div>
+      <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:20px;">Ahorro mensual estimado si se implementan todas las acciones: S/ 800 – 1,200.</p>
+      <div class="action-grid" id="actionGrid"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="report-footer">
+  <div class="wrap">
+    Informe actualizado el 18 de agosto de 2026 (Ads Library pública) · Métricas base del 15 de julio de 2026 · Para gasto/CPR/mensajes actuales subir CSV desde Ads Manager<br>
+    Cuenta publicitaria 1409972699255773 · Edgar Lz · Caza Pesca y Náutica
+  </div>
+</footer>
+
+<script>
+// ── DATA ──
+const campaigns = [
+  {n:"CAMPAÑA 1",neg:"Pesca",obj:"Mensajes",cpr:0.66,gasto:17790.85,impr:6225380,alc:1834228,est:"Apagada",nota:"Nombre genérico — imposible saber qué anunciaba"},
+  {n:"CAMPAÑA 2",neg:"Pesca",obj:"Mensajes",cpr:0.45,gasto:10457.61,impr:4929247,alc:1925049,est:"Apagada",nota:"Nombre genérico"},
+  {n:"CAMPAÑA 5",neg:"Pesca",obj:"Mensajes",cpr:0.65,gasto:9675.53,impr:3477224,alc:1455982,est:"Apagada",nota:"Nombre genérico"},
+  {n:"CAMPAÑA 4",neg:"Pesca",obj:"Mensajes",cpr:0.70,gasto:4605.27,impr:1830940,alc:781722,est:"Apagada",nota:"Nombre genérico"},
+  {n:"CAMPAÑA 3",neg:"Pesca",obj:"Mensajes",cpr:0.63,gasto:4593.87,impr:1525892,alc:692096,est:"Apagada",nota:"Nombre genérico"},
+  {n:'Publicación: "OFERTA IMPERDIBLE 🔥" (CBO)',neg:"Pesca",obj:"Mensajes",cpr:0.30,gasto:1788.45,impr:530816,alc:225322,est:"Activa",nota:"Motor principal de la cuenta"},
+  {n:'Post: "Atrapa tu kit completo a solo S/50.00"',neg:"Pesca",obj:"Mensajes",cpr:0.84,gasto:1406.62,impr:422285,alc:137416,est:"Apagada",nota:""},
+  {n:'Publicación: "OFERTA IMPERDIBLE DE PESCA"',neg:"Pesca",obj:"Mensajes",cpr:0.45,gasto:1253.50,impr:394645,alc:202241,est:"Activa",nota:"Reactivada"},
+  {n:"Motaxi | Conductores VES | WhatsApp",neg:"Motaxi",obj:"Mensajes",cpr:1.98,gasto:1095.19,impr:154304,alc:null,est:"Activa",nota:"REVISAR: costo 5-18x más alto que pesca"},
+  {n:'Messages Ad: "Llévate el mejor combo de pesca"',neg:"Pesca",obj:"Mensajes",cpr:0.62,gasto:1068.85,impr:298675,alc:140711,est:"Apagada",nota:""},
+  {n:'Post: "Equípate con Wetsuit CPN"',neg:"Pesca",obj:"Mensajes",cpr:0.31,gasto:1035.41,impr:184232,alc:70666,est:"Activa",nota:""},
+  {n:'Post: "CAZA PESCA Y NAUTICA — Tu tienda náutica"',neg:"Pesca",obj:"Mensajes",cpr:0.30,gasto:1034.51,impr:229954,alc:85737,est:"Activa",nota:"Reactivada — CPR S/0.30"},
+  {n:'Post: "Atención pescadores del Perú"',neg:"Pesca",obj:"Mensajes",cpr:0.56,gasto:958.88,impr:266376,alc:141644,est:"Apagada",nota:""},
+  {n:'Post: "TODO PARA TU AVENTURA DE PESCA"',neg:"Pesca",obj:"Mensajes",cpr:0.39,gasto:950.96,impr:307977,alc:99560,est:"Activa",nota:"Reactivada"},
+  {n:'Publicación: "OFERTA IMPERDIBLE DE SEÑUELOS"',neg:"Pesca",obj:"Mensajes",cpr:0.45,gasto:934.19,impr:287314,alc:97650,est:"Activa",nota:""},
+  {n:'Publicación: "OFERTA IMPERDIBLE 🔥" (v2)',neg:"Pesca",obj:"Mensajes",cpr:0.24,gasto:905.06,impr:600859,alc:325450,est:"Activa",nota:"Reactivada — EXCELENTE CPR S/0.24"},
+  {n:'Post: "Combo listo para pescar"',neg:"Pesca",obj:"Mensajes",cpr:0.47,gasto:875.00,impr:227975,alc:133447,est:"Apagada",nota:""},
+  {n:'Publicación: "DALE CON TODO AL AGUA - TRAJES"',neg:"Pesca",obj:"Mensajes",cpr:0.57,gasto:657.02,impr:190117,alc:99979,est:"Activa",nota:"Reactivada"},
+  {n:'Messages Ad: "OFERTAS DE PESCA IMPERDIBLES"',neg:"Pesca",obj:"Mensajes",cpr:0.57,gasto:596.98,impr:164027,alc:97880,est:"Apagada",nota:""},
+  {n:'Messages Ad: "TU PRÓXIMA AVENTURA DE PESCA"',neg:"Pesca",obj:"Mensajes",cpr:0.38,gasto:578.12,impr:247930,alc:118710,est:"Completada",nota:""},
+  {n:'Messages Ad: "Atención pescadores!"',neg:"Pesca",obj:"Mensajes",cpr:0.75,gasto:577.73,impr:136879,alc:71562,est:"Completada",nota:""},
+  {n:'Publicación: "OFERTÓN BODYBOARDS GRAVITAL"',neg:"Pesca",obj:"Mensajes",cpr:0.54,gasto:532.13,impr:187037,alc:108860,est:"Activa",nota:"CPR alto S/0.94"},
+  {n:'Mensajes: "Llévate tu combo 2.10m a 60 soles"',neg:"Pesca",obj:"Mensajes",cpr:0.92,gasto:531.19,impr:118127,alc:56394,est:"Apagada",nota:""},
+  {n:'Publicación: "OFERTA ESPECIAL"',neg:"Pesca",obj:"Mensajes",cpr:0.72,gasto:515.09,impr:80025,alc:37854,est:"Apagada",nota:""},
+  {n:'Messages Ad: "Atrapa más, gasta menos"',neg:"Pesca",obj:"Mensajes",cpr:0.98,gasto:441.22,impr:88212,alc:47923,est:"Apagada",nota:""},
+  {n:'Messages Ad: "La pesca nunca fue tan fácil"',neg:"Pesca",obj:"Mensajes",cpr:0.87,gasto:427.94,impr:116307,alc:60303,est:"Apagada",nota:""},
+  {n:'Publicación: "Equipo de pesca completo"',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:349.99,impr:288685,alc:196288,est:"Apagada",nota:"Compra interacciones, NO mensajes"},
+  {n:'Publicación: "TODO PARA TU AVENTURA" (inter.)',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:349.56,impr:290251,alc:203045,est:"Apagada",nota:"Compra interacciones, NO mensajes"},
+  {n:'Publicación: "OFERTA IMPERDIBLE" (interacción)',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:329.64,impr:250042,alc:182639,est:"Activa",nota:"Evaluar: S/213/mes en interacciones"},
+  {n:'Publicación: "Explora el mar" (interacción)',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:329.58,impr:298715,alc:248184,est:"Activa",nota:"Evaluar: S/212/mes en interacciones"},
+  {n:'Messages Ad: "¿Listo para tu próxima aventura?"',neg:"Pesca",obj:"Mensajes",cpr:0.48,gasto:295.91,impr:152334,alc:62416,est:"Apagada",nota:""},
+  {n:'Messages Ad: "Hasta la abuelita pesca más que tú"',neg:"Pesca",obj:"Mensajes",cpr:1.78,gasto:240.43,impr:48917,alc:30846,est:"Apagada",nota:"Costo alto"},
+  {n:'Messages Ad: "Atrapa tu kit completo S/50" (v2)',neg:"Pesca",obj:"Mensajes",cpr:1.29,gasto:240.00,impr:73845,alc:40541,est:"Apagada",nota:""},
+  {n:'Messages Ad: "Combo de pesca completo S/50"',neg:"Pesca",obj:"Mensajes",cpr:0.79,gasto:238.89,impr:82488,alc:66576,est:"Apagada",nota:""},
+  {n:'Messages Ad: "Peñero, tu EQUIPO DE PESCA"',neg:"Pesca",obj:"Mensajes",cpr:1.03,gasto:238.24,impr:64700,alc:49921,est:"Apagada",nota:""},
+  {n:'Messages Ad: "Siente la adrenalina de la pesca"',neg:"Pesca",obj:"Mensajes",cpr:0.89,gasto:238.10,impr:74160,alc:62582,est:"Apagada",nota:""},
+  {n:'Messages Ad: "KIT COMPLETO A 50 SOLES"',neg:"Pesca",obj:"Mensajes",cpr:1.43,gasto:237.49,impr:57670,alc:32291,est:"Apagada",nota:"Costo alto"},
+  {n:'Messages Ad: "Últimas unidades a S/60"',neg:"Pesca",obj:"Mensajes",cpr:0.84,gasto:237.43,impr:82569,alc:68469,est:"Apagada",nota:""},
+  {n:'Publicación: "ATENCIÓN CONDUCTORES AMAZONAS"',neg:"Motaxi",obj:"Mensajes",cpr:0.84,gasto:230.63,impr:44073,alc:17676,est:"Apagada",nota:""},
+  {n:'Post: "PLOMOS DE PESCA DE TODOS LOS TAMAÑOS"',neg:"Pesca",obj:"Mensajes",cpr:0.48,gasto:225.63,impr:69628,alc:35685,est:"Apagada",nota:""},
+  {n:'Messages Ad: "KIT COMPLETO 2.40m A 80 SOLES"',neg:"Pesca",obj:"Mensajes",cpr:1.79,gasto:215.04,impr:39540,alc:22241,est:"Apagada",nota:"Costo alto"},
+  {n:'Messages Ad: "KIT COMPLETO 2.70m a 120 soles"',neg:"Pesca",obj:"Mensajes",cpr:1.90,gasto:214.32,impr:57480,alc:31478,est:"Apagada",nota:"Costo alto"},
+  {n:'Publicación: "MIRA LO QUE OTROS NO VEN"',neg:"Telescopios",obj:"Mensajes",cpr:0.24,gasto:749.01,impr:154213,alc:131897,est:"Activa",nota:"Ahora activa — CPR S/0.24, buen rendimiento"},
+  {n:'Post: "Arma tu pesca hoy"',neg:"Pesca",obj:"Mensajes",cpr:0.99,gasto:118.88,impr:30061,alc:18449,est:"Apagada",nota:""},
+  {n:'Post: "Descripción Comercial Multicanal"',neg:"Otro",obj:"Mensajes",cpr:1.26,gasto:103.66,impr:10082,alc:6380,est:"Apagada",nota:""},
+  {n:'Post: "ATENCIÓN, AMANTES DE LAS ALITAS"',neg:"Restaurante",obj:"Mensajes",cpr:1.32,gasto:102.59,impr:10107,alc:6658,est:"Apagada",nota:"Costo alto"},
+  {n:'Post: "BUFFET DE ALITAS ILIMITADAS"',neg:"Restaurante",obj:"Mensajes",cpr:0.98,gasto:102.43,impr:10980,alc:7789,est:"Apagada",nota:""},
+  {n:'Post: "OFERTA IMPERDIBLE 🔴"',neg:"Pesca",obj:"Mensajes",cpr:0.41,gasto:88.41,impr:26342,alc:18266,est:"Apagada",nota:""},
+  {n:'Mensajes: "EL VERDADERO SABOR PERUANO"',neg:"Restaurante",obj:"Mensajes",cpr:4.99,gasto:79.77,impr:7203,alc:3790,est:"Apagada",nota:"PEOR COSTO: S/4.99/mensaje"},
+  {n:'Messages Ad: "Celebramos el día del Padre"',neg:"Pesca",obj:"Mensajes",cpr:1.34,gasto:77.77,impr:22576,alc:11750,est:"Apagada",nota:""},
+  {n:'Messages Ad: "Celebra el Día del Padre kit"',neg:"Pesca",obj:"Mensajes",cpr:1.33,gasto:77.39,impr:19908,alc:11365,est:"Apagada",nota:""},
+  {n:"Fiestas Patrias combo 39 soles 🎣",neg:"Pesca",obj:"Mensajes",cpr:0.16,gasto:9.37,impr:null,alc:null,est:"Activa",nota:"Duplicada — consolidar en la 🎉"},
+  {n:"Fiestas Patrias combo 39 soles 🎉",neg:"Pesca",obj:"Mensajes",cpr:0.11,gasto:8.90,impr:null,alc:null,est:"Activa",nota:"MEJOR CPR ACTIVA — escalar"},
+  {n:"Fiestas Patrias combo 39 soles 🇵🇪",neg:"Pesca",obj:"Mensajes",cpr:0.17,gasto:9.25,impr:null,alc:null,est:"Activa",nota:"Duplicada — consolidar"},
+  {n:"Fiestas Patrias combo 39 soles 🔥",neg:"Pesca",obj:"Mensajes",cpr:0.19,gasto:8.48,impr:null,alc:null,est:"Activa",nota:"Duplicada — consolidar"},
+  {n:"LA MEJOR TIENDA DE PISCINAS EN PERÚ",neg:"Piscinas",obj:"Mensajes",cpr:0.29,gasto:120.81,impr:null,alc:null,est:"Activa",nota:""},
+  {n:'Post: "¡Atrapa la mejor oferta en Caza Pesca y Náutica!"',neg:"Pesca",obj:"Mensajes",cpr:0.41,gasto:1167.26,impr:417680,alc:196142,est:"Activa",nota:""},
+  {n:'Publicación: "OFERTA IMPERDIBLE EN REGULADORES DE BUCEO"',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:373.94,impr:262711,alc:205417,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "MÁSCARA DE SILICONA CON VÁLVULA"',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:374.37,impr:301534,alc:249684,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "OFERTA DEL DÍA"',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:213.37,impr:159463,alc:127715,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "LLEVA TU INMERSIÓN AL SIGUIENTE NIVEL"',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:374.77,impr:302512,alc:244780,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "Equipo de pesca completo a precio increíble"',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:373.78,impr:305549,alc:214021,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "CAZA PESCA Y NAUTICA — Tu tienda náutica" (inter.)',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:374.61,impr:262445,alc:191128,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "TODO PARA TU AVENTURA DE PESCA" (inter.)',neg:"Pesca",obj:"Interacción",cpr:0.002,gasto:373.82,impr:307021,alc:221692,est:"Activa",nota:"Compra interacciones"},
+  {n:'Publicación: "OFERTA IMPERDIBLE 🎣🔥"',neg:"Pesca",obj:"Mensajes",cpr:0.37,gasto:686.03,impr:235772,alc:130188,est:"Activa",nota:""},
+  {n:'Publicación: "SEÑUELOS PROFESIONALES" (nueva)',neg:"Pesca",obj:"Mensajes",cpr:0.37,gasto:199.08,impr:56864,alc:31313,est:"Activa",nota:"Campaña recién creada"},
+  {n:'Post: "Wetsuit CPN para aguas frías" (nueva)',neg:"Pesca",obj:"Mensajes",cpr:0.51,gasto:199.77,impr:29231,alc:17385,est:"Activa",nota:"Campaña recién creada"}
+];
+
+const activas30d = [
+  {n:'Publicación: "OFERTA IMPERDIBLE 🔥" (CBO)',neg:"Pesca",obj:"Mensajes",msgs:6076,cpr:0.31,inv:1886.93,diag:"Motor principal de la cuenta",accion:"Proteger — no tocar",cls:"good"},
+  {n:'Publicación: "OFERTA IMPERDIBLE DE PESCA"',neg:"Pesca",obj:"Mensajes",msgs:2884,cpr:0.46,inv:1323.46,diag:"Reactivada, buen volumen",accion:"Mantener",cls:"ok"},
+  {n:"Motaxi | Conductores VES | WhatsApp",neg:"Motaxi",obj:"Mensajes",msgs:597,cpr:2.11,inv:1257.72,diag:"Costo 5-18x más alto que pesca",accion:"Revisar segmentación urgente",cls:"bad"},
+  {n:'Post: "¡Atrapa la mejor oferta en Caza Pesca!"',neg:"Pesca",obj:"Mensajes",msgs:2863,cpr:0.41,inv:1167.26,diag:"Buen rendimiento",accion:"Mantener",cls:"ok"},
+  {n:'Post: "Equípate con Wetsuit CPN"',neg:"Pesca",obj:"Mensajes",msgs:3358,cpr:0.31,inv:1049.56,diag:"Buen CPR",accion:"Mantener",cls:"ok"},
+  {n:'Post: "CAZA PESCA Y NAUTICA — Tu tienda náutica"',neg:"Pesca",obj:"Mensajes",msgs:3541,cpr:0.30,inv:1048.73,diag:"MEJOR CPR de mensajes",accion:"Mantener y escalar",cls:"good"},
+  {n:'Post: "TODO PARA TU AVENTURA DE PESCA"',neg:"Pesca",obj:"Mensajes",msgs:2489,cpr:0.39,inv:964.77,diag:"Reactivada, CPR correcto",accion:"Mantener",cls:"ok"},
+  {n:'Publicación: "SEÑUELOS PROFESIONALES"',neg:"Pesca",obj:"Mensajes",msgs:2104,cpr:0.45,inv:948.11,diag:"CPR correcto",accion:"Mantener",cls:"ok"},
+  {n:'Publicación: "OFERTA IMPERDIBLE 🔥" (v2)',neg:"Pesca",obj:"Mensajes",msgs:3800,cpr:0.24,inv:918.87,diag:"EXCELENTE CPR S/0.24",accion:"Escalar presupuesto",cls:"good"},
+  {n:'Publicación: "MIRA LO QUE OTROS NO VEN"',neg:"Telescopios",obj:"Mensajes",msgs:3079,cpr:0.24,inv:749.01,diag:"Reactivada, excelente CPR",accion:"Escalar presupuesto",cls:"good"},
+  {n:'Publicación: "DALE CON TODO AL AGUA — TRAJES"',neg:"Pesca",obj:"Mensajes",msgs:1201,cpr:0.59,inv:708.27,diag:"Reactivada",accion:"Mantener",cls:"ok"},
+  {n:'Publicación: "OFERTA IMPERDIBLE 🎣🔥"',neg:"Pesca",obj:"Mensajes",msgs:1873,cpr:0.37,inv:686.03,diag:"CPR bueno",accion:"Mantener",cls:"ok"},
+  {n:'Publicación: "LLEVA TU INMERSIÓN AL SIGUIENTE NIVEL"',neg:"Pesca",obj:"Interacción",msgs:180714,cpr:0.002,inv:374.77,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "CAZA PESCA Y NAUTICA" (interacción)',neg:"Pesca",obj:"Interacción",msgs:152046,cpr:0.002,inv:374.61,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "MÁSCARA DE SILICONA CON VÁLVULA"',neg:"Pesca",obj:"Interacción",msgs:193883,cpr:0.002,inv:374.37,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "REGULADORES DE BUCEO"',neg:"Pesca",obj:"Interacción",msgs:160915,cpr:0.002,inv:373.94,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "TODO PARA TU AVENTURA" (interacción)',neg:"Pesca",obj:"Interacción",msgs:178237,cpr:0.002,inv:373.82,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "Equipo de pesca completo" (interacción)',neg:"Pesca",obj:"Interacción",msgs:200813,cpr:0.002,inv:373.78,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "OFERTA IMPERDIBLE" (interacción)',neg:"Pesca",obj:"Interacción",msgs:162093,cpr:0.002,inv:353.74,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "Explora el mar" (interacción)',neg:"Pesca",obj:"Interacción",msgs:223186,cpr:0.002,inv:353.42,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:'Publicación: "OFERTÓN BODYBOARDS GRAVITAL"',neg:"Pesca",obj:"Mensajes",msgs:226,cpr:0.94,inv:212.34,diag:"CPR alto",accion:"Optimizar o apagar",cls:"bad"},
+  {n:'Publicación: "OFERTA DEL DÍA" (interacción)',neg:"Pesca",obj:"Interacción",msgs:101800,cpr:0.002,inv:213.37,diag:"Compra interacciones",accion:"Evaluar si genera ventas",cls:"warn"},
+  {n:"LA MEJOR TIENDA DE PISCINAS EN PERÚ",neg:"Piscinas",obj:"Mensajes",msgs:651,cpr:0.31,inv:200.23,diag:"Buen CPR, negocio distinto",accion:"Mantener",cls:"ok"},
+  {n:'Post: "Wetsuit CPN" (nueva)',neg:"Pesca",obj:"Mensajes",msgs:389,cpr:0.51,inv:199.77,diag:"Campaña recién creada",accion:"Monitorear",cls:"ok"},
+  {n:'Publicación: "SEÑUELOS" (nueva)',neg:"Pesca",obj:"Mensajes",msgs:531,cpr:0.37,inv:199.08,diag:"Campaña recién creada",accion:"Monitorear",cls:"ok"},
+  {n:"Fiestas Patrias combo 39 soles 🎣",neg:"Pesca",obj:"Mensajes",msgs:108,cpr:0.18,inv:19.37,diag:"Duplicada — consolidar",accion:"Apagar — consolidar en 🎉",cls:"off"},
+  {n:"Fiestas Patrias combo 39 soles 🇵🇪",neg:"Pesca",obj:"Mensajes",msgs:103,cpr:0.19,inv:19.08,diag:"Duplicada — consolidar",accion:"Apagar — consolidar en 🎉",cls:"off"},
+  {n:"Fiestas Patrias combo 39 soles 🎉",neg:"Pesca",obj:"Mensajes",msgs:151,cpr:0.12,inv:18.61,diag:"MEJOR CPR de Fiestas Patrias",accion:"ESCALAR — subir presupuesto",cls:"good"},
+  {n:"Fiestas Patrias combo 39 soles 🔥",neg:"Pesca",obj:"Mensajes",msgs:90,cpr:0.20,inv:18.32,diag:"Duplicada — consolidar",accion:"Apagar — consolidar en 🎉",cls:"off"}
+];
+
+const actions = [
+  {pri:"urgent",num:"1",title:"Pagar saldo pendiente de S/ 935.03",detail:"Facturación → Pagar. Verificar que al menos 1 tarjeta tenga fondos. Si no se paga, Meta pausará las 29 campañas activas."},
+  {pri:"urgent",num:"2",title:"Solicitar revisión del perfil de Facebook",detail:"Account Quality → Cuenta de Facebook → Revisar perfil. Levanta la restricción activa desde feb-2025 que limita la administración de anuncios."},
+  {pri:"high",num:"3",title:"Consolidar 4 campañas Fiestas Patrias en 1",detail:"Dejar solo la 🎉 (CPR S/0.11), apagar las otras 3, subir presupuesto a S/10-15/día. Meta estima -10% costo por audiencias superpuestas. Hacer antes del 28 de julio."},
+  {pri:"high",num:"4",title:"Revisar campaña Motaxi (CPR S/2.00)",detail:"Segmentación, creativo y landing page. CPR es 5-18x más caro que pesca. Ahorro potencial: S/500-700/mes si se optimiza a CPR < S/1.00."},
+  {pri:"high",num:"5",title:"Evaluar 2 campañas de interacción (~S/425/mes)",detail:"Si no generan ventas reales, apagar y reasignar ese presupuesto a campañas de mensajes que sí convierten."},
+  {pri:"med",num:"6",title:'Reactivar "OFERTA IMPERDIBLE 🔥 v2" (CPR S/0.24)',detail:"Tuvo el mejor costo por mensaje de toda la cuenta histórica. Evaluar si el creativo sigue vigente y relanzar."},
+  {pri:"med",num:"7",title:"Eliminar o corregir anuncio de telescopio rechazado",detail:"'MIRA LO QUE OTROS NO VEN' rechazado desde may-2026 por página de destino no funcional. Limpia marcas negativas de la cuenta."},
+  {pri:"med",num:"8",title:"Resolver 2 reclamos de copyright (video Colors)",detail:"Buzón de ayuda → Tus alertas. Eliminar el video o disputar el reclamo para limpiar el expediente del perfil."},
+  {pri:"low",num:"9",title:"Renombrar CAMPAÑA 1-5 con nombres descriptivos",detail:'Formato sugerido: "Negocio | Producto | Canal | Fecha". Esas 5 campañas gastaron S/47,123 sin poder identificar qué anunciaban.'},
+  {pri:"low",num:"10",title:"Configurar cuenta de respaldo en portafolio Caza Pesca",detail:"Agregar método de pago en soles (la cuenta está en USD, cambiar primero). Es el plan B si la cuenta personal cae."}
+];
+
+// ── HELPERS ──
+// Nota: estos mappings se declaran acá temprano porque renderMainTable() los usa
+// en la primera llamada (antes se declaraban debajo y disparaban TDZ error).
+const CAMPAIGN_OWNERS   = {}; // { "nombre campaña": "vendedor" }
+const CAMPAIGN_SALES    = {}; // { "nombre campaña": 15 }  (manual, fallback)
+const CAMPAIGN_PRODUCTS = {}; // { "nombre campaña": ["productoId1", ...] }
+
+function fmt(n) { return n == null ? '—' : n.toLocaleString('es-PE'); }
+function fmtM(n) { return n == null ? '—' : 'S/ ' + n.toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function calcMsgs(cpr, gasto) { return (cpr && gasto && cpr > 0) ? Math.round(gasto / cpr) : 0; }
+function tagHTML(est) {
+  const cls = est === 'Activa' ? 'tag-active' : est === 'Rechazada' ? 'tag-rejected' : 'tag-off';
+  return `<span class="tag ${cls}">${est}</span>`;
+}
+function effClass(cpr) {
+  if (cpr <= 0.50) return 'eff-good';
+  if (cpr <= 1.00) return 'eff-mid';
+  return 'eff-bad';
+}
+
+// ── LINK HELPERS ──
+const ADS_MGR = 'https://www.facebook.com/adsmanager/manage/campaigns?act=1409972699255773';
+const PAGE_IDS = {
+  'Pesca': '100578911942533',
+  'Pesca/CPN': '100578911942533',
+  'Pesca/surf': '100578911942533',
+  'Pesca/buceo': '100578911942533',
+  'Piscinas': '100578911942533',
+  'Telescopios': '100578911942533',
+  'Otro': '100578911942533',
+  'Restaurante': '100578911942533',
+  'Motaxi': '109804400600476',
+  'Codextudio': '225648068869519'
+};
+const PAGE_NAMES = {
+  '100578911942533': 'Caza Pesca y Náutica',
+  '109804400600476': 'Motaxi',
+  '225648068869519': 'Codextudio'
+};
+const WA_MAP = [
+  {match: /Fiestas Patrias/i, wa: '+51 969 350 649'},
+  {match: /Wetsuit CPN|Wetsuit.*aguas/i, wa: '+51 908 808 912'},
+  {match: /SEÑUELOS/i, wa: '+51 912 630 912'},
+  {match: /OFERTA IMPERDIBLE.*CBO/i, wa: '+51 912 630 912'},
+  {match: /OFERTA IMPERDIBLE.*interacc/i, wa: '+51 912 630 912'},
+  {match: /OFERTA IMPERDIBLE.*v2/i, wa: '+51 908 808 912'},
+  {match: /OFERTA IMPERDIBLE.*🎣/i, wa: '+51 912 630 912'},
+  {match: /OFERTA IMPERDIBLE DE PESCA/i, wa: '+51 924 719 566'},
+  {match: /Explora el mar/i, wa: '+51 908 808 912'},
+  {match: /PRÓXIMA AVENTURA/i, wa: '+51 969 350 649'},
+  {match: /Atención pescadores/i, wa: '+51 969 350 649'},
+  {match: /PISCINAS/i, wa: '+51 908 808 912'},
+  {match: /SEGURIDAD ACUÁTICA/i, wa: '+51 908 808 912'},
+  {match: /Conductores.*VES|Motaxi/i, wa: '+51 902 179 536'},
+  {match: /CONDUCTORES AMAZONAS/i, wa: '+51 902 179 536'},
+  {match: /Atrapa la mejor oferta/i, wa: '+51 978 633 702'},
+  {match: /CAZA PESCA Y NAUTICA.*tienda|CAZA PESCA Y NAUTICA.*inter/i, wa: '+51 912 630 912'},
+  {match: /TODO PARA TU AVENTURA/i, wa: '+51 969 350 649'},
+  {match: /MIRA LO QUE OTROS NO VEN/i, wa: '+51 978 633 702'},
+  {match: /DALE CON TODO/i, wa: '+51 908 808 912'},
+  {match: /INMERSIÓN AL SIGUIENTE NIVEL/i, wa: '+51 969 350 649'},
+  {match: /MÁSCARA DE SILICONA/i, wa: '+51 924 719 566'},
+  {match: /REGULADORES DE BUCEO/i, wa: '+51 912 630 912'},
+  {match: /OFERTA DEL DÍA/i, wa: '+51 969 350 649'},
+  {match: /Equipo de pesca completo/i, wa: 'Interacción'},
+  {match: /BODYBOARDS|GRAVITAL/i, wa: '+51 924 719 566'},
+  {match: /OFERTA ESPECIAL/i, wa: '+51 908 808 912'},
+];
+function getWA(name, neg) {
+  for (const m of WA_MAP) { if (m.match.test(name)) return m.wa; }
+  if (neg === 'Motaxi') return '+51 902 179 536';
+  return null;
+}
+function waCell(name, neg) {
+  const num = getWA(name, neg);
+  if (!num) return '<td class="num" style="color:var(--text-muted);font-size:0.78rem">—</td>';
+  if (num === 'Messenger') return '<td class="num" style="font-size:0.78rem;white-space:nowrap;color:var(--ocean);" title="Solo Messenger / Instagram">💬 Messenger</td>';
+  if (num === 'Interacción') return '<td class="num" style="font-size:0.78rem;white-space:nowrap;color:var(--text-muted);" title="Campaña de interacción — no recibe mensajes">👍 Interacción</td>';
+  const digits = num.replace(/[^0-9]/g, '');
+  return `<td class="num" style="font-size:0.78rem;white-space:nowrap"><a href="https://wa.me/${digits}" target="_blank" rel="noopener" style="color:var(--sea-green);text-decoration:none" title="Abrir WhatsApp">${svgWA} ${num}</a></td>`;
+}
+const svgWA = '<svg viewBox="0 0 16 16" width="13" height="13" fill="var(--sea-green)" style="vertical-align:-2px;margin-right:2px"><path d="M13.6 2.3A7.9 7.9 0 002.2 12.7L.8 15.2l2.6-1.3A7.9 7.9 0 0013.6 2.3zM8 14.1a6.1 6.1 0 01-3.3-1l-.2-.1-2.2 1.1.6-2.1-.2-.3A6.1 6.1 0 118 14.1zm3.4-4.6c-.2-.1-1.1-.6-1.3-.6s-.3 0-.5.2-.5.6-.7.8-.2.2-.4.1a5.3 5.3 0 01-2.6-2.3c-.2-.3.2-.3.5-1 0-.1 0-.3-.1-.4S5.6 5 5.4 4.6s-.4 0-.5 0h-.5a.9.9 0 00-.7.4A2.7 2.7 0 003.3 7a4.7 4.7 0 001 1.8 10.7 10.7 0 004.1 3.1c1.5.5 1.5.3 1.7.3a2.5 2.5 0 001.7-1.2 2 2 0 00.1-1.2c0-.1-.2-.2-.5-.3z"/></svg>';
+const svgExternal = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.5 2H2.5a1 1 0 00-1 1v6.5a1 1 0 001 1H9a1 1 0 001-1V7.5"/><path d="M7 1.5h3.5V5"/><path d="M5.5 6.5L10.5 1.5"/></svg>';
+
+const AD_LIB_MAP = [
+  {match: /Fiestas Patrias.*🎉/, id: '2241503006389441'},
+  {match: /Fiestas Patrias.*🎣/, id: '1037773712542466'},
+  {match: /Fiestas Patrias.*🇵🇪/, id: '1834437374385498'},
+  {match: /Fiestas Patrias.*🔥/, id: '1876987669926070'},
+  {match: /Fiestas Patrias/i, id: '2241503006389441'},
+  {match: /Wetsuit/i, id: '27057660797187372'},
+  {match: /SEÑUELOS/i, id: '919641984470743'},
+  {match: /OFERTA IMPERDIBLE.*CBO/i, id: '28177325581857854'},
+  {match: /OFERTA IMPERDIBLE.*interacc/i, id: '4244328795782182'},
+  {match: /OFERTA IMPERDIBLE.*🔴/i, id: '1720905375940528'},
+  {match: /OFERTA IMPERDIBLE DE PESCA/i, id: '1058832919736076'},
+  {match: /OFERTAS DE PESCA IMPERDIBLES/i, id: '1700792651066650'},
+  {match: /OFERTA IMPERDIBLE/i, id: '28177325581857854'},
+  {match: /Explora el mar/i, id: '1282239840644571'},
+  {match: /PRÓXIMA AVENTURA/i, id: '1823773772455295'},
+  {match: /próxima aventura/i, id: '1823773772455295'},
+  {match: /Atención pescadores|Atencion pescadores/i, id: '855445953668774'},
+  {match: /PISCINAS/i, id: '976186645374531'},
+  {match: /SEGURIDAD ACUÁTICA/i, id: '1544726700318655'},
+  {match: /Conductores.*VES|Motaxi.*Conductores/i, id: '2757905127906878'},
+  {match: /CONDUCTORES AMAZONAS/i, id: '992281916983885'},
+  {match: /DALE CON TODO.*TRAJES/i, id: '1659361545114267'},
+  {match: /BODYBOARDS GRAVITAL/i, id: '969554289001281'},
+  {match: /PLOMOS DE PESCA/i, id: '2180711199380676'},
+  {match: /combo.*pesca|kit completo.*50|Atrapa tu kit/i, id: '855445953668774'},
+  {match: /TODO PARA TU AVENTURA/i, id: '1193277122515261'},
+  {match: /OFERTA ESPECIAL/i, id: '1700792651066650'},
+  {match: /MIRA LO QUE OTROS/i, id: '1796461917737884'},
+  {match: /Día del Padre|dia del padre/i, id: '793871483426879'},
+  {match: /Atrapa la mejor oferta/i, id: '855445953668774'},
+  {match: /REGULADORES DE BUCEO/i, id: '2521437504963675'},
+  {match: /MÁSCARA DE SILICONA/i, id: '1544726700318655'},
+  {match: /OFERTA DEL DÍA/i, id: '969554289001281'},
+  {match: /INMERSIÓN AL SIGUIENTE NIVEL/i, id: '1796461917737884'},
+  {match: /Equipo de pesca completo.*precio/i, id: '793871483426879'},
+  {match: /CAZA PESCA.*NAUTICA.*inter/i, id: '1193277122515261'},
+  {match: /Motaxi/i, id: '2757905127906878'},
+];
+
+function getAdLibId(name) {
+  for (const m of AD_LIB_MAP) { if (m.match.test(name)) return m.id; }
+  return null;
+}
+
+function adLibURL(negocio, name) {
+  const libId = getAdLibId(name);
+  if (libId) return `https://www.facebook.com/ads/library/?id=${libId}`;
+  const pageId = PAGE_IDS[negocio] || '100578911942533';
+  return `https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=PE&view_all_page_id=${pageId}`;
+}
+
+function linkCell(name, negocio) {
+  const libId = getAdLibId(name);
+  const pageId = PAGE_IDS[negocio] || '100578911942533';
+  const pageName = PAGE_NAMES[pageId] || 'Caza Pesca';
+  if (libId) {
+    return `<td class="link-cell">
+      <a class="link-lib" href="https://www.facebook.com/ads/library/?id=${libId}" target="_blank" rel="noopener" title="Ver anuncio exacto en Biblioteca (${pageName})">${svgExternal} Ver anuncio</a>
+    </td>`;
+  }
+  const url = `https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=PE&view_all_page_id=${pageId}`;
+  return `<td class="link-cell">
+    <a class="link-lib" href="${url}" target="_blank" rel="noopener" title="Ver anuncios de ${pageName}">${svgExternal} Ver página</a>
+  </td>`;
+}
+
+// ── RENDER MAIN TABLE ──
+const maxGasto = Math.max(...campaigns.map(c => c.gasto || 0));
+function renderMainTable(data) {
+  const body = document.getElementById('mainBody');
+  body.innerHTML = data.map((c, i) => {
+    const msgs = calcMsgs(c.cpr, c.gasto);
+    const barW = ((c.gasto || 0) / maxGasto * 100).toFixed(1);
+    // ⚠ Campañas con objetivo distinto a "Mensajes": marca fila en rojo
+    const esInteraccion = (c.obj || '').toLowerCase().includes('interac');
+    const filaAlerta = esInteraccion ? 'style="background:linear-gradient(90deg,rgba(239,68,68,0.10),transparent);"' : '';
+    const objBadge = esInteraccion
+      ? `<span style="background:#DC2626;color:#fff;padding:2px 8px;border-radius:5px;font-size:0.68rem;font-weight:800;letter-spacing:0.03em">⚠ INTERACCIÓN</span>`
+      : `<span style="background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:5px;font-size:0.68rem;font-weight:700">✓ Mensajes</span>`;
+    // Celda "Mensajes reales" — SOLO cuenta si el objetivo es Mensajes; si no, avisa
+    const msgsCell = esInteraccion
+      ? `<span style="color:#DC2626;font-weight:700" title="Esta campaña optimiza para interacciones, no para mensajes. Los mensajes que llegan son colaterales.">0 msgs*</span>`
+      : (msgs ? fmt(msgs) : '—');
+    // Ventas atribuidas (últimos 30 días) — usa productos vinculados
+    const prodIds = getProductosDe(c.n);
+    let ventasCell = '<span style="color:var(--text-muted);font-style:italic">—</span>';
+    if (prodIds.length > 0 && typeof calcularVentasDeProductos === 'function') {
+      try {
+        const res = calcularVentasDeProductos(prodIds, '30d');
+        if (res && res.unidades > 0) {
+          ventasCell = `<div style="text-align:right"><b style="color:#059669">${res.unidades}u</b><div style="font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace">S/ ${res.monto.toFixed(2)}</div></div>`;
+        } else {
+          ventasCell = '<span style="color:var(--text-muted)">0</span>';
+        }
+      } catch (e) { /* silencioso */ }
+    }
+    return `<tr ${filaAlerta}>
+      <td class="num">${i + 1}</td>
+      <td class="campaign-name">${c.n}</td>
+      <td>${tagHTML(c.est)}</td>
+      <td>${c.neg}</td>
+      <td>${objBadge}</td>
+      <td class="num">${msgsCell}</td>
+      <td class="num"><span class="eff ${effClass(c.cpr)}">${fmtM(c.cpr)}</span></td>
+      <td class="num bar-cell"><span class="bar-fill" style="width:${barW}%"></span><span class="bar-val">${fmtM(c.gasto)}</span></td>
+      ${waCell(c.n, c.neg)}
+      ${typeof productoCell === 'function' ? productoCell(c.n) : '<td>—</td>'}
+      <td class="num">${ventasCell}</td>
+      ${linkCell(c.n, c.neg)}
+      <td>${esInteraccion ? '<b style="color:#B91C1C">Dar de baja y recrear como Mensajes</b>' : (c.nota || '')}</td>
+    </tr>`;
+  }).join('');
+  // Alerta de campañas mal configuradas + resumen por vendedor
+  const interaccionSet = data.filter(c => (c.obj||'').toLowerCase().includes('interac'));
+  const alertaEl = document.getElementById('alertaInteraccion');
+  if (alertaEl) {
+    if (interaccionSet.length > 0) {
+      alertaEl.style.display = 'block';
+      document.getElementById('alertaInterCount').textContent = interaccionSet.length;
+      const gastoInt = interaccionSet.reduce((s,c) => s + Number(c.gasto||0), 0);
+      document.getElementById('alertaInterGasto').textContent = 'S/ ' + gastoInt.toFixed(2);
+    } else {
+      alertaEl.style.display = 'none';
+    }
+  }
+  renderResumenPorVendedor(data);
+}
+
+// ══════ Ranking de mensajes por vendedor ══════
+function renderResumenPorVendedor(data) {
+  const wrap = document.getElementById('resumenVendedores');
+  if (!wrap) return;
+
+  // Contar campañas y mensajes por vendedor
+  const stats = {}; // { vendedor: { campanas, msgs, gasto, activas, interaccion } }
+  data.forEach(c => {
+    const vend = CAMPAIGN_OWNERS[c.n] || '(sin asignar)';
+    if (!stats[vend]) stats[vend] = { campanas: 0, msgs: 0, gasto: 0, activas: 0, interaccion: 0 };
+    stats[vend].campanas++;
+    stats[vend].gasto += Number(c.gasto || 0);
+    if ((c.est || '').toLowerCase() === 'activa') stats[vend].activas++;
+    const esInter = (c.obj || '').toLowerCase().includes('interac');
+    if (esInter) stats[vend].interaccion++;
+    // Solo contar mensajes reales cuando el objetivo es Mensajes
+    if (!esInter) stats[vend].msgs += calcMsgs(c.cpr, c.gasto);
+  });
+
+  const rows = Object.entries(stats).sort((a, b) => b[1].msgs - a[1].msgs);
+  if (!rows.length) { wrap.innerHTML = ''; return; }
+
+  const totalMsgs = rows.reduce((s, r) => s + r[1].msgs, 0);
+  const totalGasto = rows.reduce((s, r) => s + r[1].gasto, 0);
+  const cpmProm = totalMsgs > 0 ? totalGasto / totalMsgs : 0;
+
+  wrap.innerHTML = `
+    <div style="background:linear-gradient(135deg,#0F172A,#1E293B);color:#fff;border-radius:12px;padding:16px 20px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+        <div>
+          <div style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7">📊 Rendimiento por vendedor</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:800;font-size:1.4rem;margin-top:2px">Mensajes recibidos y costo promedio</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.72rem;opacity:0.7">TOTAL RESUMEN</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.1rem">${fmt(totalMsgs)} msgs · S/ ${cpmProm.toFixed(2)}/msg</div>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:#fff">
+          <thead>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.15);text-align:left">
+              <th style="padding:8px 6px;font-weight:600;opacity:0.7;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase">Vendedor</th>
+              <th style="padding:8px 6px;font-weight:600;opacity:0.7;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-align:right">Campañas</th>
+              <th style="padding:8px 6px;font-weight:600;opacity:0.7;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-align:right">Mensajes</th>
+              <th style="padding:8px 6px;font-weight:600;opacity:0.7;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-align:right">Inversión</th>
+              <th style="padding:8px 6px;font-weight:600;opacity:0.7;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-align:right">Costo/msg</th>
+              <th style="padding:8px 6px;font-weight:600;opacity:0.7;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-align:right">Alertas</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(([vend, s]) => {
+              const cpm = s.msgs > 0 ? s.gasto / s.msgs : 0;
+              const alerta = s.interaccion > 0
+                ? `<span style="background:#DC2626;color:#fff;padding:2px 8px;border-radius:5px;font-size:0.68rem;font-weight:800">${s.interaccion} interacción</span>`
+                : `<span style="opacity:0.5">—</span>`;
+              return `<tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+                <td style="padding:9px 6px;font-weight:700">${vend}</td>
+                <td style="padding:9px 6px;text-align:right;font-family:'JetBrains Mono',monospace">${s.campanas} <span style="opacity:0.5">(${s.activas} act.)</span></td>
+                <td style="padding:9px 6px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:800;color:#34D399">${fmt(s.msgs)}</td>
+                <td style="padding:9px 6px;text-align:right;font-family:'JetBrains Mono',monospace">S/ ${s.gasto.toFixed(2)}</td>
+                <td style="padding:9px 6px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:${cpm > 0 && cpm < 0.5 ? '#34D399' : cpm > 1 ? '#F87171' : '#FBBF24'}">${cpm > 0 ? 'S/ ' + cpm.toFixed(2) : '—'}</td>
+                <td style="padding:9px 6px;text-align:right">${alerta}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+let sortedCampaigns = [...campaigns].sort((a, b) => (b.gasto || 0) - (a.gasto || 0));
+
+// ── FILTROS POR COLUMNA ──
+const COL_FILTERS = { est: null, neg: null, obj: null }; // null = todos, o Set con valores permitidos
+let sortCol = 7, sortAsc = false;
+
+function aplicarFiltrosYRender() {
+  const filtrados = sortedCampaigns.filter(c => {
+    for (const [field, allowed] of Object.entries(COL_FILTERS)) {
+      if (!allowed) continue;
+      if (!allowed.has(c[field] || '')) return false;
+    }
+    return true;
+  });
+  renderMainTable(filtrados);
+  actualizarBarraFiltros(filtrados.length);
+  actualizarHeadersFiltrados();
+}
+
+function actualizarBarraFiltros(nMostrados) {
+  const bar = document.getElementById('filterActiveBar');
+  const txt = document.getElementById('filterActiveText');
+  if (!bar) return;
+  const activos = Object.entries(COL_FILTERS).filter(([, v]) => v).map(([k]) => k);
+  if (activos.length === 0) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  const nombres = { est: 'Estado', neg: 'Negocio', obj: 'Objetivo' };
+  txt.textContent = `🔎 Mostrando ${nMostrados} de ${sortedCampaigns.length} · Filtros: ${activos.map(k => nombres[k]).join(', ')}`;
+}
+
+function actualizarHeadersFiltrados() {
+  document.querySelectorAll('#mainTable thead th[data-filter-field]').forEach(th => {
+    const field = th.dataset.filterField;
+    const active = !!COL_FILTERS[field];
+    th.classList.toggle('filtered', active);
+    const btn = th.querySelector('.col-filter-btn');
+    if (btn) btn.classList.toggle('active', active);
+  });
+}
+
+renderMainTable(sortedCampaigns);
+
+// ── SORT ──
+document.querySelectorAll('#mainTable thead th').forEach(th => {
+  th.addEventListener('click', (e) => {
+    if (e.target.closest('.col-filter-btn')) return; // click en embudo, ignorar sort
+    const col = +th.dataset.col;
+    const type = th.dataset.type;
+    if (col === sortCol) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = true; }
+
+    document.querySelectorAll('#mainTable thead th').forEach(t => t.classList.remove('sorted'));
+    th.classList.add('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = sortAsc ? '▲' : '▼';
+
+    // Cols: 0#, 1campaña, 2estado, 3negocio, 4objetivo, 5msgs, 6cpr, 7gasto, 8wa, 9productos, 10ventas30d, 11linkAd, 12nota
+    const keys = ['_idx','n','est','neg','obj','_msgs','cpr','gasto','_wa','_prod','_ventas30d','_link','nota'];
+    const ventas30dOf = (c) => {
+      const ids = getProductosDe(c.n);
+      if (!ids.length || typeof calcularVentasDeProductos !== 'function') return 0;
+      try { return calcularVentasDeProductos(ids, '30d')?.monto || 0; } catch { return 0; }
+    };
+    sortedCampaigns.sort((a, b) => {
+      let va, vb;
+      if (col === 0) { va = campaigns.indexOf(a); vb = campaigns.indexOf(b); }
+      else if (col === 5) { va = calcMsgs(a.cpr, a.gasto); vb = calcMsgs(b.cpr, b.gasto); }
+      else if (col === 10) { va = ventas30dOf(a); vb = ventas30dOf(b); }
+      else if (type === 'num') { va = a[keys[col]] || 0; vb = b[keys[col]] || 0; }
+      else { va = (a[keys[col]] || '').toLowerCase(); vb = (b[keys[col]] || '').toLowerCase(); }
+      if (va < vb) return sortAsc ? -1 : 1;
+      if (va > vb) return sortAsc ? 1 : -1;
+      return 0;
+    });
+    aplicarFiltrosYRender();
+  });
+});
+
+// ── POPUP FILTRO COLUMNA ──
+let popupFieldActual = null;
+let popupSelActual = new Set();
+
+function toggleColFilter(btn, field, label) {
+  const popup = document.getElementById('colFilterPopup');
+  if (!popup) return;
+
+  if (popupFieldActual === field && popup.style.display === 'flex') {
+    cerrarColFilter();
+    return;
+  }
+  popupFieldActual = field;
+
+  // Valores únicos y su conteo
+  const counts = {};
+  campaigns.forEach(c => {
+    const v = c[field] || '';
+    counts[v] = (counts[v] || 0) + 1;
+  });
+  const valoresUnicos = Object.keys(counts).sort();
+  const filtroActual = COL_FILTERS[field];
+  popupSelActual = new Set(filtroActual ? [...filtroActual] : valoresUnicos);
+
+  // Render lista
+  const list = document.getElementById('filterValuesList');
+  list.innerHTML = valoresUnicos.map(v => {
+    const checked = popupSelActual.has(v) ? 'checked' : '';
+    const safeVal = v.replace(/"/g, '&quot;');
+    return `<label class="filter-value" data-value="${safeVal}">
+      <input type="checkbox" ${checked} onchange="onFilterCheckChange(this, '${safeVal.replace(/'/g, "\\'")}')">
+      <span class="value-label">${v || '<i style=\"opacity:0.5\">(vacío)</i>'}</span>
+      <span class="value-count">${counts[v]}</span>
+    </label>`;
+  }).join('');
+
+  document.getElementById('filterSearchInput').value = '';
+
+  // Posicionar popup debajo del botón
+  const r = btn.getBoundingClientRect();
+  popup.style.display = 'flex';
+  const popupW = 300;
+  let left = r.left + window.scrollX;
+  if (left + popupW > window.innerWidth) left = window.innerWidth - popupW - 8;
+  popup.style.left = Math.max(8, left) + 'px';
+  popup.style.top = (r.bottom + window.scrollY + 4) + 'px';
+
+  setTimeout(() => document.getElementById('filterSearchInput').focus(), 50);
+}
+
+function onFilterCheckChange(cb, value) {
+  if (cb.checked) popupSelActual.add(value);
+  else popupSelActual.delete(value);
+}
+
+function filterSelectAll(select) {
+  document.querySelectorAll('#filterValuesList .filter-value').forEach(row => {
+    if (row.style.display === 'none') return;
+    const cb = row.querySelector('input[type="checkbox"]');
+    const val = row.dataset.value;
+    cb.checked = select;
+    if (select) popupSelActual.add(val); else popupSelActual.delete(val);
+  });
+}
+
+function aplicarColFilter() {
+  if (!popupFieldActual) return;
+  // Determinar cuántos valores únicos totales hay
+  const counts = {};
+  campaigns.forEach(c => { counts[c[popupFieldActual] || ''] = 1; });
+  const totalUnicos = Object.keys(counts).length;
+  if (popupSelActual.size === totalUnicos) {
+    COL_FILTERS[popupFieldActual] = null; // sin filtro
+  } else {
+    COL_FILTERS[popupFieldActual] = new Set(popupSelActual);
+  }
+  cerrarColFilter();
+  aplicarFiltrosYRender();
+}
+
+function cerrarColFilter() {
+  const popup = document.getElementById('colFilterPopup');
+  if (popup) popup.style.display = 'none';
+  popupFieldActual = null;
+}
+
+function limpiarTodosFiltros() {
+  Object.keys(COL_FILTERS).forEach(k => COL_FILTERS[k] = null);
+  aplicarFiltrosYRender();
+}
+
+// Buscador dentro del popup
+document.getElementById('filterSearchInput').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('#filterValuesList .filter-value').forEach(row => {
+    const label = row.querySelector('.value-label').textContent.toLowerCase();
+    row.style.display = (!q || label.includes(q)) ? 'flex' : 'none';
+  });
+});
+
+// Cerrar popup al click fuera
+document.addEventListener('click', (e) => {
+  const popup = document.getElementById('colFilterPopup');
+  if (!popup || popup.style.display === 'none') return;
+  if (popup.contains(e.target) || e.target.closest('.col-filter-btn')) return;
+  cerrarColFilter();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') cerrarColFilter();
+});
+
+// ── VENDEDORES Y VENTAS POR CAMPAÑA ──
+const VENDEDORES_META  = ['Sandra', 'Paul', 'Ana', 'Angel', 'Edgar'];
+// CAMPAIGN_OWNERS, CAMPAIGN_SALES, CAMPAIGN_PRODUCTS ya están declarados arriba (línea ~1552)
+
+function getProductosDe(campName) {
+  const v = CAMPAIGN_PRODUCTS[campName];
+  if (!v) return [];
+  return Array.isArray(v) ? v : [v]; // compat con formato viejo (string)
+}
+
+function contarCampanasActivasConProducto(productoId) {
+  if (!productoId) return 0;
+  let count = 0;
+  if (typeof activas30d === 'undefined') return 0;
+  activas30d.forEach(a => {
+    const prods = getProductosDe(a.n);
+    if (prods.includes(productoId)) count++;
+  });
+  return count;
+}
+let PRODUCTOS_META = [];      // catálogo de productos (desde cpn_config/productos)
+let INGRESOS_META  = {};      // { 'YYYY-MM-DD': [ingresos...] } de cpn_ingresos
+
+async function cargarProductosEIngresos() {
+  try {
+    if (typeof META_DB === 'undefined') return;
+    // Productos del catálogo — colección plural post-migración, con fallback al doc viejo
+    PRODUCTOS_META = [];
+    try {
+      const pSnap = await META_DB.collection('cpn_productos').get();
+      pSnap.forEach(doc => {
+        const p = doc.data();
+        if (p && p.nombre) PRODUCTOS_META.push(p);
+      });
+    } catch (e) { console.warn('cpn_productos:', e.message); }
+    if (!PRODUCTOS_META.length) {
+      try {
+        const legacy = await META_DB.collection('cpn_config').doc('productos').get();
+        if (legacy.exists) PRODUCTOS_META = (legacy.data().lista || []).filter(p => p && p.nombre);
+      } catch(e) { console.warn('Fallback productos meta:', e.message); }
+    }
+    // Ingresos últimos 90 días
+    const hace90 = new Date();
+    hace90.setDate(hace90.getDate() - 90);
+    const hace90str = `${hace90.getFullYear()}-${String(hace90.getMonth()+1).padStart(2,'0')}-${String(hace90.getDate()).padStart(2,'0')}`;
+    const iSnap = await META_DB.collection('cpn_ingresos').where('fecha', '>=', hace90str).get();
+    iSnap.forEach(d => {
+      const i = d.data();
+      if (!INGRESOS_META[i.fecha]) INGRESOS_META[i.fecha] = [];
+      INGRESOS_META[i.fecha].push(i);
+    });
+    // Poblar datalist
+    const dl = document.getElementById('productosDatalist');
+    if (dl) {
+      dl.innerHTML = PRODUCTOS_META
+        .filter(p => p.estado !== 'inactivo')
+        .map(p => `<option data-id="${p.id}" value="${p.nombre.replace(/"/g,'&quot;')}">`)
+        .join('');
+    }
+    // Aplicar cálculos automáticos a filas ya renderizadas
+    refrescarVentasVinculadas();
+  } catch (e) {
+    console.warn('[meta-ads] no se pudo cargar productos/ingresos', e.message);
+  }
+}
+
+function calcularVentasAutomaticas(productoId, periodo = 'mes') {
+  if (!productoId) return null;
+  // Los ingresos de la app CPN guardan productos por NOMBRE (no id).
+  // Buscamos el producto en el catálogo para obtener su nombre y matchear.
+  const prod = PRODUCTOS_META.find(p => p.id === productoId);
+  if (!prod) return { unidades: 0, monto: 0 };
+  const nombreBuscado = (prod.nombre || '').toLowerCase().trim();
+  if (!nombreBuscado) return { unidades: 0, monto: 0 };
+
+  const now = new Date();
+  let unidades = 0, monto = 0;
+
+  const enPeriodo = (fecha) => {
+    if (periodo === 'todo') return true;
+    const d = new Date(fecha + 'T00:00:00');
+    if (periodo === 'mes') return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    if (periodo === 'hoy') return fecha === now.toISOString().slice(0, 10);
+    if (periodo === 'semana') {
+      const hace7 = new Date(); hace7.setDate(hace7.getDate() - 6); hace7.setHours(0,0,0,0);
+      return d >= hace7;
+    }
+    return false;
+  };
+
+  Object.entries(INGRESOS_META).forEach(([fecha, arr]) => {
+    if (!enPeriodo(fecha)) return;
+    arr.forEach(i => {
+      if (i.esCobro) return;
+      // Formato nuevo: array productos
+      if (i.productos && i.productos.length) {
+        i.productos.forEach(p => {
+          const pNom = (p.nombre || '').toLowerCase().trim();
+          const matchPorId   = p.id && p.id === productoId;
+          const matchPorNom  = pNom && pNom === nombreBuscado;
+          if (matchPorId || matchPorNom) {
+            unidades += Number(p.cantidad || 1);
+            monto += Number(p.precio || 0) * Number(p.cantidad || 1);
+          }
+        });
+      } else if (i.producto) {
+        // Formato viejo: solo string
+        if ((i.producto || '').toLowerCase().trim() === nombreBuscado) {
+          unidades += 1;
+          monto += Number(i.monto || 0);
+        }
+      }
+    });
+  });
+  return { unidades, monto };
+}
+
+function refrescarVentasVinculadas() {
+  if (typeof activas30d === 'undefined') return;
+  activas30d.forEach(a => {
+    const ids = getProductosDe(a.n);
+    if (ids.length) {
+      refrescarVentasCell(a.n);
+    }
+  });
+}
+
+function campKey(nombre) {
+  return btoa(unescape(encodeURIComponent(nombre))).replace(/[/+=]/g, '_').slice(0, 100);
+}
+
+function vendedorCell(name) {
+  const key = campKey(name);
+  const asignado = CAMPAIGN_OWNERS[name] || '';
+  const options = ['<option value="">— sin asignar —</option>']
+    .concat(VENDEDORES_META.map(v =>
+      `<option value="${v}" ${asignado === v ? 'selected' : ''}>${v}</option>`
+    )).join('');
+  return `<td><select class="vend-select" data-campkey="${key}" data-campname="${encodeURIComponent(name)}" data-assigned="${asignado ? 'true' : 'false'}" onchange="onVendedorChange(this)">${options}</select></td>`;
+}
+
+function productoCell(name) {
+  const ids = getProductosDe(name);
+  const chipsHtml = ids.map(pid => {
+    const prod = PRODUCTOS_META.find(x => x.id === pid);
+    const nombre = prod ? prod.nombre : `(sin catálogo)`;
+    const nCamp = contarCampanasActivasConProducto(pid);
+    const share = nCamp > 1 ? `<span class="prod-share-badge" title="Compartido con ${nCamp} campañas — venta dividida entre ${nCamp}">÷${nCamp}</span>` : '';
+    return `<span class="prod-chip">
+      <span class="prod-chip-name" title="${nombre.replace(/"/g,'&quot;')}">${nombre}</span>${share}
+      <button class="prod-chip-x" onclick="quitarProductoVinculado(this, '${encodeURIComponent(name)}', '${pid}')" title="Quitar">✕</button>
+    </span>`;
+  }).join('');
+  return `<td class="prod-cell" data-campname="${encodeURIComponent(name)}">
+    <div class="prod-chips">${chipsHtml}</div>
+    <input type="text" list="productosDatalist" class="prod-input"
+      data-campname="${encodeURIComponent(name)}"
+      placeholder="${ids.length ? '+ Agregar otro producto...' : 'Buscar producto...'}"
+      onchange="onProductoAgregar(this)"
+      onblur="onProductoAgregar(this)">
+  </td>`;
+}
+
+function refrescarProductoCell(campName) {
+  document.querySelectorAll(`.prod-cell[data-campname="${encodeURIComponent(campName)}"]`).forEach(cell => {
+    cell.outerHTML = productoCell(campName);
+  });
+}
+
+function calcularVentasDeProductos(prodIds, periodo = 'mes') {
+  // Suma con división: cada producto se divide entre las N campañas activas que lo comparten
+  let unidades = 0, monto = 0;
+  prodIds.forEach(pid => {
+    const res = calcularVentasAutomaticas(pid, periodo);
+    if (!res) return;
+    const n = Math.max(1, contarCampanasActivasConProducto(pid));
+    unidades += res.unidades / n;
+    monto += res.monto / n;
+  });
+  return { unidades: Math.round(unidades * 100) / 100, monto };
+}
+
+function ventasCell(name, inv) {
+  const prodIds = getProductosDe(name);
+  const hasProduct = prodIds.length > 0;
+  const manual = CAMPAIGN_SALES[name];
+  const hasManual = manual != null && manual !== '';
+
+  let ventas = 0, badge = '';
+  if (hasProduct) {
+    const res = calcularVentasDeProductos(prodIds, 'mes');
+    ventas = res.unidades;
+    const compartidas = prodIds.some(pid => contarCampanasActivasConProducto(pid) > 1);
+    badge = `<span class="ventas-auto-badge" title="Auto desde ${prodIds.length} producto${prodIds.length!==1?'s':''} vinculado${prodIds.length!==1?'s':''}${compartidas ? ' (con división por campañas que comparten producto)' : ''}">🤖 auto${compartidas ? ' ÷' : ''}</span>`;
+  } else if (hasManual) {
+    ventas = manual;
+  }
+
+  let cpvHtml = '';
+  if (ventas > 0 && inv && inv > 0) {
+    const cpv = inv / ventas;
+    const cpvCls = cpv <= 20 ? 'good' : cpv <= 50 ? 'warn' : 'bad';
+    cpvHtml = `<div class="ventas-cpv ${cpvCls}">${fmtM(cpv)}/venta</div>`;
+  }
+
+  return `<td class="ventas-cell">
+    <input type="number" min="0" step="0.01" class="ventas-input"
+      data-campname="${encodeURIComponent(name)}"
+      data-inv="${inv || 0}"
+      data-hasvalue="${(hasProduct || hasManual) ? 'true' : 'false'}"
+      value="${ventas || ''}"
+      placeholder="0"
+      ${hasProduct ? 'readonly' : ''}
+      title="${hasProduct ? 'Calculado automático desde los productos vinculados' : ''}"
+      onchange="onVentasChange(this)"
+      onblur="onVentasChange(this)">
+    ${badge}
+    ${cpvHtml}
+  </td>`;
+}
+
+function refrescarVentasCell(campName) {
+  document.querySelectorAll(`.ventas-input[data-campname="${encodeURIComponent(campName)}"]`).forEach(inp => {
+    const cell = inp.closest('td.ventas-cell');
+    if (!cell) return;
+    const inv = Number(inp.dataset.inv) || 0;
+    cell.outerHTML = ventasCell(campName, inv);
+  });
+}
+
+async function guardarProductosCampana(name) {
+  const productos = getProductosDe(name);
+  if (typeof META_DB === 'undefined') throw new Error('firestore not ready');
+  if (productos.length > 0) {
+    await META_DB.collection('meta_campaign_owners').doc('mapping').set({
+      products: { [name]: productos },
+      updatedAt: Date.now()
+    }, { merge: true });
+  } else {
+    await META_DB.collection('meta_campaign_owners').doc('mapping').update({
+      [`products.${name}`]: firebase.firestore.FieldValue.delete(),
+      updatedAt: Date.now()
+    });
+  }
+}
+
+function refrescarFilaCampana(name) {
+  // Vuelve a renderizar celda producto + celda ventas de todas las filas que tengan esta campaña
+  refrescarProductoCell(name);
+  refrescarVentasCell(name);
+  // Y refresca las demás filas cuyos productos comparten con esta (para recalcular división)
+  const ids = getProductosDe(name);
+  if (typeof activas30d !== 'undefined') {
+    activas30d.forEach(a => {
+      if (a.n === name) return;
+      const otros = getProductosDe(a.n);
+      if (otros.some(pid => ids.includes(pid))) {
+        refrescarProductoCell(a.n);
+        refrescarVentasCell(a.n);
+      }
+    });
+  }
+  // También re-renderizar la tabla principal para reflejar productos y ventas atribuidas
+  if (typeof aplicarFiltrosYRender === 'function') {
+    try { aplicarFiltrosYRender(); } catch (e) { /* silencioso */ }
+  }
+}
+
+async function onProductoAgregar(inp) {
+  const name = decodeURIComponent(inp.dataset.campname || '');
+  const value = inp.value.trim();
+  if (!value) return;
+
+  // Buscar producto por nombre exacto (case-insensitive)
+  const prod = PRODUCTOS_META.find(p => (p.nombre || '').toLowerCase() === value.toLowerCase());
+  if (!prod) {
+    inp.value = '';
+    inp.setAttribute('placeholder', 'No coincide con ningún producto...');
+    setTimeout(() => {
+      const ids = getProductosDe(name);
+      inp.setAttribute('placeholder', ids.length ? '+ Agregar otro producto...' : 'Buscar producto...');
+    }, 2000);
+    return;
+  }
+
+  const actuales = getProductosDe(name);
+  if (actuales.includes(prod.id)) {
+    inp.value = '';
+    return; // ya estaba
+  }
+
+  inp.classList.add('saving');
+  try {
+    CAMPAIGN_PRODUCTS[name] = [...actuales, prod.id];
+    await guardarProductosCampana(name);
+    inp.value = '';
+    inp.classList.remove('saving');
+    refrescarFilaCampana(name);
+  } catch (e) {
+    console.error('[meta-ads] error agregando producto', e);
+    inp.classList.remove('saving');
+    // rollback en memoria
+    CAMPAIGN_PRODUCTS[name] = actuales;
+    alert('No se pudo agregar el producto. Revisa tu conexión.');
+  }
+}
+
+async function quitarProductoVinculado(btn, encName, prodId) {
+  const name = decodeURIComponent(encName);
+  const actuales = getProductosDe(name);
+  const filtrado = actuales.filter(id => id !== prodId);
+  try {
+    if (filtrado.length > 0) CAMPAIGN_PRODUCTS[name] = filtrado;
+    else delete CAMPAIGN_PRODUCTS[name];
+    await guardarProductosCampana(name);
+    refrescarFilaCampana(name);
+  } catch (e) {
+    console.error('[meta-ads] error quitando producto', e);
+    // rollback
+    CAMPAIGN_PRODUCTS[name] = actuales;
+    alert('No se pudo quitar el producto. Revisa tu conexión.');
+  }
+}
+
+async function cargarCampaignData() {
+  try {
+    if (typeof META_DB === 'undefined') return;
+    const doc = await META_DB.collection('meta_campaign_owners').doc('mapping').get();
+    if (!doc.exists) return;
+    const data = doc.data() || {};
+    Object.assign(CAMPAIGN_OWNERS,   data.owners   || {});
+    Object.assign(CAMPAIGN_SALES,    data.sales    || {});
+
+    // Migración: si products[name] es string, convertir a array
+    const rawProducts = data.products || {};
+    Object.keys(rawProducts).forEach(k => {
+      const v = rawProducts[k];
+      CAMPAIGN_PRODUCTS[k] = Array.isArray(v) ? v : (v ? [v] : []);
+    });
+
+    document.querySelectorAll('.vend-select').forEach(sel => {
+      const name = decodeURIComponent(sel.dataset.campname || '');
+      const asig = CAMPAIGN_OWNERS[name];
+      if (asig) { sel.value = asig; sel.dataset.assigned = 'true'; }
+    });
+    // Refrescar todas las celdas de producto + ventas para que rendericen chips e incluyan división
+    if (typeof activas30d !== 'undefined') {
+      activas30d.forEach(a => {
+        refrescarProductoCell(a.n);
+        refrescarVentasCell(a.n);
+      });
+    }
+  } catch (e) {
+    console.warn('[meta-ads] no se pudo cargar campaign data', e.message);
+  }
+}
+
+function pintarCPV(inp, ventas) {
+  const inv = Number(inp.dataset.inv) || 0;
+  const cell = inp.closest('td');
+  if (!cell) return;
+  let cpvEl = cell.querySelector('.ventas-cpv');
+  if (ventas > 0 && inv > 0) {
+    const cpv = inv / ventas;
+    const cpvCls = cpv <= 20 ? 'good' : cpv <= 50 ? 'warn' : 'bad';
+    if (!cpvEl) {
+      cpvEl = document.createElement('div');
+      cell.appendChild(cpvEl);
+    }
+    cpvEl.className = 'ventas-cpv ' + cpvCls;
+    cpvEl.textContent = fmtM(cpv) + '/venta';
+  } else if (cpvEl) {
+    cpvEl.remove();
+  }
+}
+
+async function onVendedorChange(sel) {
+  const name = decodeURIComponent(sel.dataset.campname || '');
+  const vendedor = sel.value;
+  sel.classList.add('saving');
+  try {
+    if (typeof META_DB === 'undefined') throw new Error('firestore not ready');
+    if (vendedor) {
+      CAMPAIGN_OWNERS[name] = vendedor;
+      await META_DB.collection('meta_campaign_owners').doc('mapping').set({
+        owners: { [name]: vendedor },
+        updatedAt: Date.now()
+      }, { merge: true });
+      sel.dataset.assigned = 'true';
+    } else {
+      delete CAMPAIGN_OWNERS[name];
+      await META_DB.collection('meta_campaign_owners').doc('mapping').update({
+        [`owners.${name}`]: firebase.firestore.FieldValue.delete(),
+        updatedAt: Date.now()
+      });
+      sel.dataset.assigned = 'false';
+    }
+    sel.classList.remove('saving');
+    sel.classList.add('saved');
+    setTimeout(() => sel.classList.remove('saved'), 700);
+  } catch (e) {
+    console.error('[meta-ads] error guardando vendedor', e);
+    sel.classList.remove('saving');
+    alert('No se pudo guardar el vendedor. Revisa tu conexión.');
+  }
+}
+
+async function onVentasChange(inp) {
+  const name = decodeURIComponent(inp.dataset.campname || '');
+  const raw = inp.value.trim();
+  const ventas = raw === '' ? null : Math.max(0, parseInt(raw, 10) || 0);
+
+  // evitar guardar si no cambió
+  if (ventas === (CAMPAIGN_SALES[name] ?? null)) return;
+
+  inp.classList.add('saving');
+  try {
+    if (typeof META_DB === 'undefined') throw new Error('firestore not ready');
+    if (ventas != null) {
+      CAMPAIGN_SALES[name] = ventas;
+      await META_DB.collection('meta_campaign_owners').doc('mapping').set({
+        sales: { [name]: ventas },
+        updatedAt: Date.now()
+      }, { merge: true });
+      inp.dataset.hasvalue = 'true';
+      inp.value = ventas;
+    } else {
+      delete CAMPAIGN_SALES[name];
+      await META_DB.collection('meta_campaign_owners').doc('mapping').update({
+        [`sales.${name}`]: firebase.firestore.FieldValue.delete(),
+        updatedAt: Date.now()
+      });
+      inp.dataset.hasvalue = 'false';
+    }
+    pintarCPV(inp, ventas || 0);
+    inp.classList.remove('saving');
+    inp.classList.add('saved');
+    setTimeout(() => inp.classList.remove('saved'), 700);
+  } catch (e) {
+    console.error('[meta-ads] error guardando ventas', e);
+    inp.classList.remove('saving');
+    alert('No se pudo guardar las ventas. Revisa tu conexión.');
+  }
+}
+
+// ── ACTIVAS TABLE ──
+document.getElementById('activasBody').innerHTML = activas30d.map((a, i) => {
+  const bgCls = a.cls === 'good' ? 'background:var(--sea-green-light)' :
+                a.cls === 'bad' ? 'background:var(--coral-light)' :
+                a.cls === 'warn' ? 'background:var(--amber-light)' :
+                a.cls === 'off' ? 'background:var(--tag-off-bg)' : '';
+  return `<tr style="${bgCls}">
+    <td class="num">${i + 1}</td>
+    <td class="campaign-name">${a.n}</td>
+    <td>${a.neg}</td>
+    <td>${a.obj}</td>
+    <td class="num">${a.msgs ? fmt(a.msgs) : '—'}</td>
+    <td class="num"><span class="eff ${effClass(a.cpr)}">${fmtM(a.cpr)}</span></td>
+    <td class="num">${a.inv ? fmtM(a.inv) : '—'}</td>
+    ${waCell(a.n, a.neg)}
+    ${vendedorCell(a.n)}
+    ${productoCell(a.n)}
+    ${ventasCell(a.n, a.inv)}
+    ${linkCell(a.n, a.neg)}
+    <td>${a.diag}</td>
+    <td><strong>${a.accion}</strong></td>
+  </tr>`;
+}).join('');
+
+// ── BUSINESS CARDS ──
+const bizData = {};
+campaigns.forEach(c => {
+  if (c.obj !== 'Mensajes') return;
+  const key = c.neg.split('/')[0].trim();
+  if (!bizData[key]) bizData[key] = {camps: 0, msgs: 0, gasto: 0};
+  bizData[key].camps++;
+  bizData[key].msgs += calcMsgs(c.cpr, c.gasto);
+  bizData[key].gasto += c.gasto || 0;
+});
+const bizEntries = Object.entries(bizData).sort((a, b) => b[1].gasto - a[1].gasto);
+const totalGasto = bizEntries.reduce((s, [, d]) => s + d.gasto, 0);
+const bizClasses = {Pesca:'biz-pesca',Motaxi:'biz-motaxi',Restaurante:'biz-resto'};
+
+document.getElementById('bizGrid').innerHTML = bizEntries.map(([name, d]) => {
+  const cpr = d.msgs > 0 ? (d.gasto / d.msgs) : 0;
+  const pct = totalGasto > 0 ? (d.gasto / totalGasto * 100).toFixed(1) : 0;
+  const cls = bizClasses[name] || 'biz-otro';
+  return `<div class="biz-card ${cls}">
+    <div class="biz-name">${name}</div>
+    <div class="biz-stat"><span class="biz-stat-label">Campañas</span><span class="biz-stat-val">${d.camps}</span></div>
+    <div class="biz-stat"><span class="biz-stat-label">Mensajes totales</span><span class="biz-stat-val">${fmt(d.msgs)}</span></div>
+    <div class="biz-stat"><span class="biz-stat-label">Inversión total</span><span class="biz-stat-val">${fmtM(d.gasto)}</span></div>
+    <div class="biz-stat"><span class="biz-stat-label">CPR promedio</span><span class="biz-stat-val eff ${effClass(cpr)}">${fmtM(cpr)}</span></div>
+    <div class="biz-stat"><span class="biz-stat-label">% del gasto</span><span class="biz-stat-val">${pct}%</span></div>
+  </div>`;
+}).join('');
+
+// ── TOP / BOTTOM ──
+const msgCamps = campaigns.filter(c => c.obj === 'Mensajes' && c.gasto > 50 && c.cpr > 0);
+const best = [...msgCamps].sort((a, b) => a.cpr - b.cpr).slice(0, 10);
+const worst = [...msgCamps].sort((a, b) => b.cpr - a.cpr).slice(0, 10);
+
+function renderCompare(list, containerId, isGood) {
+  document.getElementById(containerId).innerHTML = list.map((c, i) => {
+    const cls = isGood ? 'eff-good' : 'eff-bad';
+    return `<div class="compare-item">
+      <span class="compare-rank">${i + 1}</span>
+      <span class="compare-name">${c.n}</span>
+      <span class="compare-cpr ${cls}">${fmtM(c.cpr)}</span>
+    </div>`;
+  }).join('');
+}
+renderCompare(best, 'topGood', true);
+renderCompare(worst, 'topBad', false);
+
+// ── ACTIONS ──
+document.getElementById('actionGrid').innerHTML = actions.map(a => {
+  const cls = `action-${a.pri}`;
+  return `<div class="action-card ${cls}">
+    <div class="action-num">${a.num}</div>
+    <div>
+      <div class="action-title">${a.title}</div>
+      <div class="action-detail">${a.detail}</div>
+    </div>
+  </div>`;
+}).join('');
+
+// ── CHARTS ──
+function getCSS(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+function drawPieChart(canvasId, labels, values, colors) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height;
+  const cx = w * 0.35, cy = h / 2;
+  const radius = Math.min(cx, cy) - 20;
+  const total = values.reduce((a, b) => a + b, 0);
+
+  let startAngle = -Math.PI / 2;
+  values.forEach((val, i) => {
+    const sliceAngle = (val / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, startAngle, startAngle + sliceAngle);
+    ctx.closePath();
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+    startAngle += sliceAngle;
+  });
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius * 0.5, 0, Math.PI * 2);
+  ctx.fillStyle = getCSS('--bg-card');
+  ctx.fill();
+
+  const legendX = w * 0.68;
+  let legendY = 24;
+  ctx.textBaseline = 'middle';
+  labels.forEach((label, i) => {
+    const pct = ((values[i] / total) * 100).toFixed(1);
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(legendX, legendY - 5, 12, 12);
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '12px Segoe UI, system-ui, sans-serif';
+    ctx.fillText(`${label} (${pct}%)`, legendX + 18, legendY + 1);
+    legendY += 22;
+  });
+}
+
+function drawBarChart(canvasId, labels, values, color) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height;
+  const pad = {t: 10, r: 20, b: 80, l: 70};
+  const chartW = w - pad.l - pad.r;
+  const chartH = h - pad.t - pad.b;
+  const maxVal = Math.max(...values) * 1.1;
+  const barW = Math.min(chartW / labels.length * 0.6, 32);
+  const gap = chartW / labels.length;
+
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + chartH - (chartH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+    ctx.fillStyle = getCSS('--text-muted');
+    ctx.font = '10px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('S/' + Math.round(maxVal / 4 * i).toLocaleString(), pad.l - 8, y + 3);
+  }
+
+  labels.forEach((label, i) => {
+    const x = pad.l + gap * i + gap / 2 - barW / 2;
+    const barH = (values[i] / maxVal) * chartH;
+    const y = pad.t + chartH - barH;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    const r = 3;
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + barW - r, y);
+    ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+    ctx.lineTo(x + barW, pad.t + chartH);
+    ctx.lineTo(x, pad.t + chartH);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(pad.l + gap * i + gap / 2, pad.t + chartH + 8);
+    ctx.rotate(Math.PI / 3.5);
+    ctx.fillStyle = getCSS('--text-secondary');
+    ctx.font = '9px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    const maxLen = 22;
+    ctx.fillText(label.length > maxLen ? label.slice(0, maxLen) + '…' : label, 0, 0);
+    ctx.restore();
+  });
+}
+
+function drawHBarChart(canvasId, labels, values, baseColor) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height;
+  const pad = {t: 5, r: 80, b: 5, l: 5};
+  const maxVal = Math.max(...values);
+  const barH = Math.min((h - pad.t - pad.b) / labels.length * 0.7, 20);
+  const gap = (h - pad.t - pad.b) / labels.length;
+
+  labels.forEach((label, i) => {
+    const y = pad.t + gap * i + gap / 2 - barH / 2;
+    const barW = (values[i] / maxVal) * (w - pad.l - pad.r);
+
+    ctx.fillStyle = baseColor;
+    ctx.globalAlpha = 0.2 + 0.8 * (1 - i / labels.length);
+    ctx.beginPath();
+    const r = 3;
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(pad.l + barW - r, y);
+    ctx.quadraticCurveTo(pad.l + barW, y, pad.l + barW, y + r);
+    ctx.lineTo(pad.l + barW, y + barH - r);
+    ctx.quadraticCurveTo(pad.l + barW, y + barH, pad.l + barW - r, y + barH);
+    ctx.lineTo(pad.l, y + barH);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '10px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('S/' + values[i].toLocaleString('es-PE', {minimumFractionDigits:2}), pad.l + barW + 6, y + barH / 2);
+
+    ctx.fillStyle = getCSS('--text-secondary');
+    ctx.font = '9px Segoe UI, system-ui, sans-serif';
+    const maxLen = 36;
+    const shortLabel = label.length > maxLen ? label.slice(0, maxLen) + '…' : label;
+    ctx.fillText(shortLabel, pad.l + 4, y - 4);
+  });
+}
+
+function drawScatter(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height;
+  const pad = {t: 20, r: 20, b: 40, l: 60};
+  const cW = w - pad.l - pad.r, cH = h - pad.t - pad.b;
+
+  const pts = activas30d.filter(a => a.inv && a.msgs && a.obj === 'Mensajes')
+    .map(a => ({x: a.inv, y: a.msgs, cpr: a.cpr, n: a.n}));
+
+  const maxX = Math.max(...pts.map(p => p.x)) * 1.15;
+  const maxY = Math.max(...pts.map(p => p.y)) * 1.15;
+
+  ctx.strokeStyle = getCSS('--border');
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + cH - (cH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+    ctx.fillStyle = getCSS('--text-muted');
+    ctx.font = '9px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxY / 4 * i).toLocaleString(), pad.l - 6, y + 3);
+  }
+  ctx.fillStyle = getCSS('--text-muted');
+  ctx.font = '9px Segoe UI, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Inversión 30d (S/)', w / 2, h - 4);
+  ctx.save();
+  ctx.translate(12, h / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Mensajes 30d', 0, 0);
+  ctx.restore();
+
+  pts.forEach(p => {
+    const px = pad.l + (p.x / maxX) * cW;
+    const py = pad.t + cH - (p.y / maxY) * cH;
+    const r = Math.max(5, Math.min(14, p.y / maxY * 16));
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fillStyle = p.cpr <= 0.50 ? getCSS('--sea-green') : p.cpr <= 1.00 ? getCSS('--amber') : getCSS('--coral');
+    ctx.globalAlpha = 0.7;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = getCSS('--text');
+    ctx.font = '8px Segoe UI, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    const short = p.n.length > 20 ? p.n.slice(0, 20) + '…' : p.n;
+    ctx.fillText(short, px, py - r - 4);
+  });
+}
+
+function renderCharts() {
+  const ocean = getCSS('--ocean');
+  const colors = [getCSS('--ocean'), getCSS('--coral'), getCSS('--amber'), getCSS('--sea-green'), getCSS('--text-muted')];
+
+  drawPieChart('chartNegocio',
+    bizEntries.map(([n]) => n),
+    bizEntries.map(([, d]) => d.gasto),
+    colors.slice(0, bizEntries.length)
+  );
+
+  const top15 = [...campaigns].filter(c => c.obj === 'Mensajes' && c.gasto > 200).sort((a, b) => b.gasto - a.gasto).slice(0, 15);
+  drawBarChart('chartCPR',
+    top15.map(c => c.n.replace(/^(Publicación|Messages Ad|Post|Mensajes Anuncio|Mensajes): /, '').replace(/"/g, '')),
+    top15.map(c => c.cpr),
+    ocean
+  );
+
+  const activasInv = activas30d.filter(a => a.inv).sort((a, b) => b.inv - a.inv);
+  drawHBarChart('chartActivas',
+    activasInv.map(a => a.n.replace(/^(Publicación|Messages Ad|Post): /, '').replace(/"/g, '')),
+    activasInv.map(a => a.inv),
+    ocean
+  );
+
+  drawScatter('chartEficiencia');
+}
+
+renderCharts();
+window.addEventListener('resize', () => { clearTimeout(window._rc); window._rc = setTimeout(renderCharts, 200); });
+
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+mq.addEventListener('change', () => setTimeout(renderCharts, 50));
+new MutationObserver(() => setTimeout(renderCharts, 50)).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+
+// ── ACTUALIZACIÓN DE DATOS ──
+const STORAGE_KEY = 'metaads_snapshots_1409972699255773';
+const FS_COLLECTION = 'meta_snapshots';
+const REMINDER_HIDE_KEY = 'metaads_reminder_hidden_date';
+
+// Cache en memoria para no golpear Firestore en cada tab click
+let SNAPSHOTS_CACHE = null;
+
+function getSnapshotsLocal() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+}
+function setSnapshotsLocal(snaps) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(snaps)); } catch {}
+}
+
+async function getSnapshots() {
+  if (SNAPSHOTS_CACHE) return SNAPSHOTS_CACHE;
+  try {
+    if (typeof META_DB === 'undefined') throw new Error('firestore not ready');
+    const qs = await META_DB.collection(FS_COLLECTION).orderBy('timestamp').get();
+    const snaps = qs.docs.map(d => d.data());
+    SNAPSHOTS_CACHE = snaps;
+    // sincroniza cache local para modo offline
+    setSnapshotsLocal(snaps);
+    marcarSincronizado(true);
+    return snaps;
+  } catch (e) {
+    console.warn('[meta-ads] firestore off, usando localStorage', e.message);
+    marcarSincronizado(false);
+    const snaps = getSnapshotsLocal();
+    SNAPSHOTS_CACHE = snaps;
+    return snaps;
+  }
+}
+
+async function saveSnapshot(data) {
+  const snaps = await getSnapshots();
+  const today = new Date().toISOString().slice(0, 10);
+  const existing = snaps.findIndex(s => s.date === today);
+  const snap = { date: today, timestamp: Date.now(), campaigns: data };
+  if (existing >= 0) snaps[existing] = snap; else snaps.push(snap);
+  if (snaps.length > 90) snaps.splice(0, snaps.length - 90);
+  SNAPSHOTS_CACHE = snaps;
+  setSnapshotsLocal(snaps);
+  // sube a firestore
+  try {
+    if (typeof META_DB === 'undefined') throw new Error('firestore not ready');
+    await META_DB.collection(FS_COLLECTION).doc(today).set(snap);
+    marcarSincronizado(true);
+  } catch (e) {
+    console.warn('[meta-ads] no se pudo guardar en Firestore', e.message);
+    marcarSincronizado(false);
+  }
+  updateSnapshotUI();
+  evaluarRecordatorio();
+}
+
+function marcarSincronizado(ok) {
+  const el = document.getElementById('syncBadge');
+  if (!el) return;
+  el.textContent = '';
+  const dot = document.createElement('span'); dot.className = 'sync-badge-dot';
+  const label = document.createElement('span');
+  if (ok) {
+    el.className = 'sync-badge';
+    label.textContent = 'sincronizado';
+  } else {
+    el.className = 'sync-badge error';
+    label.textContent = 'solo local';
+  }
+  el.appendChild(dot); el.appendChild(label);
+}
+
+function fechaHoyMetaISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+async function evaluarRecordatorio() {
+  const banner = document.getElementById('reminderBanner');
+  if (!banner) return;
+  const hoy = fechaHoyMetaISO();
+  const hiddenDate = localStorage.getItem(REMINDER_HIDE_KEY);
+  if (hiddenDate === hoy) { banner.classList.remove('show'); return; }
+
+  const snaps = await getSnapshots();
+  const lastToday = snaps.some(s => s.date === hoy);
+  if (lastToday) { banner.classList.remove('show'); return; }
+
+  banner.classList.add('show');
+  const textEl = document.getElementById('reminderText');
+  const subEl = document.getElementById('reminderSub');
+  if (snaps.length === 0) {
+    textEl.innerHTML = '<b>🔔 Aún no hay ningún snapshot cargado.</b>';
+    subEl.textContent = 'Sube el primer CSV para empezar a comparar días.';
+  } else {
+    const last = snaps[snaps.length - 1];
+    const dias = Math.max(1, Math.floor((Date.now() - last.timestamp) / 86400000));
+    textEl.innerHTML = `<b>🔔 Última actualización: hace ${dias} día${dias!==1?'s':''}.</b>`;
+    subEl.textContent = `Sube el CSV de hoy (${new Date().toLocaleDateString('es-PE')}) para mantener el reporte al día.`;
+  }
+}
+
+function ocultarRecordatorio() {
+  localStorage.setItem(REMINDER_HIDE_KEY, fechaHoyMetaISO());
+  document.getElementById('reminderBanner').classList.remove('show');
+}
+
+function parseCSV(text) {
+  const lines = [];
+  let current = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"') { inQuotes = !inQuotes; current += c; }
+    else if ((c === '\n' || c === '\r') && !inQuotes) {
+      if (current.trim()) lines.push(current);
+      current = '';
+      if (c === '\r' && text[i+1] === '\n') i++;
+    } else { current += c; }
+  }
+  if (current.trim()) lines.push(current);
+
+  function parseLine(line) {
+    const fields = []; let field = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (c === '"') { if (inQ && line[i+1] === '"') { field += '"'; i++; } else inQ = !inQ; }
+      else if (c === ',' && !inQ) { fields.push(field.trim()); field = ''; }
+      else field += c;
+    }
+    fields.push(field.trim());
+    return fields;
+  }
+
+  if (lines.length < 2) return null;
+  const headers = parseLine(lines[0]);
+  const nameIdx = headers.findIndex(h => /nombre.*campa/i.test(h));
+  const statusIdx = headers.findIndex(h => /entrega/i.test(h));
+  const resultsIdx = headers.findIndex(h => /^resultados$/i.test(h));
+  const cprIdx = headers.findIndex(h => /coste por resultado/i.test(h));
+  const spendIdx = headers.findIndex(h => /importe gastado/i.test(h));
+  const imprIdx = headers.findIndex(h => /impresiones/i.test(h));
+  const reachIdx = headers.findIndex(h => /alcance/i.test(h));
+  if (nameIdx < 0 || spendIdx < 0) return null;
+
+  const data = [];
+  for (let i = 1; i < lines.length; i++) {
+    const row = parseLine(lines[i]);
+    const name = row[nameIdx];
+    if (!name) continue;
+    const spend = parseFloat((row[spendIdx] || '0').replace(/[^0-9.-]/g, '')) || 0;
+    const results = parseFloat((row[resultsIdx] || '0').replace(/[^0-9.-]/g, '')) || 0;
+    const cpr = parseFloat((row[cprIdx] || '0').replace(/[^0-9.-]/g, '')) || 0;
+    const impr = parseInt((row[imprIdx] || '0').replace(/[^0-9]/g, '')) || 0;
+    const reach = parseInt((row[reachIdx] || '0').replace(/[^0-9]/g, '')) || 0;
+    const status = row[statusIdx] || '';
+    data.push({ name, status, results, cpr, spend, impr, reach });
+  }
+  return data.length > 0 ? data : null;
+}
+
+function handleCSVUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(ev) {
+    const data = parseCSV(ev.target.result);
+    if (!data) {
+      alert('No se pudo leer el CSV. Verifica que sea un export de Ads Manager.');
+      return;
+    }
+    await saveSnapshot(data);
+    updateTableWithSnapshot(data);
+    aplicarSnapshotCompleto(data);
+    const statusEl = document.getElementById('uploadStatus');
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.innerHTML = '<div class="snapshot-badge" style="font-size:0.85rem;padding:6px 14px;">✓ ' + data.length + ' campañas cargadas — snapshot guardado (' + new Date().toLocaleDateString('es-PE') + ')</div>';
+    }
+    closeUploadModal();
+  };
+  reader.readAsText(file, 'UTF-8');
+  e.target.value = '';
+}
+
+function updateTableWithSnapshot(data) {
+  const table = document.querySelector('#campanas table tbody');
+  if (!table) return;
+  const rows = table.querySelectorAll('tr');
+  let updated = 0;
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 8) return;
+    const campName = cells[1]?.textContent?.trim();
+    if (!campName) return;
+    const match = data.find(d => {
+      const dn = d.name.replace(/[""]/g, '"').toLowerCase();
+      const cn = campName.toLowerCase();
+      return cn.includes(dn.substring(0, 30)) || dn.includes(cn.substring(0, 30));
+    });
+    if (match && match.spend > 0) {
+      const spendCell = cells[7];
+      const oldSpend = parseFloat(spendCell?.textContent?.replace(/[^0-9.-]/g, '')) || 0;
+      if (match.spend !== oldSpend) {
+        const delta = match.spend - oldSpend;
+        const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '';
+        const cls = delta > 0 ? 'delta-up' : delta < 0 ? 'delta-down' : 'delta-same';
+        if (spendCell) {
+          spendCell.innerHTML = '<span style="font-weight:600">S/ ' + match.spend.toLocaleString('es-PE', {minimumFractionDigits:2}) + '</span>' +
+            (delta !== 0 ? ' <span class="' + cls + '">' + arrow + ' S/' + Math.abs(delta).toFixed(2) + '</span>' : '');
+        }
+        updated++;
+      }
+    }
+  });
+  document.getElementById('lastUpdate').textContent = 'Última actualización: ' + new Date().toLocaleString('es-PE');
+  // Actualizar la fecha del encabezado dinámicamente
+  const hdr = document.getElementById('hdrFechaInforme');
+  if (hdr) {
+    const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const now = new Date();
+    hdr.textContent = `Fecha: ${now.getDate()} ${meses[now.getMonth()]} ${now.getFullYear()}`;
+  }
+}
+
+async function updateSnapshotUI() {
+  const snaps = await getSnapshots();
+  const countEl = document.getElementById('snapshotCount');
+  if (countEl) {
+    countEl.textContent = snaps.length > 0 ? snaps.length + ' snapshot' + (snaps.length > 1 ? 's' : '') + ' guardado' + (snaps.length > 1 ? 's' : '') : '';
+  }
+  const tabs = document.querySelectorAll('.period-tab[data-period]');
+  tabs.forEach(tab => {
+    const p = parseInt(tab.dataset.period);
+    if (isNaN(p)) return;
+    const cutoff = Date.now() - p * 86400000;
+    const has = snaps.some(s => s.timestamp <= cutoff);
+    tab.classList.toggle('disabled', !has && snaps.length === 0);
+  });
+  if (snaps.length > 0) {
+    const last = snaps[snaps.length - 1];
+    document.getElementById('lastUpdate').textContent = 'Último snapshot: ' + new Date(last.timestamp).toLocaleDateString('es-PE');
+  }
+}
+
+document.querySelectorAll('.period-tab').forEach(tab => {
+  tab.addEventListener('click', async function() {
+    document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const period = this.dataset.period;
+    if (period === 'current') {
+      resetTableToOriginal();
+      return;
+    }
+    const days = parseInt(period);
+    const snaps = await getSnapshots();
+    if (snaps.length === 0) {
+      alert('No hay snapshots guardados. Sube un CSV primero para crear el primer snapshot.');
+      document.querySelector('.period-tab[data-period="current"]').classList.add('active');
+      this.classList.remove('active');
+      return;
+    }
+    const cutoff = Date.now() - days * 86400000;
+    const older = snaps.filter(s => s.timestamp <= cutoff);
+    const newer = snaps[snaps.length - 1];
+    if (older.length === 0) {
+      alert('No hay datos de hace ' + days + ' día(s). El snapshot más antiguo es del ' + new Date(snaps[0].timestamp).toLocaleDateString('es-PE') + '.\nSigue subiendo CSVs para acumular historial.');
+      return;
+    }
+    const oldSnap = older[older.length - 1];
+    showComparison(oldSnap.campaigns, newer.campaigns, days);
+  });
+});
+
+function resetTableToOriginal() {
+  const table = document.querySelector('#campanas table tbody');
+  if (!table) return;
+  const rows = table.querySelectorAll('tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 8) return;
+    const spendCell = cells[7];
+    const delta = spendCell?.querySelector('.delta-up, .delta-down, .delta-same');
+    if (delta) delta.remove();
+  });
+}
+
+function showComparison(oldData, newData, days) {
+  const table = document.querySelector('#campanas table tbody');
+  if (!table) return;
+  const rows = table.querySelectorAll('tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 8) return;
+    const campName = cells[1]?.textContent?.trim()?.toLowerCase();
+    if (!campName) return;
+
+    const findMatch = (data) => data.find(d => {
+      const dn = d.name.replace(/[""]/g, '"').toLowerCase();
+      return campName.includes(dn.substring(0, 30)) || dn.includes(campName.substring(0, 30));
+    });
+
+    const oldMatch = findMatch(oldData);
+    const newMatch = findMatch(newData);
+    if (newMatch && oldMatch) {
+      const spendDelta = newMatch.spend - oldMatch.spend;
+      const spendCell = cells[7];
+      if (spendCell && spendDelta !== 0) {
+        const arrow = spendDelta > 0 ? '▲' : '▼';
+        const cls = spendDelta > 0 ? 'delta-up' : 'delta-down';
+        const existing = spendCell.querySelector('.delta-up, .delta-down');
+        if (existing) existing.remove();
+        const span = document.createElement('span');
+        span.className = cls;
+        span.textContent = ' ' + arrow + ' S/' + Math.abs(spendDelta).toFixed(2);
+        spendCell.appendChild(span);
+      }
+    }
+  });
+}
+
+function closeUploadModal() {
+  document.getElementById('uploadOverlay').style.display = 'none';
+}
+
+const uploadZone = document.getElementById('uploadZone');
+if (uploadZone) {
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.name.endsWith('.csv')) {
+      const input = document.getElementById('csvUpload');
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  RECÁLCULO DE KPIs / RANKING / GRÁFICO DESDE CSV
+// ══════════════════════════════════════════════════════════
+
+function inferirNegocio(n) {
+  const s = (n || '').toLowerCase();
+  if (/motaxi|conductor/.test(s)) return 'Motaxi';
+  if (/piscina/.test(s)) return 'Piscinas';
+  if (/telescopio|astron/.test(s)) return 'Telescopios';
+  if (/restaurant|alitas|buffet|peruano|sabor/.test(s)) return 'Restaurante';
+  if (/pesca|nautica|combo|se[ñn]uelo|carnada|linea|caña|anzuelo|wetsuit|buceo|bodyboard|fiestas patrias|inmersi|regulador|m[aá]scara|boya|plomo/.test(s)) return 'Pesca';
+  return 'Otro';
+}
+
+// Índice: nombre normalizado → objeto en `campaigns` original (para heredar negocio si ya lo conocemos)
+const _campIndex = (() => {
+  const idx = {};
+  campaigns.forEach(c => {
+    const key = c.n.toLowerCase().replace(/[""]/g, '"').substring(0, 40);
+    idx[key] = c;
+  });
+  return idx;
+})();
+
+function resolverNegocio(nombre) {
+  const key = nombre.toLowerCase().replace(/[""]/g, '"').substring(0, 40);
+  if (_campIndex[key]) return _campIndex[key].neg;
+  for (const [k, c] of Object.entries(_campIndex)) {
+    if (nombre.toLowerCase().includes(k.substring(0, 25)) || k.includes(nombre.toLowerCase().substring(0, 25))) {
+      return c.neg;
+    }
+  }
+  return inferirNegocio(nombre);
+}
+
+function computarKPIsDesdeCSV(current, snap7d) {
+  const total = current.length;
+  const activas = current.filter(d => (d.status || '').toLowerCase().includes('active')).length;
+  const inactivas = total - activas;
+  const gastoTotal = current.reduce((s, d) => s + (d.spend || 0), 0);
+  const alcanceTotal = current.reduce((s, d) => s + (d.reach || 0), 0);
+  const imprTotal = current.reduce((s, d) => s + (d.impr || 0), 0);
+
+  const activasDatos = current.filter(d => (d.status || '').toLowerCase().includes('active') && d.cpr > 0);
+  const activasMensajes = activasDatos.filter(d => d.cpr >= 0.05); // filtra las de interacción (~0.002)
+
+  let mejorCPR = null, peorCPR = null, mejorNombre = '', peorNombre = '';
+  if (activasMensajes.length > 0) {
+    const min = activasMensajes.reduce((a, b) => a.cpr < b.cpr ? a : b);
+    const max = activasMensajes.reduce((a, b) => a.cpr > b.cpr ? a : b);
+    mejorCPR = min.cpr; mejorNombre = min.name;
+    peorCPR = max.cpr;  peorNombre = max.name;
+  }
+
+  let gasto7d = null, alcance7d = null, cpm7d = null;
+  if (snap7d && snap7d.campaigns) {
+    const snap7dGasto = snap7d.campaigns.reduce((s, d) => s + (d.spend || 0), 0);
+    const snap7dAlcance = snap7d.campaigns.reduce((s, d) => s + (d.reach || 0), 0);
+    const snap7dImpr = snap7d.campaigns.reduce((s, d) => s + (d.impr || 0), 0);
+    gasto7d = Math.max(0, gastoTotal - snap7dGasto);
+    alcance7d = Math.max(0, alcanceTotal - snap7dAlcance);
+    const impr7d = Math.max(0, imprTotal - snap7dImpr);
+    cpm7d = impr7d > 0 ? (gasto7d / impr7d) * 1000 : null;
+  }
+
+  return {
+    total, activas, inactivas, gastoTotal, alcanceTotal,
+    mejorCPR, mejorNombre, peorCPR, peorNombre,
+    gasto7d, alcance7d, cpm7d
+  };
+}
+
+function truncNom(n, max) {
+  n = (n || '').replace(/^(Publicación|Messages Ad|Post|Mensajes Anuncio|Mensajes): /, '').replace(/[""]/g, '');
+  return n.length > max ? n.substring(0, max - 1) + '…' : n;
+}
+
+function pintarKPIs(k) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('kpiTotalCamp', fmt(k.total));
+  set('kpiTotalCampSub', `${k.activas} activas · ${k.inactivas} apagadas`);
+  set('kpiGastoTotal', fmtM(k.gastoTotal).replace('S/ ', 'S/ '));
+  set('kpiGastoTotalSub', 'Suma vida útil del CSV');
+
+  if (k.gasto7d != null) {
+    set('kpiGasto7d', fmtM(k.gasto7d));
+    set('kpiGasto7dSub', `Proyectado mes: ${fmtM(k.gasto7d * 30 / 7)}`);
+  } else {
+    set('kpiGasto7dSub', 'Sube el CSV de hace 7 días para calcular');
+  }
+
+  if (k.mejorCPR != null) {
+    set('kpiMejorCPR', fmtM(k.mejorCPR));
+    set('kpiMejorCPRSub', truncNom(k.mejorNombre, 32));
+  }
+  if (k.peorCPR != null) {
+    set('kpiPeorCPR', fmtM(k.peorCPR));
+    set('kpiPeorCPRSub', truncNom(k.peorNombre, 32));
+  }
+
+  if (k.alcance7d != null) {
+    set('kpiAlcance7d', fmt(k.alcance7d));
+    set('kpiAlcance7dSub', k.cpm7d ? `CPM ${fmtM(k.cpm7d)}` : 'CPM sin datos');
+  } else {
+    set('kpiAlcance7d', fmt(k.alcanceTotal));
+    set('kpiAlcance7dSub', 'Alcance total (histórico)');
+  }
+}
+
+function recalcularRankingDesdeCSV(current) {
+  const activas = current.filter(d => (d.status||'').toLowerCase().includes('active') && d.cpr >= 0.05 && d.spend >= 50);
+  if (activas.length < 3) return;
+  const sortedAsc = [...activas].sort((a, b) => a.cpr - b.cpr).slice(0, 10);
+  const sortedDesc = [...activas].sort((a, b) => b.cpr - a.cpr).slice(0, 10);
+  const gEl = document.getElementById('topGood');
+  const bEl = document.getElementById('topBad');
+  if (gEl) gEl.innerHTML = sortedAsc.map((c, i) => `<div class="compare-item"><span class="compare-rank">${i+1}</span><span class="compare-name">${truncNom(c.name, 42)}</span><span class="compare-cpr eff-good">${fmtM(c.cpr)}</span></div>`).join('');
+  if (bEl) bEl.innerHTML = sortedDesc.map((c, i) => `<div class="compare-item"><span class="compare-rank">${i+1}</span><span class="compare-name">${truncNom(c.name, 42)}</span><span class="compare-cpr eff-bad">${fmtM(c.cpr)}</span></div>`).join('');
+}
+
+function recalcularGraficoNegociosDesdeCSV(current) {
+  const porNeg = {};
+  current.forEach(d => {
+    const neg = resolverNegocio(d.name);
+    const key = neg.split('/')[0].trim();
+    if (!porNeg[key]) porNeg[key] = { camps: 0, msgs: 0, gasto: 0 };
+    porNeg[key].camps++;
+    porNeg[key].msgs += (d.cpr && d.spend && d.cpr > 0.05) ? Math.round(d.spend / d.cpr) : (d.results || 0);
+    porNeg[key].gasto += d.spend || 0;
+  });
+  const entries = Object.entries(porNeg).sort((a,b) => b[1].gasto - a[1].gasto);
+  if (typeof bizEntries !== 'undefined') {
+    bizEntries.length = 0;
+    entries.forEach(e => bizEntries.push(e));
+  }
+  // Re-renderiza la sección Negocios (bizGrid)
+  const bizGridEl = document.getElementById('bizGrid');
+  if (bizGridEl && entries.length > 0) {
+    const totalG = entries.reduce((s, [, d]) => s + d.gasto, 0);
+    const bizClasses = {Pesca:'biz-pesca', Motaxi:'biz-motaxi', Restaurante:'biz-resto'};
+    bizGridEl.innerHTML = entries.map(([name, d]) => {
+      const cpr = d.msgs > 0 ? (d.gasto / d.msgs) : 0;
+      const pct = totalG > 0 ? (d.gasto / totalG * 100).toFixed(1) : 0;
+      const cls = bizClasses[name] || 'biz-otro';
+      return `<div class="biz-card ${cls}">
+        <div class="biz-name">${name}</div>
+        <div class="biz-stat"><span class="biz-stat-label">Campañas</span><span class="biz-stat-val">${d.camps}</span></div>
+        <div class="biz-stat"><span class="biz-stat-label">Mensajes totales</span><span class="biz-stat-val">${fmt(d.msgs)}</span></div>
+        <div class="biz-stat"><span class="biz-stat-label">Inversión total</span><span class="biz-stat-val">${fmtM(d.gasto)}</span></div>
+        <div class="biz-stat"><span class="biz-stat-label">CPR promedio</span><span class="biz-stat-val eff ${effClass(cpr)}">${fmtM(cpr)}</span></div>
+        <div class="biz-stat"><span class="biz-stat-label">% del gasto</span><span class="biz-stat-val">${pct}%</span></div>
+      </div>`;
+    }).join('');
+  }
+  if (typeof renderCharts === 'function') {
+    try { renderCharts(); } catch(e) { console.warn('renderCharts falló', e); }
+  }
+}
+
+async function aplicarSnapshotCompleto(current) {
+  const snaps = await getSnapshots();
+  const cutoff7 = Date.now() - 7 * 86400000;
+  const snap7d = snaps.filter(s => s.timestamp <= cutoff7).slice(-1)[0] || null;
+
+  const kpis = computarKPIsDesdeCSV(current, snap7d);
+  pintarKPIs(kpis);
+  recalcularRankingDesdeCSV(current);
+  recalcularGraficoNegociosDesdeCSV(current);
+}
+
+updateSnapshotUI();
+evaluarRecordatorio();
+(async () => {
+  await cargarProductosEIngresos();
+  await cargarCampaignData();
+  // Una vez que llegaron productos+ingresos+mappings, re-renderizar la tabla principal
+  // para que las celdas de "Productos vinculados" y "Ventas 30d" ya tengan datos reales.
+  if (typeof aplicarFiltrosYRender === 'function') {
+    try { aplicarFiltrosYRender(); } catch (e) { /* silencioso */ }
+  }
+})();
+
+// Actualiza el subtítulo de "Activas" con el mes calendario en curso
+(function pintarMesActual() {
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const now = new Date();
+  const mesNombre = meses[now.getMonth()];
+  const anio = now.getFullYear();
+  const ultimoDia = new Date(anio, now.getMonth() + 1, 0).getDate();
+  const sub = document.getElementById('activasSubtitulo');
+  const tit = document.getElementById('activasTitulo');
+  if (tit) tit.textContent = `Campañas activas — ${mesNombre.charAt(0).toUpperCase()+mesNombre.slice(1)} ${anio}`;
+  if (sub) sub.textContent = `Del 1 al ${ultimoDia} de ${mesNombre} ${anio}. Gasto mensual estimado total: ~S/ 6,500.`;
+})();
+
+// Lee el estado del auto-update de Firestore
+async function verificarAutoUpdate() {
+  const badge = document.getElementById('autoBadge');
+  if (!badge) return;
+  try {
+    if (typeof META_DB === 'undefined') return;
+    const doc = await META_DB.collection('meta_meta').doc('lastAutoUpdate').get();
+    if (!doc.exists) return;
+    const data = doc.data() || {};
+    const hoy = new Date().toISOString().slice(0, 10);
+
+    if (data.lastError && (!data.timestamp || Date.now() - data.timestamp > 24*3600*1000)) {
+      badge.className = 'auto-badge error';
+      badge.style.display = 'inline-flex';
+      badge.innerHTML = `<span class="auto-badge-dot"></span>⚠ Auto-update falló · ${String(data.lastError).slice(0, 80)}`;
+      badge.title = 'Click para instrucciones';
+      return;
+    }
+    if (data.timestamp) {
+      const horas = Math.floor((Date.now() - data.timestamp) / 3600000);
+      const cls = horas <= 26 ? '' : (horas <= 48 ? 'warn' : 'error');
+      badge.className = 'auto-badge ' + cls;
+      badge.style.display = 'inline-flex';
+      const cuando = horas < 1 ? 'ahora' : horas < 24 ? `hace ${horas}h` : `hace ${Math.floor(horas/24)}d`;
+      badge.innerHTML = `<span class="auto-badge-dot"></span>🤖 Auto-update ${cuando} · ${data.campaignsCount || '?'} campañas`;
+    }
+  } catch (e) {
+    console.warn('[meta-ads] no se pudo leer auto-update state', e.message);
+  }
+}
+verificarAutoUpdate();
+
+// Si ya hay un snapshot cargado en Firestore/localStorage, aplicarlo al abrir la página
+(async () => {
+  const snaps = await getSnapshots();
+  if (snaps.length > 0) {
+    const last = snaps[snaps.length - 1];
+    if (last && last.campaigns) {
+      aplicarSnapshotCompleto(last.campaigns);
+    }
+  }
+})();
+</script>
