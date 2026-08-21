@@ -5654,6 +5654,17 @@ function buscarCobrosVinculados(ingresoId) {
   return cobros;
 }
 
+// Fuente de verdad de la deuda: parte del `pendiente` guardado y descuenta
+// TODOS los abonos vinculados. Si un sync anterior dejó `pendiente` desactualizado
+// (bug histórico: cobros que quedaron huérfanos), esta función lo corrige en runtime.
+function _pendienteReal(ingreso) {
+  if (!ingreso) return 0;
+  const guardado = Number(ingreso.pendiente || 0);
+  if (guardado <= 0) return 0;
+  const abonos = buscarCobrosVinculados(ingreso.id).reduce((s, c) => s + Number(c.monto || 0), 0);
+  return Math.max(0, guardado - abonos);
+}
+
 function eliminarConCobros(fecha, id, callback) {
   const ingreso = (INGRESOS[fecha] || []).find(i => i.id === id);
   if (!ingreso) return;
@@ -8750,7 +8761,7 @@ function abrirModalCobro(fecha, id) {
   cobroPendienteFecha = fecha;
   cobroPendienteId = id;
 
-  const pendiente = Number(ingreso.pendiente || 0);
+  const pendiente = _pendienteReal(ingreso);
   const prods = (ingreso.productos && ingreso.productos.length) ? ingreso.productos.map(p => p.nombre).join(', ') : ingreso.producto;
   const [y,m,d] = (ingreso.fecha||'').split('-');
   const fechaFmt = d ? `${d}/${m}/${y}` : '';
@@ -8759,6 +8770,18 @@ function abrirModalCobro(fecha, id) {
   const cobrosAnteriores = buscarCobrosVinculados(id);
   const totalAbonado = cobrosAnteriores.reduce((s, c) => s + Number(c.monto), 0);
   const deudaOriginal = Number(ingreso.totalProductos || 0) - Number(ingreso.monto || 0) + totalAbonado;
+
+  // Auto-reparación: si ya no queda deuda pero el campo `pendiente` está desincronizado,
+  // corregirlo en Firestore y cerrar el modal. Bug histórico visto con Paul (21/08/2026).
+  if (pendiente <= 0.009 && Number(ingreso.pendiente || 0) > 0) {
+    ingreso.pendiente = 0;
+    ingreso.esAdelanto = false;
+    ingreso.nota = (ingreso.nota ? ingreso.nota + ' | ' : '') + `Auto-reparación: deuda cerrada (abonos suman S/${totalAbonado.toFixed(2)})`;
+    syncAddIngreso(ingreso);
+    toast('Esta venta ya estaba pagada. Sincronizado.', 'success');
+    if (SESION && SESION.rol === 'vendedor') { renderVendedorView(); } else { renderPendientes(); }
+    return;
+  }
 
   let historialHtml = '';
   if (cobrosAnteriores.length > 0) {
@@ -8824,7 +8847,7 @@ async function confirmarCobro() {
   const montoCobro = parseFloat(document.getElementById('cobroMonto').value) || 0;
   const metodoCobro = document.getElementById('cobroMetodo').value;
   const notaCobro = document.getElementById('cobroNota').value.trim();
-  const pendienteActual = Number(ingreso.pendiente || 0);
+  const pendienteActual = _pendienteReal(ingreso);
 
   if (!fechaCobro) { toast('Selecciona la fecha de cobro', 'error'); return; }
   if (!horaCobro) { toast('Indica la hora', 'error'); return; }
@@ -12377,7 +12400,7 @@ function renderVendedorView() {
   const pendWrap = document.getElementById('vendedorPendientes');
   const pendBody = document.getElementById('vendedorPendientesBody');
   if (pendWrap && pendBody) {
-    const misPendientes = Object.values(INGRESOS).flat().filter(i => i.esAdelanto && Number(i.pendiente||0) > 0 && ((i.vendedor||'').toLowerCase().trim() === (SESION.nombre||'').toLowerCase().trim()));
+    const misPendientes = Object.values(INGRESOS).flat().filter(i => i.esAdelanto && _pendienteReal(i) > 0.009 && ((i.vendedor||'').toLowerCase().trim() === (SESION.nombre||'').toLowerCase().trim()));
     if (!misPendientes.length) {
       pendWrap.style.display = 'none';
     } else {
@@ -12450,7 +12473,7 @@ function renderVendedorView() {
         return `<div style="border:1px solid rgba(239,68,68,0.3);border-left:4px solid var(--rojo);border-radius:8px;padding:12px;margin-bottom:8px;background:#fff">
           <div onclick="abrirModalCobro('${i.fecha}','${i.id}')" style="cursor:pointer">
             <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <span style="font-family:'Rajdhani',sans-serif;font-weight:800;font-size:1.1rem;color:var(--rojo)">S/ ${Number(i.pendiente).toFixed(2)}</span>
+              <span style="font-family:'Rajdhani',sans-serif;font-weight:800;font-size:1.1rem;color:var(--rojo)">S/ ${_pendienteReal(i).toFixed(2)}</span>
               <span style="font-size:0.72rem;color:var(--text3);font-family:'JetBrains Mono',monospace">${fechaFmt}</span>
             </div>
             <div style="font-size:0.8rem;color:var(--text4);margin-top:4px;line-height:1.3">${prods}</div>
