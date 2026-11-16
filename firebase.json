@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "public": ".",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": [
+      "firebase.json", "**/.*", "**/node_modules/**",
+      "firestore.rules", "functions/**", "catalogo-scraper/**",
+      "*.mjs", "logo.jpg"
+    ],
+    "redirects": [
+      { "source": "/admin", "destination": "/entrar", "type": 302 },
+      { "source": "/panel", "destination": "/entrar", "type": 302 },
+      { "source": "/mi-cuenta", "destination": "/entrar", "type": 302 },
+      { "source": "/tienda", "destination": "/", "type": 302 }
+    ]
+  },
+  "firestore": { "rules": "firestore.rules" },
+  "storage": { "rules": "storage.rules" }
+}

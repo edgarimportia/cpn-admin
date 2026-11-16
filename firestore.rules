@@ -1,0 +1,176 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Catálogo público (tienda.html lee sin auth) ─────────
+    match /cpn_config/productos {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false; // nunca borrar el catálogo
+    }
+    // Post-migración: cada producto es un doc individual en cpn_productos/{id}.
+    // Sin el límite de 1 MiB del doc gigante y con escrituras aisladas por producto.
+    match /cpn_productos/{id} {
+      allow read: if true;
+      // Al crear: requerir id, nombre, precio numérico
+      allow create: if request.resource.data.keys().hasAll(['id', 'nombre', 'precio'])
+                    && request.resource.data.precio is number;
+      // Al actualizar: no cambiar el id (preserva identidad)
+      allow update: if request.resource.data.id == resource.data.id;
+      allow delete: if false;  // soft-delete con estado=inactivo
+    }
+    match /cpn_config/categorias {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false;
+    }
+
+    // ─── Usuarios / vendedores: leer y escribir con validación de esquema ─
+    // read=true por diseño (la app SPA valida contraseñas hasheadas cliente-side).
+    // Los hashes son SHA-256 + salt por usuario; suficiente para el equipo actual,
+    // pero considerar migrar a Firebase Auth si se agregan más usuarios sensibles.
+    match /cpn_config/usuarios {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false;
+    }
+    match /cpn_config/vendedores {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false;
+    }
+    match /cpn_config/vendedores_extendido {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false;
+    }
+    match /cpn_config/clientes {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false;
+    }
+
+    // ─── Backups: solo lectura, deben tener prefijo específico ─
+    match /cpn_config/{backup} {
+      allow read: if backup.matches('productos_backup_.*') || backup.matches('clientes_backup_.*');
+      allow write: if false; // solo se crean desde server-side con service account
+      allow delete: if false;
+    }
+
+    // ─── Asistencia de vendedores: marcación ingreso/salida ─
+    // La app es SPA sin Firebase Auth, así que estas reglas son de esquema mínimo.
+    // Al crear: requiere username + fecha + entrada (marcación mínima válida).
+    // Al actualizar: permite agregar salida y otros campos, pero preserva la entrada original.
+    // Nunca borrar (auditoría del owner).
+    match /cpn_asistencia/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['username', 'fecha', 'entrada'])
+                    && request.resource.data.username is string
+                    && request.resource.data.fecha is string;
+      allow update: if request.resource.data.username == resource.data.username
+                    && request.resource.data.fecha == resource.data.fecha;
+      allow delete: if false;
+    }
+
+    // ─── Caja chica (solo efectivo): gastos, ingresos manuales y arqueos ─
+    // Un movimiento se crea con sus datos completos y después SOLO se puede anular
+    // (no se cambia monto, tipo, fecha ni quién lo registró). Nunca se borra: auditoría.
+    match /cpn_caja/config {
+      allow read: if true;
+      allow write: if request.resource.data.vendedoresFuera is list;
+      allow delete: if false;
+    }
+    match /cpn_caja/{id} {
+      allow read: if true;
+      allow create: if id != 'config'
+                    && request.resource.data.keys().hasAll(['id', 'tipo', 'monto', 'fecha', 'ts', 'registradoPor'])
+                    && request.resource.data.id == id
+                    && request.resource.data.tipo in ['ingreso', 'egreso', 'arqueo']
+                    && request.resource.data.monto is number
+                    && request.resource.data.monto >= 0
+                    && request.resource.data.fecha is string;
+      allow update: if id != 'config'
+                    && request.resource.data.monto == resource.data.monto
+                    && request.resource.data.tipo == resource.data.tipo
+                    && request.resource.data.fecha == resource.data.fecha
+                    && request.resource.data.ts == resource.data.ts
+                    && request.resource.data.registradoPor == resource.data.registradoPor
+                    && request.resource.data.anulado == true;
+      allow delete: if false;
+    }
+
+    // ─── Nubefact: config para facturación electrónica SUNAT ─
+    // NOTA de seguridad (11-set-2026): esta app es SPA sin Firebase Auth,
+    // no podemos filtrar por rol=admin desde rules. La lectura está permitida
+    // pero el token queda expuesto en Firestore. Para máxima seguridad, la
+    // fase 2 debe migrar la emisión a una Cloud Function que actúe como proxy
+    // y guarde el token en Secret Manager.
+    // Por ahora se acepta el riesgo: el token permite emitir comprobantes solo
+    // del RUC específico y son auditables desde el panel Nubefact.
+    match /cpn_config/nubefact {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAny(['API_TOKEN', 'RUC_EMISOR']);
+      allow delete: if false;
+    }
+
+    // ─── Ingresos: crear y actualizar sí, borrar NUNCA
+    match /cpn_ingresos/{id} {
+      allow read: if true;
+      // Al crear: requerir campos mínimos que impidan basura
+      allow create: if request.resource.data.keys().hasAll(['vendedor', 'fecha', 'monto', 'id'])
+                    && request.resource.data.monto is number
+                    && request.resource.data.fecha is string;
+      // Al actualizar: no cambiar el id ni el vendedor original
+      allow update: if request.resource.data.id == resource.data.id
+                    && request.resource.data.vendedor == resource.data.vendedor;
+      // Nunca borrar
+      allow delete: if false;
+    }
+
+    // ─── Proveedores (documento lista) ─────
+    match /cpn_config/proveedores {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasAll(['lista']);
+      allow delete: if false;
+    }
+
+    // ─── Compras a proveedores: crear, actualizar, NUNCA borrar ─────
+    match /cpn_compras/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['id', 'codigo', 'proveedorId', 'total'])
+                    && request.resource.data.total is number;
+      allow update: if request.resource.data.id == resource.data.id
+                    && request.resource.data.codigo == resource.data.codigo;
+      allow delete: if false;
+    }
+
+    // ─── Cotizaciones: crear, actualizar, NUNCA borrar ─────
+    match /cpn_cotizaciones/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['id', 'codigo', 'vendedor', 'total'])
+                    && request.resource.data.total is number;
+      allow update: if request.resource.data.id == resource.data.id
+                    && request.resource.data.codigo == resource.data.codigo;
+      allow delete: if false;
+    }
+
+    // ─── Meta Ads: snapshots + owners + estado auto ─────────
+    match /meta_snapshots/{id} {
+      allow read, write: if true;
+      allow delete: if false; // preservar historial
+    }
+    match /meta_campaign_owners/{id} {
+      allow read, write: if true;
+      allow delete: if false;
+    }
+    match /meta_meta/{id} {
+      allow read, write: if true;
+      allow delete: if false;
+    }
+
+    // ─── Todo lo demás: bloqueado ────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

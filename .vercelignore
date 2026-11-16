@@ -1,0 +1,11 @@
+catalogo-scraper/
+functions/
+.firebase/
+firebase.json
+firestore.rules
+storage.rules
+.firebaserc
+.claude/
+node_modules/
+*.log
+backups/

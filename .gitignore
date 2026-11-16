@@ -1,0 +1,7 @@
+.vercel
+backups/
+.firebase/
+.claude/
+.env*
+**/.env*
+node_modules/
