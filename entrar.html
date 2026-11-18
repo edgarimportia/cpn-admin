@@ -15449,6 +15449,7 @@ function _cajaRender() {
       ${btn('➖ Registrar gasto', "_cajaForm('egreso')", '#B91C1C')}
       ${btn('➕ Registrar ingreso', "_cajaForm('ingreso')", '#047857')}
       ${btn('🧮 Arqueo / contar caja', '_cajaArqueo()', '#3730A3')}
+      ${btn('📄 Reporte del día (PDF)', '_cajaReporteDia()', '#0F766E')}
       ${btn('📊 Excel del periodo', '_cajaExcel()', '#1E1B4B')}
     </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
@@ -15614,6 +15615,8 @@ async function _cajaGuardarArqueo() {
     toast(esperado === null ? `Caja abierta con ${_cajaS(contado)}` : (Math.abs(diferencia) < 0.01 ? 'Arqueo correcto: cuadra exacto ✓' : `Arqueo guardado. Diferencia ${diferencia > 0 ? '+' : ''}${_cajaS(diferencia)}`), Math.abs(diferencia) < 0.01 ? 'success' : 'info', 6000);
     _caja.fecha = fechaHoy();
     await _cajaCargar(); _cajaRender();
+    // Si el arqueo se pidió desde "Reporte del día", seguir directo al reporte
+    if (_caja.reporteTrasArqueo) { _caja.reporteTrasArqueo = false; _cajaReporteDia({ sinPreguntar: true }); }
   } catch (e) { toast('No se pudo guardar el arqueo: ' + (e?.message || e), 'error'); btn.disabled = false; }
 }
 
@@ -15669,6 +15672,333 @@ async function _cajaExcel() {
   const a = document.createElement('a'); a.href = url; a.download = `Caja_chica_CPN_${desde.trim()}_a_${fechaHoy()}.xlsx`; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
   toast(`📊 Excel de caja: ${ev.length} movimientos`, 'success');
+}
+
+// ── Reporte del día en PDF: lo genera la administradora al cerrar y lo envía ──
+const _cajaRep = { blob: null, url: null, nombre: '', texto: '' };
+
+// Números del día para el reporte. Lo anterior a la apertura de la caja no cuenta (saldo null).
+function _cajaResumenReporte(D) {
+  const ok = D.eventos.filter(e => !e.anulado);
+  const cuenta = ok.filter(e => e.tipo !== 'arqueo' && e.saldo !== null && e.saldo !== undefined);
+  const suma = f => _r2(cuenta.filter(f).reduce((s, e) => s + Number(e.monto || 0), 0));
+  const arqueos = ok.filter(e => e.tipo === 'arqueo');
+  const apertura = arqueos.find(e => e.esperado === null || e.esperado === undefined) || null;
+  const controles = arqueos.filter(e => e !== apertura);
+  const gastos = cuenta.filter(e => e.tipo === 'egreso');
+  return {
+    inicio: D.saldoInicial !== null ? D.saldoInicial : (apertura ? _r2(apertura.monto) : null),
+    esApertura: D.saldoInicial === null && !!apertura,
+    apertura,
+    ventas: suma(e => e.origen === 'venta'), nVentas: cuenta.filter(e => e.origen === 'venta').length,
+    otros: suma(e => e.origen === 'manual' && e.tipo === 'ingreso'), nOtros: cuenta.filter(e => e.origen === 'manual' && e.tipo === 'ingreso').length,
+    gastos: suma(e => e.tipo === 'egreso'), nGastos: gastos.length,
+    gastosSinFoto: gastos.filter(e => !e.comprobanteUrl).length,
+    ajusteArqueos: _r2(controles.reduce((s, e) => s + Number(e.diferencia || 0), 0)),
+    ultimoArqueo: arqueos.length ? arqueos[arqueos.length - 1] : null,
+    antesDeAbrir: ok.filter(e => e.tipo !== 'arqueo' && (e.saldo === null || e.saldo === undefined)),
+    anulados: D.eventos.filter(e => e.anulado),
+    fin: D.saldoFinal,
+  };
+}
+
+async function _cajaReporteDia(opts = {}) {
+  const fecha = _caja.fecha || fechaHoy();
+  try { await _cajaCargar(); } catch (e) { toast('No pude cargar la caja: ' + (e?.message || e), 'error'); return; }
+  const D = _cajaDia(fecha);
+  if (!D.abierta || D.saldoFinal === null) { toast('La caja todavía no estaba abierta ese día: primero haz la apertura con 🧮 Arqueo', 'error', 6000); return; }
+  if (!opts.sinPreguntar && fecha === fechaHoy() && !D.arqueos.some(a => a.esperado !== null && a.esperado !== undefined)) {
+    const contar = await askConfirm('¿Contar la caja antes?',
+      'Hoy todavía no se contó el efectivo de cierre. Lo recomendable es contar la caja primero: así el reporte dice si cuadra o si falta o sobra dinero.\n\n¿Quieres contar la caja ahora?',
+      { okText: '🧮 Contar la caja primero', cancelText: 'Generar sin contar' });
+    if (contar) { _caja.reporteTrasArqueo = true; _cajaArqueo(); return; }
+  }
+  let doc;
+  try { await window.ensureJsPDF(); doc = _cajaDibujarPDF(D); }
+  catch (e) { console.error('[caja pdf]', e); toast('No pude generar el PDF: ' + (e?.message || e), 'error'); return; }
+  _cajaRep.blob = doc.output('blob');
+  if (_cajaRep.url) URL.revokeObjectURL(_cajaRep.url);
+  _cajaRep.url = URL.createObjectURL(_cajaRep.blob);
+  _cajaRep.nombre = `Caja_chica_CPN_${fecha}.pdf`;
+  _cajaRep.texto = _cajaTextoResumen(D);
+  let puedeCompartir = false;
+  try { puedeCompartir = !!(navigator.canShare && navigator.canShare({ files: [new File([_cajaRep.blob], _cajaRep.nombre, { type: 'application/pdf' })] })); } catch (e) {}
+  let m = document.getElementById('modalCajaRepOverlay');
+  if (!m) { m = document.createElement('div'); m.id = 'modalCajaRepOverlay'; m.className = 'modal-overlay'; document.body.appendChild(m); }
+  const bt = (txt, fn, bg, extra = '') => `<button onclick="${fn}" style="flex:1;min-width:150px;background:${bg};color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer;${extra}">${txt}</button>`;
+  m.innerHTML = `<div class="modal" style="max-width:900px;width:96vw;max-height:94vh;display:flex;flex-direction:column">
+    <div class="modal-title">📄 <span>Reporte de caja chica · ${fecha.split('-').reverse().join('/')}</span>
+      <button class="modal-close" onclick="document.getElementById('modalCajaRepOverlay').classList.remove('open')">✕</button></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      ${puedeCompartir ? bt('📤 Compartir PDF', '_cajaRepCompartir()', '#0F766E') : ''}
+      ${bt('⬇️ Descargar PDF', '_cajaRepDescargar()', '#1E1B4B')}
+      ${bt('💬 Resumen por WhatsApp', '_cajaRepWhatsapp()', '#16A34A')}
+    </div>
+    <div style="font-size:0.75rem;color:var(--text3);margin-bottom:8px">${puedeCompartir ? 'Compartir PDF abre WhatsApp u otra app con el archivo adjunto.' : 'Descarga el PDF y adjúntalo en WhatsApp. El botón verde manda además el resumen en texto.'}</div>
+    <iframe src="${_cajaRep.url}" style="flex:1;min-height:60vh;width:100%;border:1px solid var(--border);border-radius:8px;background:#fff"></iframe>
+  </div>`;
+  m.classList.add('open');
+  toast('📄 Reporte de caja listo', 'success');
+}
+
+function _cajaRepDescargar() {
+  if (!_cajaRep.url) return;
+  const a = document.createElement('a'); a.href = _cajaRep.url; a.download = _cajaRep.nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('✓ PDF descargado', 'success');
+}
+async function _cajaRepCompartir() {
+  if (!_cajaRep.blob) return;
+  try {
+    const file = new File([_cajaRep.blob], _cajaRep.nombre, { type: 'application/pdf' });
+    await navigator.share({ files: [file], title: 'Caja chica · CPN Sports', text: _cajaRep.texto });
+  } catch (e) { if (e?.name !== 'AbortError') toast('No se pudo compartir: ' + (e?.message || e), 'error'); }
+}
+function _cajaRepWhatsapp() {
+  if (_cajaRep.texto) window.open('https://wa.me/?text=' + encodeURIComponent(_cajaRep.texto), '_blank', 'noopener');
+}
+
+function _cajaTextoResumen(D) {
+  const r = _cajaResumenReporte(D);
+  const f = new Date(D.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+  const l = ['*CAJA CHICA (efectivo) · CPN Sports*', `📅 ${f}`, '',
+    `${r.esApertura ? '🔓 Apertura de caja' : 'Empezó el día con'}: ${_cajaS(r.inicio)}`,
+    `➕ Ventas y cobros en efectivo: ${_cajaS(r.ventas)} (${r.nVentas})`];
+  if (r.otros) l.push(`➕ Otros ingresos: ${_cajaS(r.otros)} (${r.nOtros})`);
+  l.push(`➖ Gastos: ${_cajaS(r.gastos)} (${r.nGastos})`);
+  if (Math.abs(r.ajusteArqueos) >= 0.01) l.push(`🧮 Diferencias de arqueo: ${r.ajusteArqueos > 0 ? '+' : '-'}${_cajaS(Math.abs(r.ajusteArqueos))}`);
+  l.push(`💵 *Debe haber en caja: ${_cajaS(r.fin)}*`);
+  const ua = r.ultimoArqueo;
+  if (ua && ua !== r.apertura) {
+    const d = Number(ua.diferencia || 0);
+    l.push(`🧮 Arqueo ${ua.hora} (${ua.registradoPor}): contado ${_cajaS(ua.monto)} → ${Math.abs(d) < 0.01 ? 'cuadra exacto ✅' : (d < 0 ? 'FALTA ' : 'SOBRA ') + _cajaS(Math.abs(d)) + ' ⚠️'}`);
+  } else if (!r.esApertura) l.push('⚠️ No se contó la caja este día');
+  if (D.fuera.length) l.push('', `Efectivo de vendedores fuera de la tienda (no está en la caja): ${D.fuera.map(v => `${v.vendedor} ${_cajaS(v.monto)}`).join(', ')}`);
+  return l.join('\n');
+}
+
+function _cajaDibujarPDF(D) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'portrait', compress: true });
+  const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+  const M = 32, CW = W - M * 2;
+  const r = _cajaResumenReporte(D);
+  // Las fuentes estándar del PDF solo cubren Latin-1: quitar emojis y signos fuera de rango
+  const T = s => String(s ?? '').replace(/[–—−]/g, '-').replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/…/g, '...').replace(/[^\x00-\xFF]/g, '').replace(/ {2,}/g, ' ');
+  const S = n => _cajaS(n);
+  const SG = n => (Number(n) > 0.004 ? '+' : Number(n) < -0.004 ? '-' : '') + _cajaS(Math.abs(Number(n || 0)));
+  const DER = v => ({ content: v, styles: { halign: 'right' } });
+  const VERDE = [4, 120, 87], ROJO = [185, 28, 28], AZUL = [55, 48, 163], GRIS = [71, 85, 105], OSC = [6, 78, 59], AMBAR = [180, 83, 9];
+  const tinte = c => c.map(v => Math.round(v + (255 - v) * 0.9));
+  const fechaLarga = new Date(D.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const quien = SESION?.nombre || 'Administración';
+  const ahora = new Date();
+  const horaGen = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+  const base = {
+    theme: 'grid',
+    styles: { font: 'helvetica', fontSize: 8, cellPadding: 4, lineColor: [226, 232, 240], lineWidth: 0.5, textColor: [30, 41, 59], overflow: 'linebreak' },
+    headStyles: { fillColor: OSC, textColor: 255, fontStyle: 'bold', fontSize: 8 },
+    footStyles: { fillColor: [209, 250, 229], textColor: OSC, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [248, 250, 252] },
+    margin: { left: M, right: M, top: 46, bottom: 46 },
+    rowPageBreak: 'avoid', showFoot: 'lastPage',
+  };
+  let y = 0;
+  const ensure = h => { if (y + h > H - 46) { doc.addPage(); y = 46; } };
+  const seccion = (titulo, sub, hMin) => {
+    ensure((hMin || 60) + 26);
+    doc.setFillColor(...OSC); doc.rect(M, y, 4, 15, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(...OSC);
+    doc.text(T(titulo), M + 10, y + 11.5);
+    if (sub) { doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.text(T(sub), W - M, y + 11.5, { align: 'right' }); }
+    y += 24;
+  };
+  const tras = (gap = 18) => { y = doc.lastAutoTable.finalY + gap; };
+  const caja = (color, alto, dibujar) => {
+    ensure(alto + 8);
+    doc.setFillColor(...tinte(color)); doc.roundedRect(M, y, CW, alto, 6, 6, 'F');
+    doc.setFillColor(...color); doc.rect(M, y + 6, 4, alto - 12, 'F');
+    dibujar(y); y += alto + 14;
+  };
+
+  // ── Encabezado ──
+  doc.setFillColor(...OSC); doc.rect(0, 0, W, 86, 'F');
+  doc.setFillColor(...VERDE); doc.rect(0, 80, W, 6, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(23); doc.text('CAJA CHICA', M, 38);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(T('CPN Sports · Caza, Pesca y Náutica'), M, 56);
+  doc.setFontSize(8); doc.text(T('Solo efectivo · reporte del día'), M, 69);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(11.5);
+  doc.text(T(fechaLarga.charAt(0).toUpperCase() + fechaLarga.slice(1)), W - M, 36, { align: 'right' });
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+  doc.text(T(`Generado ${fechaHoy() === D.fecha ? 'hoy' : 'el ' + ahora.toLocaleDateString('es-PE')} a las ${horaGen} por ${quien}`), W - M, 52, { align: 'right' });
+  doc.text(T(`${D.eventos.length} movimiento(s) de efectivo`), W - M, 66, { align: 'right' });
+  y = 100;
+
+  // ── Tarjetas: inicio + entradas - salidas = debe haber ──
+  const kpis = [
+    { label: r.esApertura ? 'APERTURA DE CAJA' : 'EMPEZÓ EL DÍA CON', valor: S(r.inicio), sub: r.esApertura ? `a las ${r.apertura.hora}` : 'saldo del día anterior', color: GRIS },
+    { label: '+ VENTAS Y COBROS', valor: S(r.ventas), sub: `${r.nVentas} en efectivo`, color: VERDE },
+    { label: '+ OTROS INGRESOS', valor: S(r.otros), sub: `${r.nOtros} registrado(s)`, color: [15, 118, 110] },
+    { label: '- GASTOS', valor: S(r.gastos), sub: `${r.nGastos} gasto(s)`, color: ROJO },
+    { label: '= DEBE HABER', valor: S(r.fin), sub: 'según el registro', color: AZUL },
+  ];
+  const kw = (CW - 4 * 6) / 5, kh = 52;
+  kpis.forEach((k, i) => {
+    const x = M + i * (kw + 6);
+    doc.setFillColor(...tinte(k.color)); doc.roundedRect(x, y, kw, kh, 6, 6, 'F');
+    doc.setFillColor(...k.color); doc.rect(x, y + 6, 3, kh - 12, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(6.5); doc.setTextColor(100, 116, 139); doc.text(T(k.label), x + 9, y + 14);
+    doc.setFontSize(12.5); doc.setTextColor(...k.color); doc.text(T(k.valor), x + 9, y + 32);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(6.8); doc.setTextColor(100, 116, 139); doc.text(T(k.sub), x + 9, y + 44);
+  });
+  y += kh + 8;
+  if (Math.abs(r.ajusteArqueos) >= 0.01) {
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(7.5); doc.setTextColor(...GRIS);
+    doc.text(T(`Incluye ${SG(r.ajusteArqueos)} de diferencia en arqueos del día (el arqueo fija el saldo a lo contado).`), M, y + 4);
+    y += 10;
+  }
+  y += 8;
+
+  // ── ¿Cuadra? ──
+  const ua = r.ultimoArqueo;
+  if (ua && ua !== r.apertura) {
+    const d = Number(ua.diferencia || 0), exacto = Math.abs(d) < 0.01;
+    const color = exacto ? VERDE : ROJO;
+    const despues = Math.abs(_r2(r.fin - ua.monto)) >= 0.01;
+    caja(color, ua.nota || despues ? 70 : 54, yy => {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(...color);
+      doc.text(T(exacto ? 'CAJA CUADRADA: el efectivo contado coincide con el registro' : `${d < 0 ? 'FALTA' : 'SOBRA'} ${S(Math.abs(d))} en la caja`), M + 14, yy + 18);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(30, 41, 59);
+      doc.text(T(`Arqueo de las ${ua.hora} por ${ua.registradoPor || '-'}: contado ${S(ua.monto)} · debía haber ${S(ua.esperado)} · diferencia ${SG(d)}`), M + 14, yy + 34);
+      let ly = yy + 47;
+      if (ua.nota) { doc.text(T(`Nota: ${ua.nota}`).slice(0, 140), M + 14, ly); ly += 12; }
+      if (despues) { doc.setTextColor(...GRIS); doc.text(T(`Después del arqueo hubo más movimientos: al cerrar el día debe haber ${S(r.fin)}.`), M + 14, ly); }
+    });
+  } else if (r.esApertura) {
+    caja(AZUL, 44, yy => {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(...AZUL);
+      doc.text(T(`Hoy se abrió la caja chica con ${S(r.apertura.monto)}`), M + 14, yy + 18);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(30, 41, 59);
+      doc.text(T(`Apertura a las ${r.apertura.hora} por ${r.apertura.registradoPor || '-'}${r.apertura.nota ? ' · ' + r.apertura.nota : ''}`).slice(0, 150), M + 14, yy + 33);
+    });
+  } else {
+    caja(AMBAR, 44, yy => {
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(...AMBAR);
+      doc.text('SIN ARQUEO: hoy no se contó el efectivo', M + 14, yy + 18);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(30, 41, 59);
+      doc.text(T(`El "debe haber" (${S(r.fin)}) es solo según el registro; no se verificó contando billetes y monedas.`), M + 14, yy + 33);
+    });
+  }
+
+  // ── Desglose de billetes y monedas del último conteo ──
+  const den = ua?.denominaciones && Object.keys(ua.denominaciones).length ? ua.denominaciones : null;
+  if (den) {
+    const filas = _CAJA_DENOM.filter(v => den[String(v)]).map(v => [`${v >= 10 ? 'Billete' : 'Moneda'} S/ ${v < 1 ? v.toFixed(2) : v}`, String(den[String(v)]), S(v * den[String(v)])]);
+    seccion('Billetes y monedas contados', `arqueo de las ${ua.hora}`, 30 + filas.length * 16);
+    doc.autoTable({ ...base, startY: y, margin: { ...base.margin, right: M + CW / 2 },
+      head: [['Denominación', 'Cantidad', 'Subtotal']], body: filas, foot: [['TOTAL CONTADO', '', DER(S(ua.monto))]],
+      columnStyles: { 1: { halign: 'center' }, 2: { halign: 'right' } } });
+    tras();
+  }
+
+  // ── Movimientos del día ──
+  seccion('Movimientos de efectivo del día', 'en orden de hora · saldo corrido', 70);
+  if (!D.eventos.length) {
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(...GRIS);
+    doc.text('Sin movimientos de efectivo este día.', M, y + 6); y += 22;
+  } else {
+    const body = D.eventos.map(e => {
+      const arq = e.tipo === 'arqueo';
+      const det = arq
+        ? (e.esperado === null || e.esperado === undefined ? `Apertura: contado ${S(e.monto)}` : `Contado ${S(e.monto)} · debía haber ${S(e.esperado)} · dif. ${SG(e.diferencia)}`) + (e.nota ? ` · ${e.nota}` : '')
+        : (e.descripcion || '') + (e.origen === 'manual' && e.tipo === 'egreso' && !e.comprobanteUrl ? ' (sin foto de comprobante)' : '');
+      const quienMov = e.origen === 'venta' ? `vendió ${e.vendedor}` : (e.registradoPor || '');
+      const cuenta = !e.anulado && e.saldo !== null && e.saldo !== undefined;
+      return [
+        e.hora || '',
+        arq ? (e.esperado === null || e.esperado === undefined ? 'Apertura' : 'Arqueo') : T(e.categoria || ''),
+        T((e.anulado ? `ANULADO (${e.motivoAnulacion || 'sin motivo'}): ` : '') + det).slice(0, 220),
+        T(quienMov),
+        !arq && e.tipo === 'ingreso' ? (cuenta ? '' : '(') + S(e.monto) + (cuenta ? '' : ')') : '',
+        !arq && e.tipo === 'egreso' ? (cuenta ? '' : '(') + S(e.monto) + (cuenta ? '' : ')') : '',
+        e.saldo === null || e.saldo === undefined ? 'antes de abrir' : S(e.saldo),
+      ];
+    });
+    doc.autoTable({ ...base, startY: y,
+      head: [['Hora', 'Movimiento', 'Detalle', 'Quién', 'Entrada', 'Salida', 'Saldo']],
+      body,
+      foot: [['', 'TOTAL DEL DÍA', '', '', DER(S(r.ventas + r.otros)), DER(S(r.gastos)), DER(S(r.fin))]],
+      columnStyles: { 0: { cellWidth: 34 }, 1: { cellWidth: 82, fontStyle: 'bold' }, 2: { cellWidth: 'auto' }, 3: { cellWidth: 66 },
+        4: { cellWidth: 58, halign: 'right' }, 5: { cellWidth: 58, halign: 'right' }, 6: { cellWidth: 62, halign: 'right' } },
+      didParseCell: h => {
+        if (h.section !== 'body') return;
+        const e = D.eventos[h.row.index];
+        if (e.anulado) { h.cell.styles.textColor = [148, 163, 184]; h.cell.styles.fontStyle = 'italic'; return; }
+        if (h.column.index === 4 && h.cell.raw) h.cell.styles.textColor = VERDE;
+        if (h.column.index === 5 && h.cell.raw) h.cell.styles.textColor = ROJO;
+        if (e.tipo === 'arqueo') h.cell.styles.fillColor = [238, 242, 255];
+      } });
+    tras(8);
+    const notas = [];
+    if (r.anulados.length) notas.push(`${r.anulados.length} movimiento(s) anulado(s): aparecen en gris y entre paréntesis, no suman.`);
+    if (r.antesDeAbrir.length) notas.push(`${r.antesDeAbrir.length} movimiento(s) antes de abrir la caja: no suman al saldo.`);
+    if (notas.length) {
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(7.5); doc.setTextColor(...GRIS);
+      notas.forEach(n => { ensure(12); doc.text(T(n), M, y + 4); y += 11; });
+    }
+    y += 10;
+  }
+
+  // ── Gastos por categoría ──
+  if (r.nGastos) {
+    const porCat = {};
+    D.eventos.filter(e => e.tipo === 'egreso' && !e.anulado && e.saldo !== null && e.saldo !== undefined).forEach(e => {
+      const x = porCat[e.categoria] || (porCat[e.categoria] = { n: 0, t: 0, sinFoto: 0 });
+      x.n++; x.t += Number(e.monto || 0); if (!e.comprobanteUrl) x.sinFoto++;
+    });
+    const filas = Object.entries(porCat).sort((a, b) => b[1].t - a[1].t).map(([c, x]) => [T(c), String(x.n), x.sinFoto ? `${x.sinFoto} sin foto` : 'todos con foto', S(x.t)]);
+    seccion('Gastos por categoría', `${r.nGastos} gasto(s)`, 30 + filas.length * 16);
+    doc.autoTable({ ...base, startY: y, head: [['Categoría', 'Cant.', 'Comprobantes', 'Total']], body: filas,
+      foot: [['TOTAL GASTOS', String(r.nGastos), r.gastosSinFoto ? `${r.gastosSinFoto} sin foto` : '', DER(S(r.gastos))]],
+      columnStyles: { 1: { halign: 'center', cellWidth: 40 }, 2: { cellWidth: 100 }, 3: { halign: 'right', cellWidth: 80 } } });
+    tras();
+  }
+
+  // ── Efectivo que NO está en la caja ──
+  if (D.fuera.length) {
+    seccion('Efectivo de vendedores fuera de la tienda', 'NO está en la caja', 30 + D.fuera.length * 16);
+    const tot = _r2(D.fuera.reduce((s, v) => s + Number(v.monto || 0), 0));
+    doc.autoTable({ ...base, startY: y, headStyles: { ...base.headStyles, fillColor: [30, 64, 175] },
+      head: [['Hora', 'Vendedor', 'Detalle', 'Monto']],
+      body: D.fuera.map(v => [v.hora || '', T(v.vendedor), T(v.descripcion), S(v.monto)]),
+      foot: [['', 'TOTAL POR ENTREGAR', '', DER(S(tot))]],
+      columnStyles: { 0: { cellWidth: 34 }, 1: { cellWidth: 70 }, 3: { halign: 'right', cellWidth: 70 } } });
+    tras(6);
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(7.5); doc.setTextColor(...GRIS);
+    doc.text(T('Cuando lo entreguen en tienda se registra como ingreso "Entrega de efectivo de vendedor".'), M, y + 4);
+    y += 20;
+  }
+
+  // ── Firmas ──
+  ensure(80);
+  y += 30;
+  doc.setDrawColor(148, 163, 184); doc.setLineWidth(0.6);
+  const fw = (CW - 40) / 2;
+  doc.line(M, y, M + fw, y); doc.line(M + fw + 40, y, W - M, y);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...GRIS);
+  doc.text(T(`Cerró la caja: ${quien}`), M, y + 12);
+  doc.text(T('Revisó'), M + fw + 40, y + 12);
+
+  // ── Pie de página ──
+  const n = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= n; i++) {
+    doc.setPage(i);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(148, 163, 184);
+    doc.text(T(`Caja chica CPN Sports · ${D.fecha.split('-').reverse().join('/')}`), M, H - 20);
+    doc.text(`Pagina ${i} de ${n}`, W - M, H - 20, { align: 'right' });
+  }
+  return doc;
 }
 
 function _mensajeErrorStock(e) {

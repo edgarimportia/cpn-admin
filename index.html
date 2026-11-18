@@ -557,8 +557,9 @@ function _agotado(p){
 
 // ── Búsqueda que entiende cómo pregunta la gente: categorías, plurales y sinónimos ──
 const _STOP = new Set(['de','la','el','los','las','del','para','con','y','en','por','un','una','al','a']);
+// OJO: aquí "visor" es la mira del rifle (categoría Binoculares y Visores); no ponerlo como sinónimo de máscara
 const _SINONIMOS = [
-  ['traje','neopreno','wetsuit','terno'], ['mascara','careta','visor','goggle'], ['buceo','buseo','snorkel','snorkell'],
+  ['traje','neopreno','wetsuit','terno'], ['mascara','careta','goggle'], ['buceo','buseo','snorkel','snorkell'],
   ['carrete','reel','molinete'], ['cana','vara'], ['combo','kit','set'], ['senuelo','carnada artificial','lure'],
   ['cucharilla','mariposa','cuchara'], ['plomo','pesa'], ['nylon','hilo','linea','multifilamento','elasticor','sedal'],
   ['linterna','lampara'], ['salvavida','chaleco','aro','boya'], ['bote','kayak','kayat','balsa','zodiac'],
