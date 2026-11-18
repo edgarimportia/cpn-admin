@@ -705,6 +705,13 @@ function aplicarHash(){
   if (h.startsWith('c/')) {
     const slug = h.slice(2);
     mostrarCategoria(slug);
+  } else if (h.startsWith('q/')) {
+    // Enlace directo a una búsqueda (lo manda el asistente de WhatsApp): cpnsports.com/#q/carrete-shimano
+    let q = h.slice(2);
+    try { q = decodeURIComponent(q); } catch (e) {}
+    q = q.replace(/[-+_]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
+    const inp = document.getElementById('q');
+    if (q && inp) { inp.value = q; inp.dispatchEvent(new Event('input')); } else mostrarHome();
   } else {
     mostrarHome();
   }
@@ -810,6 +817,7 @@ function mostrarCategoria(slug){
   render();
 }
 
+let _busqAprox = null;   // palabras con las que se mostró "lo más parecido" cuando no hubo resultado exacto
 function filtrar(){
   const q = norm(fQ);
   let arr = PRODS;
@@ -837,8 +845,16 @@ function filtrar(){
   }
   const toks = _tokens(fQ);
   const pts = new Map();
-  if (toks.length) arr = arr.filter(p => { const s = _puntaje(p, toks); if (s) pts.set(p, s); return s > 0; });
-  else arr = arr.slice();
+  _busqAprox = null;
+  if (toks.length) {
+    const buscar = ts => { pts.clear(); return arr.filter(p => { const s = _puntaje(p, ts); if (s) pts.set(p, s); return s > 0; }); };
+    let res = buscar(toks);
+    // Sin resultados con TODAS las palabras: mostrar lo más parecido en vez de una página vacía.
+    // Se quitan las del final ("carrete shimano" → "carrete"); si no, se prueba cada palabra sola.
+    for (let n = toks.length - 1; !res.length && n >= 1; n--) { res = buscar(toks.slice(0, n)); if (res.length) _busqAprox = toks.slice(0, n).join(' '); }
+    for (let i = 1; !res.length && i < toks.length; i++) { res = buscar([toks[i]]); if (res.length) _busqAprox = toks[i]; }
+    arr = res;
+  } else arr = arr.slice();
 
   const porNombre = (a,b) => (a.nombre||'').localeCompare(b.nombre||'');
   const base = sort === 'precio-asc' ? (a,b) => Number(a.precio) - Number(b.precio)
@@ -862,7 +878,10 @@ function render(){
   empty.style.display = 'none';
   grid.style.display = 'grid';
   const total = arr.length, show = Math.min(page*PAGE, total), vis = arr.slice(0, show);
-  cnt.innerHTML = `Mostrando <b>${vis.length}</b> de <b>${total}</b> productos${fQ?` para "<b>${fQ}</b>"`:''}`;
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  cnt.innerHTML = _busqAprox
+    ? `No encontramos "<b>${esc(fQ)}</b>" exacto · te mostramos <b>${total}</b> producto${total !== 1 ? 's' : ''} de "<b>${esc(_busqAprox)}</b>"`
+    : `Mostrando <b>${vis.length}</b> de <b>${total}</b> productos${fQ?` para "<b>${esc(fQ)}</b>"`:''}`;
   grid.innerHTML = vis.map((p,i) => {
     // Toma la primera imagen del array `imagenes` si existe, si no `imagen` (compat)
     const primaryUrl = (Array.isArray(p.imagenes) && p.imagenes[0]) ? p.imagenes[0] : p.imagen;

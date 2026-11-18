@@ -11124,6 +11124,8 @@ function _cdHex2Rgb(h) {
   const x = String(h).replace('#', '');
   return [parseInt(x.slice(0, 2), 16), parseInt(x.slice(2, 4), 16), parseInt(x.slice(4, 6), 16)];
 }
+// Código del producto para ubicarlo en el almacén (sku del catálogo; si no, el que trae la venta)
+function _cdCodigo(cat, it) { return String(cat?.sku || cat?.codigo || it?.sku || it?.codigo || '').trim(); }
 function _cdMoney(n) { return 'S/ ' + Number(n || 0).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 function _cdMoneyCorto(n) {
   n = Number(n || 0);
@@ -11525,7 +11527,7 @@ async function _cierreRecolectar(fecha, opts = {}) {
     V.dineroVentas += monto;
     const conSaldo = i.esAdelanto && pend > 0.009;
     detalle.push({ hora: i.hora || '-', vendedor: vend, tipo: conSaldo ? 'Adelanto' : 'Venta', cliente: i.cliente?.nombre || '-',
-      productos: items.map(p => `${Number(p.cantidad || 1) > 1 ? p.cantidad + 'x ' : ''}${p.nombre}`).join(', '),
+      productos: items.map(p => { const cod = _cdCodigo(buscarProd(p), p); return `${Number(p.cantidad || 1) > 1 ? p.cantidad + 'x ' : ''}${p.nombre}${cod ? ` [${cod}]` : ''}`; }).join(', '),
       metodo: pagos.length > 1 ? pagos.map(p => `${p.metodo} ${_cdMoney(p.monto)}`).join(' + ') : pagos[0].metodo,
       recibido: monto, pendiente: conSaldo ? pend : 0, obs: obs.join(' · ') });
 
@@ -11547,7 +11549,7 @@ async function _cierreRecolectar(fecha, opts = {}) {
       const listaU = Number(cat?.precio || 0);
       const desc = listaU > 0 && precio < listaU ? (listaU - precio) * cant : 0;
       const key = nombre.toLowerCase();
-      const P = productos[key] || (productos[key] = { nombre, categoria, cant: 0, venta: 0, costo: 0, costoU, conCosto: costoU > 0, listaU, descuento: 0, img: _cdImgProd(cat, it) });
+      const P = productos[key] || (productos[key] = { nombre, codigo: _cdCodigo(cat, it), categoria, cant: 0, venta: 0, costo: 0, costoU, conCosto: costoU > 0, listaU, descuento: 0, img: _cdImgProd(cat, it) });
       P.cant += cant; P.venta += sub; P.descuento += desc;
       V.descuento += desc; t.descuento += desc;
       if (listaU > 0) t.valorLista += listaU * cant;
@@ -11623,7 +11625,7 @@ function _cierreInventario(productos, ventas30 = new Map()) {
     const costo = Number(p.costoBase || 0), venta = Number(p.precio || 0);
     const min = Number(p.stockMin || 0);
     items.push({
-      id: p.id, nombre: String(p.nombre || '').trim(), categoria: String(p.categoria || 'Otros').trim() || 'Otros',
+      id: p.id, nombre: String(p.nombre || '').trim(), codigo: _cdCodigo(p), categoria: String(p.categoria || 'Otros').trim() || 'Otros',
       stock, origen: enInv ? (sinContar ? 'web' : 'inv') : (web !== null ? 'web' : 'sin'),
       cajas: Number(p.stockCajas || 0), upc: Number(p.udsPorCaja || 0), sueltas: Number(p.stockUnidades || 0),
       bajo: enInv && min > 0 && stock <= min, costo, venta, img: _cdImgProd(p),
@@ -11738,7 +11740,7 @@ async function _cierreSeguimiento(R, enMemoria, buscarProd) {
   const abonosPor = new Map();
   for (const x of universo.values()) if (x?.esCobro && x.ingresoOrigenId) abonosPor.set(x.ingresoOrigenId, (abonosPor.get(x.ingresoOrigenId) || 0) + Number(x.monto || 0));
   const itemsDe = i => (Array.isArray(i.productos) && i.productos.length) ? i.productos : (i.producto ? [{ nombre: i.producto, cantidad: 1 }] : []);
-  const textoItems = items => items.map(p => `${Number(p.cantidad || 1) > 1 ? p.cantidad + 'x ' : ''}${p.nombre}`).join(', ') || '-';
+  const textoItems = items => items.map(p => { const cod = _cdCodigo(buscarProd(p), p); return `${Number(p.cantidad || 1) > 1 ? p.cantidad + 'x ' : ''}${p.nombre}${cod ? ` [${cod}]` : ''}`; }).join(', ') || '-';
   const docDe = c => c?.documento ? `${c.tipoDoc || 'DNI'} ${c.documento}` : '';
 
   // ── Ventas pendientes de cobro ──
@@ -12029,21 +12031,21 @@ function _cierreDibujarPDF(R) {
   // ── Productos vendidos ──
   seccion('Productos vendidos', `${R.productos.length} producto(s) · ${t.unidades} unidades`, 80);
   doc.autoTable({ ...base, startY: y,
-    head: [['#', 'Foto', 'Producto', 'Categoría', 'Cant.', 'P. costo', 'P. lista', 'P. venta', 'Descuento', 'Total venta', 'Total costo', 'Ganancia', 'Margen']],
-    body: R.productos.map((p, i) => [i + 1, '', T(p.nombre), T(p.categoria), p.cant,
+    head: [['#', 'Foto', 'Código', 'Producto', 'Categoría', 'Cant.', 'P. costo', 'P. lista', 'P. venta', 'Descuento', 'Total venta', 'Total costo', 'Ganancia', 'Margen']],
+    body: R.productos.map((p, i) => [i + 1, '', T(p.codigo || '-'), T(p.nombre), T(p.categoria), p.cant,
       p.conCosto ? N(p.costoU) : 'Sin costo', p.listaU > 0 ? N(p.listaU) : '-', N(p.cant ? p.venta / p.cant : 0),
       p.descuento > 0.009 ? N(p.descuento) : '-', N(p.venta),
       p.conCosto ? N(p.costo) : '-', p.conCosto ? N(p.venta - p.costo) : '-', p.conCosto ? pct(p.venta - p.costo, p.venta) : '-']),
-    foot: [['', '', 'TOTAL', '', t.unidades, '', '', '', t.descuento > 0.009 ? N(t.descuento) : '-', N(t.valorVendido), N(t.costo), N(t.ganancia), pct(t.ganancia, t.valorConCosto)]],
+    foot: [['', '', '', 'TOTAL', '', t.unidades, '', '', '', t.descuento > 0.009 ? N(t.descuento) : '-', N(t.valorVendido), N(t.costo), N(t.ganancia), pct(t.ganancia, t.valorConCosto)]],
     styles: { ...base.styles, fontSize: 6.8, cellPadding: 2.8, valign: 'middle' },
     headStyles: { ...base.headStyles, fontSize: 7 },
     bodyStyles: { minCellHeight: 30 },
-    columnStyles: { 0: { cellWidth: 16 }, 1: { cellWidth: 32 }, 2: { cellWidth: 86 }, 3: { cellWidth: 44 }, 4: { cellWidth: 28 } },
+    columnStyles: { 0: { cellWidth: 16 }, 1: { cellWidth: 32 }, 2: { cellWidth: 44, fontStyle: 'bold' }, 3: { cellWidth: 76 }, 4: { cellWidth: 40 }, 5: { cellWidth: 24 } },
     didParseCell: d => {
-      if (d.column.index === 0 || d.column.index === 4) d.cell.styles.halign = 'center';
-      if (d.column.index >= 5) d.cell.styles.halign = 'right';
-      if (d.section === 'body' && !R.productos[d.row.index]?.conCosto && [5, 10, 11, 12].includes(d.column.index)) d.cell.styles.textColor = [180, 83, 9];
-      if (d.section === 'body' && d.column.index === 8 && (R.productos[d.row.index]?.descuento || 0) > 0.009) { d.cell.styles.textColor = [180, 83, 9]; d.cell.styles.fontStyle = 'bold'; }
+      if (d.column.index === 0 || d.column.index === 5) d.cell.styles.halign = 'center';
+      if (d.column.index >= 6) d.cell.styles.halign = 'right';
+      if (d.section === 'body' && !R.productos[d.row.index]?.conCosto && [6, 11, 12, 13].includes(d.column.index)) d.cell.styles.textColor = [180, 83, 9];
+      if (d.section === 'body' && d.column.index === 9 && (R.productos[d.row.index]?.descuento || 0) > 0.009) { d.cell.styles.textColor = [180, 83, 9]; d.cell.styles.fontStyle = 'bold'; }
     },
     didDrawCell: d => { if (d.section === 'body' && d.column.index === 1) dibujarFoto(d, R.productos[d.row.index]?.img); },
   });
@@ -12054,7 +12056,7 @@ function _cierreDibujarPDF(R) {
   doc.autoTable({ ...base, startY: y,
     head: [['Hora', 'Vendedor', 'Tipo', 'Cliente', 'Productos', 'Método', 'Recibido', 'Por cobrar', 'Obs.']],
     body: R.detalle.map(d => [T(d.hora), T(d.vendedor), T(d.tipo), T(d.cliente),
-      T(d.productos.length > 90 ? d.productos.slice(0, 90) + '...' : d.productos), T(d.metodo),
+      T(d.productos.length > 160 ? d.productos.slice(0, 160) + '...' : d.productos), T(d.metodo),
       N(d.recibido), d.pendiente ? N(d.pendiente) : '-', T(d.obs || '-')]),
     foot: [['', '', '', '', '', 'TOTAL', N(t.dinero), N(t.pendiente), '']],
     styles: { ...base.styles, fontSize: 6.6, cellPadding: 2.6 },
@@ -12269,13 +12271,13 @@ function _cierreDibujarPDF(R) {
     const avisos = [];
     avisos.push(`Conteo físico: ${ti.nContados || 0} de ${ti.n} productos contados (${pct(ti.nContados || 0, ti.n)}). Se hace en el botón Conteo de inventario.`);
     if (ti.porReponer?.length) avisos.push(`Por reponer pronto (al ritmo de venta de los últimos 30 días): ` +
-      ti.porReponer.slice(0, 8).map(p => `${p.nombre} (${p.stock <= 0 ? 'agotado' : `quedan ${N0(p.stock)}, ~${Math.max(0, Math.floor(p.dias))} días`})`).join('; ') +
+      ti.porReponer.slice(0, 8).map(p => `${p.nombre}${p.codigo ? ' [' + p.codigo + ']' : ''} (${p.stock <= 0 ? 'agotado' : `quedan ${N0(p.stock)}, ~${Math.max(0, Math.floor(p.dias))} días`})`).join('; ') +
       (ti.porReponer.length > 8 ? `; y ${ti.porReponer.length - 8} más` : '') + '.');
     if (ti.nWeb) avisos.push(`${ti.nWeb} de ${ti.n} productos tienen como stock el número de la tienda web de julio y nadie lo ha contado` +
       (ti.web5 ? `; ${ti.web5} tienen exactamente 5 unidades, el valor por defecto de la web, así que probablemente no es su stock real.` : '.') +
       ' Si el número es menor al real se bloquean ventas; si es mayor se puede vender lo que no hay. Hasta contarlos, los totales son referenciales.');
     if (ti.sinCosto) avisos.push(`${ti.sinCosto} productos con stock no tienen precio de costo: no suman al valor al costo ni a la ganancia potencial.`);
-    if (ti.listaBajoCosto.length) avisos.push(`Precio de venta menor al costo: ${ti.listaBajoCosto.slice(0, 4).map(p => `${p.nombre} (venta ${S(p.venta)}, costo ${S(p.costo)})`).join('; ')}.`);
+    if (ti.listaBajoCosto.length) avisos.push(`Precio de venta menor al costo: ${ti.listaBajoCosto.slice(0, 4).map(p => `${p.nombre}${p.codigo ? ' [' + p.codigo + ']' : ''} (venta ${S(p.venta)}, costo ${S(p.costo)})`).join('; ')}.`);
     if (ti.listaBajos.length) avisos.push(`Bajo el stock mínimo: ${ti.listaBajos.slice(0, 6).map(p => `${p.nombre} (${N0(p.stock)})`).join(', ')}.`);
     if (ti.agotados) avisos.push(`${ti.agotados} productos publicados están agotados (stock 0)${ti.sinDato ? ` y ${ti.sinDato} no tienen stock registrado` : ''}.`);
     if (avisos.length) {
@@ -12300,31 +12302,31 @@ function _cierreDibujarPDF(R) {
     seccion('Productos publicados por stock', 'De mayor a menor stock · montos en S/', 80);
     const IT = INV.items;
     doc.autoTable({ ...base, startY: y,
-      head: [['#', 'Foto', 'Producto', 'Categoría', 'Stock', 'Origen', 'P. costo', 'P. venta', 'Margen', 'Valor costo', 'Valor venta']],
-      body: IT.map((p, i) => [i + 1, '', T(p.nombre), T(p.categoria),
+      head: [['#', 'Foto', 'Código', 'Producto', 'Categoría', 'Stock', 'Origen', 'P. costo', 'P. venta', 'Margen', 'Valor costo', 'Valor venta']],
+      body: IT.map((p, i) => [i + 1, '', T(p.codigo || '-'), T(p.nombre), T(p.categoria),
         p.stock === null ? 'Sin dato' : (p.stock <= 0 ? 'Agotado' : N0(p.stock) + (p.origen === 'inv' && p.cajas > 0 ? `\n${N0(p.cajas)}cj×${N0(p.upc)}+${N0(p.sueltas)}` : '')),
         p.origen === 'inv' ? 'Inventario' : p.origen === 'web' ? 'Web' : '-',
         p.costo > 0 ? N(p.costo) : 'Sin costo', N(p.venta),
         p.costo > 0 && p.venta > 0 ? pct(p.venta - p.costo, p.venta) : '-',
         p.valorCosto > 0 ? N(p.valorCosto) : '-', p.valorVenta > 0 ? N(p.valorVenta) : '-']),
-      foot: [['', '', `${pl(ti.n, 'producto', 'productos')}`, '', N0(ti.unidades), '', '', '', '', N(ti.valorCosto), N(ti.valorVenta)]],
+      foot: [['', '', '', `${pl(ti.n, 'producto', 'productos')}`, '', N0(ti.unidades), '', '', '', '', N(ti.valorCosto), N(ti.valorVenta)]],
       styles: { ...base.styles, fontSize: 6.6, cellPadding: 2.4, valign: 'middle' },
       headStyles: { ...base.headStyles, fontSize: 7 },
       bodyStyles: { minCellHeight: 21 },
-      columnStyles: { 0: { cellWidth: 20, halign: 'center' }, 1: { cellWidth: 24 }, 3: { cellWidth: 54 }, 4: { cellWidth: 46, halign: 'right' },
-        5: { cellWidth: 38, halign: 'center' }, 6: { cellWidth: 38, halign: 'right' }, 7: { cellWidth: 38, halign: 'right' },
-        8: { cellWidth: 32, halign: 'right' }, 9: { cellWidth: 46, halign: 'right' }, 10: { cellWidth: 46, halign: 'right' } },
+      columnStyles: { 0: { cellWidth: 20, halign: 'center' }, 1: { cellWidth: 24 }, 2: { cellWidth: 46, fontStyle: 'bold' }, 4: { cellWidth: 50 }, 5: { cellWidth: 42, halign: 'right' },
+        6: { cellWidth: 36, halign: 'center' }, 7: { cellWidth: 36, halign: 'right' }, 8: { cellWidth: 36, halign: 'right' },
+        9: { cellWidth: 30, halign: 'right' }, 10: { cellWidth: 44, halign: 'right' }, 11: { cellWidth: 44, halign: 'right' } },
       didParseCell: d => {
-        if (d.section === 'foot' && d.column.index >= 4) d.cell.styles.halign = 'right';
+        if (d.section === 'foot' && d.column.index >= 5) d.cell.styles.halign = 'right';
         if (d.section !== 'body') return;
         const p = IT[d.row.index]; if (!p) return;
-        if (d.column.index === 4) {
+        if (d.column.index === 5) {
           d.cell.styles.fontStyle = 'bold';
           d.cell.styles.textColor = p.stock === null ? [148, 163, 184] : p.stock <= 0 ? [185, 28, 28] : p.bajo ? [180, 83, 9] : [30, 41, 59];
         }
-        if (d.column.index === 5 && p.origen === 'web') d.cell.styles.textColor = [180, 83, 9];
-        if (d.column.index === 6 && p.costo <= 0) d.cell.styles.textColor = [180, 83, 9];
-        if ((d.column.index === 7 || d.column.index === 8) && p.costo > 0 && p.venta > 0 && p.venta < p.costo) { d.cell.styles.textColor = [185, 28, 28]; d.cell.styles.fontStyle = 'bold'; }
+        if (d.column.index === 6 && p.origen === 'web') d.cell.styles.textColor = [180, 83, 9];
+        if (d.column.index === 7 && p.costo <= 0) d.cell.styles.textColor = [180, 83, 9];
+        if ((d.column.index === 8 || d.column.index === 9) && p.costo > 0 && p.venta > 0 && p.venta < p.costo) { d.cell.styles.textColor = [185, 28, 28]; d.cell.styles.fontStyle = 'bold'; }
       },
       didDrawCell: d => { if (d.section === 'body' && d.column.index === 1) dibujarFoto(d, IT[d.row.index]?.img); },
     });
