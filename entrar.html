@@ -11310,9 +11310,13 @@ function abrirModalCierreDia() {
           <b>Revísalo en la vista previa</b> y luego envíalo a gerencia.
         </div>
         <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px">
-          <div class="form-group" style="margin:0;flex:1;min-width:170px">
-            <label>Fecha del cierre</label>
+          <div class="form-group" style="margin:0;flex:1;min-width:150px">
+            <label>Fecha del cierre (o desde)</label>
             <input type="date" id="cdFecha">
+          </div>
+          <div class="form-group" style="margin:0;flex:1;min-width:150px">
+            <label>Hasta <span style="font-weight:400;color:var(--text3)">(opcional: varios días)</span></label>
+            <input type="date" id="cdHasta">
           </div>
           <button id="cdBtnGenerar" onclick="generarCierreDia()" style="background:linear-gradient(135deg,#1E1B4B,#4338CA);color:#fff;border:none;padding:11px 18px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer">📊 Generar reporte</button>
         </div>
@@ -11324,6 +11328,7 @@ function abrirModalCierreDia() {
         <div id="cdPreviewWrap" style="display:none">
           <iframe id="cdPreview" title="Vista previa del cierre del día" style="width:100%;height:62vh;border:1px solid var(--border);border-radius:8px;background:#F8FAFC"></iframe>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <button onclick="_cierreExcel()" style="flex:1;min-width:150px;background:#1E1B4B;color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">📊 Excel detallado</button>
             <button onclick="descargarCierreDia()" style="flex:1;min-width:150px;background:#059669;color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">📥 Descargar PDF</button>
             <button id="cdBtnCompartir" onclick="compartirCierreDia()" style="display:none;flex:1;min-width:150px;background:#4338CA;color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">📤 Compartir PDF</button>
             <button onclick="whatsappCierreDia()" style="flex:1;min-width:150px;background:#25D366;color:#fff;border:none;padding:11px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">💬 Enviar resumen por WhatsApp</button>
@@ -11334,6 +11339,7 @@ function abrirModalCierreDia() {
     document.body.appendChild(modal);
   }
   document.getElementById('cdFecha').value = fechaHoy();
+  document.getElementById('cdHasta').value = '';
   document.getElementById('cdEstado').style.display = 'none';
   document.getElementById('cdPreviewWrap').style.display = 'none';
   modal.classList.add('open');
@@ -11351,12 +11357,15 @@ async function generarCierreDia() {
     const c = { info: ['#FEF3C7', '#78350F'], ok: ['#DCFCE7', '#166534'], err: ['#FEE2E2', '#B91C1C'] }[tipo || 'info'];
     est.style.display = 'block'; est.style.background = c[0]; est.style.color = c[1]; est.textContent = txt;
   };
+  const hasta = document.getElementById('cdHasta')?.value || '';
   if (!fecha) { setEstado('Elige la fecha del cierre', 'err'); return; }
-  if (fecha > fechaHoy()) { setEstado('La fecha no puede ser futura', 'err'); return; }
+  if (fecha > fechaHoy() || hasta > fechaHoy()) { setEstado('La fecha no puede ser futura', 'err'); return; }
+  if (hasta && hasta < fecha) { setEstado('"Hasta" tiene que ser después de la fecha de inicio', 'err'); return; }
   btn.disabled = true; btn.style.opacity = '0.6';
   try {
     setEstado('⏳ Cargando ventas del día, cobros pendientes y fotos de productos...');
     const R = await _cierreRecolectar(fecha, {
+      hasta: hasta && hasta !== fecha ? hasta : null,
       inventario: document.getElementById('cdInventario')?.checked !== false,
       progreso: txt => setEstado('⏳ ' + txt),
     });
@@ -11372,7 +11381,7 @@ async function generarCierreDia() {
     _cierreBlob = doc.output('blob');
     if (_cierreBlobUrl) URL.revokeObjectURL(_cierreBlobUrl);
     _cierreBlobUrl = URL.createObjectURL(_cierreBlob);
-    _cierreNombre = `Cierre_del_dia_CPN_${fecha}.pdf`;
+    _cierreNombre = R.esRango ? `Cierre_CPN_${R.fecha}_al_${R.hasta}.pdf` : `Cierre_del_dia_CPN_${fecha}.pdf`;
     document.getElementById('cdPreview').src = _cierreBlobUrl;
     document.getElementById('cdPreviewWrap').style.display = 'block';
     let puedeCompartir = false;
@@ -11398,6 +11407,124 @@ function descargarCierreDia() {
   toast('✓ PDF descargado', 'success');
 }
 
+// Excel del cierre: lo más detallado (una fila por producto vendido, con código, costo y precio)
+async function _cierreExcel() {
+  const R = _cierreR;
+  if (!R) { toast('Primero genera el reporte', 'info'); return; }
+  try { await window.ensureExcelJS(); } catch (e) { toast('No pude cargar Excel', 'error'); return; }
+  const dmy = x => String(x || '').split('-').reverse().join('/');
+  const periodo = R.esRango ? `${dmy(R.fecha)} al ${dmy(R.hasta)}` : dmy(R.fecha);
+  const wb = new ExcelJS.Workbook();
+  const MON = '#,##0.00', PCT = '0.0%';
+  const hoja = (nombre, columnas, filas, opt = {}) => {
+    const ws = wb.addWorksheet(nombre);
+    ws.columns = columnas.map(c => ({ header: c.h, key: c.k, width: c.w || 14 }));
+    filas.forEach(r => ws.addRow(r));
+    const head = ws.getRow(1);
+    head.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    head.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4338CA' } };
+    head.alignment = { vertical: 'middle', wrapText: true };
+    columnas.forEach(c => { if (c.f) ws.getColumn(c.k).numFmt = c.f; });
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
+    if (filas.length) ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: columnas.length } };
+    if (opt.total) {
+      const r = ws.addRow(opt.total);
+      r.font = { bold: true }; r.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE0E7FF' } };
+    }
+    return ws;
+  };
+  const t = R.totales;
+  const margen = (g, v) => v > 0 ? g / v : null;
+
+  // 1) Resumen
+  const rs = wb.addWorksheet('Resumen');
+  rs.columns = [{ width: 38 }, { width: 18 }];
+  [
+    [R.esRango ? 'CIERRE DEL PERIODO · CPN Sports' : 'CIERRE DEL DÍA · CPN Sports', ''],
+    ['Periodo', periodo],
+    ['Generado', `${new Date().toLocaleString('es-PE')} por ${SESION?.nombre || 'Administración'}`],
+    [],
+    ['Dinero recibido (ventas + cobros)', t.dinero], ['Ventas', t.nVentas], ['Cobros de saldos', t.nCobros], ['Dinero de cobros de saldos', t.cobros],
+    ['Unidades vendidas', t.unidades], ['Valor vendido', t.valorVendido], ['Descuento vs precio de lista', t.descuento],
+    ['Costo de lo vendido (con costo registrado)', t.costo], ['Ganancia bruta', t.ganancia], ['Margen', margen(t.ganancia, t.valorConCosto)],
+    ['Quedó por cobrar de estas ventas', t.pendiente], ['Productos vendidos sin costo registrado (líneas)', t.itemsSinCosto],
+    ['Pendiente de cobro del equipo (todas las ventas)', R.pendientes?.total || 0],
+  ].forEach(r => rs.addRow(r));
+  rs.getRow(1).font = { bold: true, size: 14 };
+  rs.getColumn(2).numFmt = MON;
+  [6, 7, 9, 16].forEach(n => { rs.getCell(`B${n}`).numFmt = '0'; });
+  rs.getCell('B14').numFmt = PCT;
+
+  // 2) Por día
+  if (R.porDia?.length) hoja('Por día', [
+    { h: 'Fecha', k: 'f', w: 12 }, { h: 'Ventas', k: 'v', w: 9 }, { h: 'Cobros', k: 'c', w: 9 }, { h: 'Unidades', k: 'u', w: 10 },
+    { h: 'Valor vendido', k: 'vv', f: MON }, { h: 'Descuento', k: 'd', f: MON }, { h: 'Costo', k: 'co', f: MON },
+    { h: 'Ganancia', k: 'g', f: MON }, { h: 'Margen', k: 'm', f: PCT, w: 9 }, { h: 'Dinero recibido', k: 'di', f: MON, w: 16 },
+  ], R.porDia.map(d => ({ f: dmy(d.fecha), v: d.nVentas, c: d.nCobros, u: d.unidades, vv: d.valorVendido, d: d.descuento, co: d.costo,
+    g: d.valorConCosto - d.costo, m: margen(d.valorConCosto - d.costo, d.valorConCosto), di: d.dinero })),
+  { total: { f: 'TOTAL', v: t.nVentas, c: t.nCobros, u: t.unidades, vv: t.valorVendido, d: t.descuento, co: t.costo, g: t.ganancia, m: margen(t.ganancia, t.valorConCosto), di: t.dinero } });
+
+  // 3) Productos vendidos (agrupado)
+  hoja('Productos vendidos', [
+    { h: 'Código', k: 'cod', w: 12 }, { h: 'Producto', k: 'n', w: 40 }, { h: 'Categoría', k: 'cat', w: 16 }, { h: 'Cantidad', k: 'q', w: 10 },
+    { h: 'P. costo', k: 'pc', f: MON }, { h: 'P. lista', k: 'pl', f: MON }, { h: 'P. venta (prom.)', k: 'pv', f: MON, w: 15 },
+    { h: 'Descuento', k: 'd', f: MON }, { h: 'Total venta', k: 'tv', f: MON }, { h: 'Total costo', k: 'tc', f: MON },
+    { h: 'Ganancia', k: 'g', f: MON }, { h: 'Margen', k: 'm', f: PCT, w: 9 },
+  ], R.productos.map(p => ({ cod: p.codigo || '', n: p.nombre, cat: p.categoria, q: p.cant, pc: p.conCosto ? p.costoU : null,
+    pl: p.listaU > 0 ? p.listaU : null, pv: p.cant ? p.venta / p.cant : 0, d: p.descuento || 0, tv: p.venta,
+    tc: p.conCosto ? p.costo : null, g: p.conCosto ? p.venta - p.costo : null, m: p.conCosto ? margen(p.venta - p.costo, p.venta) : null })),
+  { total: { n: 'TOTAL', q: t.unidades, d: t.descuento, tv: t.valorVendido, tc: t.costo, g: t.ganancia, m: margen(t.ganancia, t.valorConCosto) } });
+
+  // 4) Una fila por cada producto de cada venta
+  hoja('Líneas de venta', [
+    { h: 'Fecha', k: 'f', w: 11 }, { h: 'Hora', k: 'h', w: 7 }, { h: 'Vendedor', k: 've', w: 12 }, { h: 'Tipo', k: 'ti', w: 10 },
+    { h: 'Cliente', k: 'cl', w: 26 }, { h: 'Teléfono', k: 'te', w: 12 }, { h: 'Código', k: 'cod', w: 11 }, { h: 'Producto', k: 'n', w: 36 },
+    { h: 'Categoría', k: 'cat', w: 14 }, { h: 'Cant.', k: 'q', w: 7 }, { h: 'P. costo', k: 'pc', f: MON, w: 11 }, { h: 'P. lista', k: 'pl', f: MON, w: 11 },
+    { h: 'P. venta', k: 'pv', f: MON, w: 11 }, { h: 'Descuento', k: 'd', f: MON, w: 11 }, { h: 'Subtotal', k: 'sub', f: MON, w: 11 },
+    { h: 'Costo total', k: 'ct', f: MON, w: 11 }, { h: 'Ganancia', k: 'g', f: MON, w: 11 }, { h: 'Método de pago', k: 'me', w: 16 }, { h: 'ID venta', k: 'id', w: 16 },
+  ], (R.lineas || []).map(l => ({ f: dmy(l.fecha), h: l.hora, ve: l.vendedor, ti: l.tipo, cl: l.cliente, te: l.telefono, cod: l.codigo || '', n: l.nombre,
+    cat: l.categoria, q: l.cant, pc: l.costoU > 0 ? l.costoU : null, pl: l.listaU > 0 ? l.listaU : null, pv: l.precio, d: l.desc || 0, sub: l.sub,
+    ct: l.costo, g: l.costo !== null ? l.sub - l.costo : null, me: l.metodo, id: l.ventaId })),
+  { total: { n: 'TOTAL', q: t.unidades, d: t.descuento, sub: t.valorVendido, ct: t.costo, g: t.ganancia } });
+
+  // 5) Movimientos (ventas, adelantos y cobros de saldos)
+  hoja('Movimientos', [
+    { h: 'Fecha', k: 'f', w: 11 }, { h: 'Hora', k: 'h', w: 7 }, { h: 'Vendedor', k: 've', w: 12 }, { h: 'Tipo', k: 'ti', w: 12 },
+    { h: 'Cliente', k: 'cl', w: 26 }, { h: 'Productos', k: 'p', w: 60 }, { h: 'Método', k: 'me', w: 20 },
+    { h: 'Recibido', k: 'r', f: MON, w: 11 }, { h: 'Por cobrar', k: 'pe', f: MON, w: 11 }, { h: 'Obs.', k: 'o', w: 24 },
+  ], R.detalle.map(d => ({ f: dmy(d.fecha), h: d.hora, ve: d.vendedor, ti: d.tipo, cl: d.cliente, p: d.productos, me: d.metodo,
+    r: d.recibido, pe: d.pendiente || 0, o: d.obs || '' })),
+  { total: { me: 'TOTAL', r: t.dinero, pe: t.pendiente } });
+
+  // 6) Por vendedor
+  hoja('Por vendedor', [
+    { h: 'Vendedor', k: 'v', w: 14 }, { h: 'Ventas', k: 'n', w: 9 }, { h: 'Cobros', k: 'c', w: 9 }, { h: 'Unidades', k: 'u', w: 10 },
+    { h: 'Valor vendido', k: 'vv', f: MON }, { h: 'Descuento', k: 'd', f: MON }, { h: 'Costo', k: 'co', f: MON }, { h: 'Ganancia', k: 'g', f: MON },
+    { h: 'Dinero de ventas', k: 'dv', f: MON, w: 15 }, { h: 'Dinero de cobros', k: 'dc', f: MON, w: 15 }, { h: 'Quedó por cobrar', k: 'pe', f: MON, w: 15 },
+  ], R.vendedoresOrden.map(v => ({ v: v.nombre, n: v.nVentas, c: v.nCobros, u: v.unidades, vv: v.valorVendido, d: v.descuento, co: v.costo,
+    g: v.valorConCosto - v.costo, dv: v.dineroVentas, dc: v.dineroCobros, pe: v.pendiente })));
+
+  // 7) Métodos de pago
+  hoja('Métodos de pago', [{ h: 'Método', k: 'm', w: 22 }, { h: 'Movimientos', k: 'n', w: 12 }, { h: 'Monto', k: 'mo', f: MON }],
+    R.metodosOrden.map(m => ({ m: m.metodo, n: m.n, mo: m.monto })), { total: { m: 'TOTAL', mo: t.dinero } });
+
+  // 8) Cobros pendientes (estado al último día)
+  if (R.pendientes?.lista?.length) hoja('Cobros pendientes', [
+    { h: 'Vendedor', k: 'v', w: 12 }, { h: 'Días', k: 'di', w: 7 }, { h: 'Fecha venta', k: 'f', w: 12 }, { h: 'Cliente', k: 'cl', w: 26 },
+    { h: 'Teléfono', k: 'te', w: 12 }, { h: 'Documento', k: 'doc', w: 14 }, { h: 'Productos', k: 'p', w: 50 }, { h: 'Envío', k: 'en', w: 30 },
+    { h: 'Pagado', k: 'pa', f: MON, w: 11 }, { h: 'Saldo', k: 's', f: MON, w: 11 },
+  ], R.pendientes.lista.map(p => ({ v: p.vendedor, di: p.dias, f: dmy(p.fecha), cl: p.cliente, te: p.telefono, doc: p.doc, p: p.productos,
+    en: p.destino || '', pa: p.pagado, s: p.saldo })), { total: { p: 'TOTAL', s: R.pendientes.total } });
+
+  const buf = await wb.xlsx.writeBuffer();
+  const url = URL.createObjectURL(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = R.esRango ? `Cierre_CPN_${R.fecha}_al_${R.hasta}.xlsx` : `Cierre_del_dia_CPN_${R.fecha}.xlsx`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  toast(`📊 Excel listo: ${(R.lineas || []).length} líneas de venta`, 'success');
+}
+
 async function compartirCierreDia() {
   if (!_cierreBlob) return;
   try {
@@ -11415,8 +11542,10 @@ function whatsappCierreDia() {
 
 function _cierreTextoResumen(R) {
   const t = R.totales;
-  const f = new Date(R.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
-  const l = ['*CIERRE DEL DÍA · CPN Sports*', `📅 ${f}`, '',
+  const f = R.esRango
+    ? `del ${R.fecha.split('-').reverse().join('/')} al ${R.hasta.split('-').reverse().join('/')}`
+    : new Date(R.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+  const l = [R.esRango ? '*CIERRE DEL PERIODO · CPN Sports*' : '*CIERRE DEL DÍA · CPN Sports*', `📅 ${f}`, '',
     `💰 Dinero recibido: *${_cdMoney(t.dinero)}*`,
     `🛒 Valor vendido: ${_cdMoney(t.valorVendido)} (${t.nVentas} ventas · ${t.unidades} uds)`,
     `📈 Ganancia bruta: ${_cdMoney(t.ganancia)}${t.valorConCosto > 0 ? ` (${Math.round(t.ganancia / t.valorConCosto * 100)}%)` : ''}`];
@@ -11442,10 +11571,15 @@ function _cierreTextoResumen(R) {
 
 // Junta todo lo del día: lo de Firestore + lo que esté solo en memoria (sin sincronizar)
 async function _cierreRecolectar(fecha, opts = {}) {
+  // Un solo día, o un periodo (opts.hasta) para el cierre de varios días
+  const hasta = opts.hasta && opts.hasta > fecha ? opts.hasta : fecha;
   const porId = new Map();
-  const snap = await DB.collection('cpn_ingresos').where('fecha', '==', fecha).get();
-  snap.forEach(d => { const x = d.data(); if (x) porId.set(x.id || d.id, x); });
-  for (const x of (INGRESOS[fecha] || [])) if (x) porId.set(x.id || ('local_' + porId.size), x);
+  const snap = hasta === fecha
+    ? await DB.collection('cpn_ingresos').where('fecha', '==', fecha).get()
+    : await DB.collection('cpn_ingresos').where('fecha', '>=', fecha).where('fecha', '<=', hasta).get();
+  // Las ventas eliminadas (marcadas eliminado:true) no van en el cierre
+  snap.forEach(d => { const x = d.data(); if (x && x.eliminado !== true) porId.set(x.id || d.id, x); });
+  for (const [fx, arr] of Object.entries(INGRESOS)) if (fx >= fecha && fx <= hasta) for (const x of (arr || [])) if (x && x.eliminado !== true) porId.set(x.id || ('local_' + porId.size), x);
   const ingresos = [...porId.values()];
 
   // Catálogo para precio de costo y categoría
@@ -11478,8 +11612,8 @@ async function _cierreRecolectar(fecha, opts = {}) {
 
   const t = { dinero: 0, valorVendido: 0, costo: 0, valorConCosto: 0, ganancia: 0, unidades: 0, pendiente: 0, cobros: 0, delivery: 0,
               nVentas: 0, nCobros: 0, nAdelantos: 0, itemsSinCosto: 0, pendValidacion: 0, nExcluidas: 0, descuento: 0, valorLista: 0 };
-  const metodos = {}, vendedores = {}, productos = {}, categorias = {}, horas = {}, matriz = {};
-  const detalle = [];
+  const metodos = {}, vendedores = {}, productos = {}, categorias = {}, horas = {}, matriz = {}, porDia = {};
+  const detalle = [], lineas = [];
 
   for (const i of ingresos) {
     const monto = Number(i.monto || 0);
@@ -11501,6 +11635,8 @@ async function _cierreRecolectar(fecha, opts = {}) {
       fila[p.metodo] = (fila[p.metodo] || 0) + p.monto;
     }
     t.dinero += monto;
+    const DD = porDia[i.fecha] || (porDia[i.fecha] = { fecha: i.fecha, dinero: 0, nVentas: 0, nCobros: 0, unidades: 0, valorVendido: 0, costo: 0, valorConCosto: 0, descuento: 0 });
+    DD.dinero += monto;
     const hh = parseInt(String(i.hora || '').split(':')[0], 10);
     if (!Number.isNaN(hh)) { const Hh = horas[hh] || (horas[hh] = { dinero: 0, n: 0 }); Hh.dinero += monto; Hh.n++; }
 
@@ -11516,9 +11652,9 @@ async function _cierreRecolectar(fecha, opts = {}) {
     if (i.envio?.agencia) obs.push('Envío ' + (i.envio.agencia === 'OTRA' ? (i.envio.otraAgencia || 'agencia') : i.envio.agencia));
 
     if (i.esCobro) {
-      V.nCobros++; V.dineroCobros += monto; t.cobros += monto; t.nCobros++;
+      V.nCobros++; V.dineroCobros += monto; t.cobros += monto; t.nCobros++; DD.nCobros++;
       const origen = enMemoria.get(i.ingresoOrigenId);
-      detalle.push({ hora: i.hora || '-', vendedor: vend, tipo: 'Cobro saldo', cliente: origen?.cliente?.nombre || '-',
+      detalle.push({ fecha: i.fecha, hora: i.hora || '-', vendedor: vend, tipo: 'Cobro saldo', cliente: origen?.cliente?.nombre || '-',
         productos: 'Abono a venta del ' + (origen?.fecha ? origen.fecha.split('-').reverse().join('/') : 'día anterior'),
         metodo: pagos.map(p => p.metodo).join(' + '), recibido: monto, pendiente: 0, obs: obs.join(' · ') });
       continue;
@@ -11526,7 +11662,7 @@ async function _cierreRecolectar(fecha, opts = {}) {
 
     V.dineroVentas += monto;
     const conSaldo = i.esAdelanto && pend > 0.009;
-    detalle.push({ hora: i.hora || '-', vendedor: vend, tipo: conSaldo ? 'Adelanto' : 'Venta', cliente: i.cliente?.nombre || '-',
+    detalle.push({ fecha: i.fecha, hora: i.hora || '-', vendedor: vend, tipo: conSaldo ? 'Adelanto' : 'Venta', cliente: i.cliente?.nombre || '-',
       productos: items.map(p => { const cod = _cdCodigo(buscarProd(p), p); return `${Number(p.cantidad || 1) > 1 ? p.cantidad + 'x ' : ''}${p.nombre}${cod ? ` [${cod}]` : ''}`; }).join(', '),
       metodo: pagos.length > 1 ? pagos.map(p => `${p.metodo} ${_cdMoney(p.monto)}`).join(' + ') : pagos[0].metodo,
       recibido: monto, pendiente: conSaldo ? pend : 0, obs: obs.join(' · ') });
@@ -11534,7 +11670,7 @@ async function _cierreRecolectar(fecha, opts = {}) {
     // Perdidas y rechazadas: su dinero cuenta en caja, pero no en el análisis de ventas
     if (i.estado === 'perdida' || i.estadoValidacionCliente === 'rechazada') { t.nExcluidas++; continue; }
 
-    t.nVentas++; V.nVentas++;
+    t.nVentas++; V.nVentas++; DD.nVentas++;
     if (i.estadoValidacionCliente === 'pendiente_admin') t.pendValidacion++;
     if (conSaldo) { t.pendiente += pend; t.nAdelantos++; V.pendiente += pend; }
     t.delivery += Number(i.delivery?.costo || 0);
@@ -11557,8 +11693,13 @@ async function _cierreRecolectar(fecha, opts = {}) {
       C.cant += cant; C.venta += sub;
       V.unidades += cant; V.valorVendido += sub;
       t.unidades += cant; t.valorVendido += sub;
+      DD.unidades += cant; DD.valorVendido += sub; DD.descuento += desc;
+      lineas.push({ fecha: i.fecha, hora: i.hora || '', vendedor: vend, cliente: i.cliente?.nombre || '', telefono: String(i.cliente?.telefono || '').trim(),
+        tipo: conSaldo ? 'Adelanto' : 'Venta', codigo: _cdCodigo(cat, it), nombre, categoria, cant, precio, listaU, costoU, desc, sub,
+        costo: costoU > 0 ? costoU * cant : null, metodo: pagos.map(p => p.metodo).join(' + '), ventaId: i.id });
       if (costoU > 0) {
         const ct = costoU * cant;
+        DD.costo += ct; DD.valorConCosto += sub;
         P.costo += ct; C.costo += ct; C.valorConCosto += sub;
         V.costo += ct; V.valorConCosto += sub;
         t.costo += ct; t.valorConCosto += sub;
@@ -11566,9 +11707,11 @@ async function _cierreRecolectar(fecha, opts = {}) {
     }
   }
   t.ganancia = t.valorConCosto - t.costo;
-  detalle.sort((a, b) => String(a.hora).localeCompare(String(b.hora)));
+  detalle.sort((a, b) => String(a.fecha + ' ' + a.hora).localeCompare(String(b.fecha + ' ' + b.hora)));
+  lineas.sort((a, b) => String(a.fecha + ' ' + a.hora).localeCompare(String(b.fecha + ' ' + b.hora)));
   const R = {
-    fecha, ingresos, totales: t, matriz, horas, detalle,
+    fecha, hasta, esRango: hasta !== fecha, ingresos, totales: t, matriz, horas, detalle, lineas,
+    porDia: Object.values(porDia).sort((a, b) => a.fecha.localeCompare(b.fecha)),
     metodosOrden: Object.values(metodos).sort((a, b) => b.monto - a.monto),
     vendedoresOrden: Object.values(vendedores).sort((a, b) => (b.dineroVentas + b.dineroCobros) - (a.dineroVentas + a.dineroCobros)),
     productos: Object.values(productos).sort((a, b) => b.venta - a.venta),
@@ -11577,7 +11720,7 @@ async function _cierreRecolectar(fecha, opts = {}) {
   await _cierreSeguimiento(R, enMemoria, buscarProd);
 
   // Caja chica del día (solo efectivo)
-  try { await _cajaCargar(); R.caja = _cajaDia(fecha); } catch (e) { console.warn('[cierre] caja chica', e); }
+  if (!R.esRango) { try { await _cajaCargar(); R.caja = _cajaDia(fecha); } catch (e) { console.warn('[cierre] caja chica', e); } }
 
   // Inventario de lo publicado: se lee fresco del servidor (otra PC pudo vender o reponer)
   if (opts.inventario !== false) {
@@ -11747,10 +11890,10 @@ async function _cierreSeguimiento(R, enMemoria, buscarProd) {
   const hoy = fechaHoy();
   const pend = []; let nDesact = 0, montoDesact = 0;
   for (const i of universo.values()) {
-    if (!i || i.esCobro || !i.esAdelanto || Number(i.pendiente || 0) <= 0.009) continue;
+    if (!i || i.eliminado === true || i.esCobro || !i.esAdelanto || Number(i.pendiente || 0) <= 0.009) continue;
     if (i.estado === 'perdida' || i.estado === 'perdida_pendiente' || i.estadoValidacionCliente === 'rechazada') continue;
     // Solo ventas hasta el día del cierre (las posteriores van en su propio cierre)
-    if (String(i.fecha || '') > R.fecha || String(i.fecha || '') > hoy) continue;
+    if (String(i.fecha || '') > (R.hasta || R.fecha) || String(i.fecha || '') > hoy) continue;
     const abonos = abonosPor.get(i.id) || 0;
     const saldo = _cdSaldoVenta(i, abonos);
     if (saldo <= 0.009) { nDesact++; montoDesact += Number(i.pendiente || 0); continue; }
@@ -11787,9 +11930,11 @@ async function _cierreSeguimiento(R, enMemoria, buscarProd) {
   const perdidas = [];
   for (const i of universo.values()) {
     if (i?.estado !== 'perdida' && i?.estado !== 'perdida_pendiente') continue;
+    if (i.eliminado === true) continue;
     const esperando = i.estado === 'perdida_pendiente';
     const cuando = fechaLocal(esperando ? i.propuestaEn : i.marcadoPerdidaEn);
-    const delDia = cuando ? cuando === R.fecha : i.fecha === R.fecha;
+    const enPeriodo = x => x >= R.fecha && x <= (R.hasta || R.fecha);
+    const delDia = cuando ? enPeriodo(cuando) : enPeriodo(String(i.fecha || ''));
     if (!delDia && !esperando) continue;
     const items = itemsDe(i);
     perdidas.push({ id: i.id, fecha: i.fecha, vendedor: String(i.vendedor || '-').trim(), delDia, esperando,
@@ -11821,8 +11966,13 @@ function _cierreDibujarPDF(R) {
   const rgb = _cdHex2Rgb;
   const tinte = c => c.map(v => Math.round(v + (255 - v) * 0.9));
   const VIO = [30, 27, 75], VIO2 = [67, 56, 202];
-  const fechaLarga = new Date(R.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const fechaCorta = R.fecha.split('-').reverse().join('/');
+  const rango = !!R.esRango;
+  const dmy = x => String(x || '').split('-').reverse().join('/');
+  const fechaLarga = rango
+    ? `Del ${new Date(R.fecha + 'T12:00:00').toLocaleDateString('es-PE', { day: 'numeric', month: 'long' })} al ${new Date(R.hasta + 'T12:00:00').toLocaleDateString('es-PE', { day: 'numeric', month: 'long', year: 'numeric' })}`
+    : new Date(R.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const fechaCorta = rango ? `${dmy(R.fecha)} al ${dmy(R.hasta)}` : dmy(R.fecha);
+  const TITULO = rango ? 'CIERRE DEL PERIODO' : 'CIERRE DEL DÍA';
   const quien = SESION?.nombre || 'Administración';
   const ahora = new Date();
   const horaGen = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
@@ -11852,7 +12002,7 @@ function _cierreDibujarPDF(R) {
   doc.setFillColor(...VIO); doc.rect(0, 0, W, 86, 'F');
   doc.setFillColor(...VIO2); doc.rect(0, 80, W, 6, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(24); doc.text(T('CIERRE DEL DÍA'), M, 38);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(24); doc.text(T(TITULO), M, 38);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(T('CPN Sports · Caza, Pesca y Náutica'), M, 56);
   doc.setFontSize(8); doc.text(T('Ventas por vendedor · ingresos por método de pago · productos vendidos'), M, 69);
   doc.setFont('helvetica', 'bold'); doc.setFontSize(11.5);
@@ -11866,7 +12016,7 @@ function _cierreDibujarPDF(R) {
   // ── Tarjetas de resumen ──
   const ticket = t.nVentas > 0 ? t.valorVendido / t.nVentas : 0;
   const kpis = [
-    { label: 'DINERO RECIBIDO HOY', valor: S(t.dinero), sub: `${pl(t.nVentas, 'venta', 'ventas')} + ${pl(t.nCobros, 'cobro', 'cobros')}`, color: [5, 150, 105] },
+    { label: rango ? 'DINERO RECIBIDO' : 'DINERO RECIBIDO HOY', valor: S(t.dinero), sub: `${pl(t.nVentas, 'venta', 'ventas')} + ${pl(t.nCobros, 'cobro', 'cobros')}`, color: [5, 150, 105] },
     { label: 'VALOR VENDIDO', valor: S(t.valorVendido), sub: t.descuento > 0.009 ? `${pl(t.unidades, 'ud.', 'uds.')} · ${S(t.descuento)} de descuento` : `${pl(t.unidades, 'unidad vendida', 'unidades vendidas')}`, color: [124, 58, 237] },
     { label: 'GANANCIA BRUTA', valor: S(t.ganancia), sub: t.valorConCosto > 0 ? `Margen ${pct(t.ganancia, t.valorConCosto)}${t.itemsSinCosto ? ' (parcial)' : ''}` : 'Sin productos con costo', color: [13, 148, 136] },
     { label: 'TICKET PROMEDIO', valor: S(ticket), sub: 'Valor vendido por venta', color: [37, 99, 235] },
@@ -12028,6 +12178,21 @@ function _cierreDibujarPDF(R) {
     cell.styles.fillColor = bg; cell.styles.textColor = fg; cell.styles.fontStyle = 'bold';
   };
 
+  // ── Ventas por día (cierre de un periodo) ──
+  if (rango && R.porDia?.length) {
+    seccion('Ventas por día', `${pl(R.porDia.length, 'día', 'días')} con movimientos · montos en S/`, 40 + R.porDia.length * 15);
+    const diaSem = x => new Date(x + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'short' }).replace('.', '');
+    doc.autoTable({ ...base, startY: y,
+      head: [['Fecha', 'Ventas', 'Cobros', 'Unidades', 'Valor vendido', 'Descuento', 'Costo', 'Ganancia', 'Margen', 'Dinero recibido']],
+      body: R.porDia.map(d => [T(`${diaSem(d.fecha)} ${dmy(d.fecha)}`), d.nVentas, d.nCobros, d.unidades, N(d.valorVendido),
+        d.descuento > 0.009 ? N(d.descuento) : '-', N(d.costo), N(d.valorConCosto - d.costo), pct(d.valorConCosto - d.costo, d.valorConCosto), N(d.dinero)]),
+      foot: [['TOTAL', t.nVentas, t.nCobros, t.unidades, N(t.valorVendido), t.descuento > 0.009 ? N(t.descuento) : '-', N(t.costo), N(t.ganancia), pct(t.ganancia, t.valorConCosto), N(t.dinero)]],
+      styles: { ...base.styles, fontSize: 7.4, cellPadding: 3 },
+      didParseCell: d => { if (d.column.index >= 1) d.cell.styles.halign = d.column.index <= 3 ? 'center' : 'right'; },
+    });
+    tras();
+  }
+
   // ── Productos vendidos ──
   seccion('Productos vendidos', `${R.productos.length} producto(s) · ${t.unidades} unidades`, 80);
   doc.autoTable({ ...base, startY: y,
@@ -12052,15 +12217,15 @@ function _cierreDibujarPDF(R) {
   tras();
 
   // ── Detalle de movimientos ──
-  seccion('Detalle de movimientos del día', `${R.detalle.length} registro(s) · montos en S/`, 80);
+  seccion(rango ? 'Detalle de movimientos del periodo' : 'Detalle de movimientos del día', `${R.detalle.length} registro(s) · montos en S/`, 80);
   doc.autoTable({ ...base, startY: y,
     head: [['Hora', 'Vendedor', 'Tipo', 'Cliente', 'Productos', 'Método', 'Recibido', 'Por cobrar', 'Obs.']],
-    body: R.detalle.map(d => [T(d.hora), T(d.vendedor), T(d.tipo), T(d.cliente),
+    body: R.detalle.map(d => [T(rango ? `${dmy(d.fecha).slice(0, 5)} ${d.hora}` : d.hora), T(d.vendedor), T(d.tipo), T(d.cliente),
       T(d.productos.length > 160 ? d.productos.slice(0, 160) + '...' : d.productos), T(d.metodo),
       N(d.recibido), d.pendiente ? N(d.pendiente) : '-', T(d.obs || '-')]),
     foot: [['', '', '', '', '', 'TOTAL', N(t.dinero), N(t.pendiente), '']],
     styles: { ...base.styles, fontSize: 6.6, cellPadding: 2.6 },
-    columnStyles: { 0: { cellWidth: 26 }, 1: { cellWidth: 44 }, 2: { cellWidth: 42 }, 3: { cellWidth: 64 }, 5: { cellWidth: 58 }, 6: { cellWidth: 44 }, 7: { cellWidth: 42 }, 8: { cellWidth: 56 } },
+    columnStyles: { 0: { cellWidth: rango ? 34 : 26 }, 1: { cellWidth: 44 }, 2: { cellWidth: 42 }, 3: { cellWidth: 64 }, 5: { cellWidth: 58 }, 6: { cellWidth: 44 }, 7: { cellWidth: 42 }, 8: { cellWidth: 56 } },
     didParseCell: d => {
       if (d.column.index === 0) d.cell.styles.halign = 'center';
       if (d.column.index === 6 || d.column.index === 7) d.cell.styles.halign = 'right';
@@ -12077,7 +12242,7 @@ function _cierreDibujarPDF(R) {
   const PD = R.perdidas || [];
   const pdDia = PD.filter(p => p.delDia), pdAnt = PD.filter(p => !p.delDia);
   const sumPerd = arr => arr.reduce((s, p) => s + p.perdida, 0);
-  seccion('Pérdidas del día', (pdDia.length ? `${pl(pdDia.length, 'venta', 'ventas')} · ${S(sumPerd(pdDia))} perdidos` : 'Sin pérdidas este día')
+  seccion(rango ? 'Pérdidas del periodo' : 'Pérdidas del día', (pdDia.length ? `${pl(pdDia.length, 'venta', 'ventas')} · ${S(sumPerd(pdDia))} perdidos` : (rango ? 'Sin pérdidas en el periodo' : 'Sin pérdidas este día'))
     + (pdAnt.length ? ` · ${pl(pdAnt.length, 'propuesta anterior', 'propuestas anteriores')} sin decidir` : ''), PD.length ? 80 : 24);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(71, 85, 105);
   if (!pdDia.length) {
@@ -12092,7 +12257,7 @@ function _cierreDibujarPDF(R) {
     doc.autoTable({ ...base, startY: y,
       headStyles: { ...base.headStyles, fontSize: 7 },
       head: [['Estado', 'Vendedor', 'Venta', 'Cliente', 'Foto', 'Producto', 'Motivo', 'Pagado', 'Costo prod.', 'Envío ida+vuelta', 'Pérdida']],
-      body: PD.map(p => [T(p.esperando ? 'Propuesta: decide admin' : 'Pérdida aprobada') + (p.delDia ? '' : '\n(días anteriores)'),
+      body: PD.map(p => [T(p.esperando ? 'Propuesta: decide admin' : 'Pérdida aprobada') + (p.delDia ? '' : (rango ? '\n(antes del periodo)' : '\n(días anteriores)')),
         T(p.vendedor), ddmm(p.fecha), T([p.cliente, p.telefono && 'Tel ' + p.telefono].filter(Boolean).join('\n')), '',
         T(p.productos.length > 70 ? p.productos.slice(0, 70) + '...' : p.productos), T([p.motivo, p.nota].filter(Boolean).join(' - ').slice(0, 110)),
         N(p.pagado), N(p.costoProd), N(p.envio), N(p.perdida)]),
@@ -12211,7 +12376,7 @@ function _cierreDibujarPDF(R) {
     ` (${repo.slice(0, 4).map(p => p.nombre).join(', ')}${repo.length > 4 ? '...' : ''}). Detalle en el anexo de inventario.`);
   const nEspera = PD.filter(p => p.esperando).length;
   if (nEspera) notas.push(`${nEspera} propuesta(s) de pérdida esperan tu decisión: aprobar la pérdida o pedir el retorno del producto.`);
-  if (!notas.length) notas.push('Sin observaciones: todas las ventas del día tienen sus datos completos.');
+  if (!notas.length) notas.push(rango ? 'Sin observaciones: todas las ventas del periodo tienen sus datos completos.' : 'Sin observaciones: todas las ventas del día tienen sus datos completos.');
   seccion('Observaciones para revisar', '', 20 + notas.length * 22);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(51, 65, 85);
   for (const n of notas) {
@@ -12226,7 +12391,7 @@ function _cierreDibujarPDF(R) {
   // ── Conformidad ──
   seccion('Conformidad', '', 64);
   const fw = (CW - 30) / 2;
-  [[`Revisado por: ${quien}`, 'Administración · cierre del día'], ['Recibido por:', 'Gerencia']].forEach((f, i) => {
+  [[`Revisado por: ${quien}`, rango ? 'Administración · cierre del periodo' : 'Administración · cierre del día'], ['Recibido por:', 'Gerencia']].forEach((f, i) => {
     const x = M + i * (fw + 30);
     doc.setDrawColor(148, 163, 184); doc.setLineWidth(0.8); doc.line(x, y + 30, x + fw, y + 30);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(30, 41, 59); doc.text(T(f[0]), x, y + 43);
@@ -12340,13 +12505,13 @@ function _cierreDibujarPDF(R) {
     if (p > 1) {
       doc.setFillColor(...VIO); doc.rect(0, 0, W, 28, 'F');
       doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5);
-      doc.text(T('CIERRE DEL DÍA · CPN Sports'), M, 18);
+      doc.text(T(TITULO + ' · CPN Sports'), M, 18);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
       doc.text(T(fechaCorta), W - M, 18, { align: 'right' });
     }
     doc.setDrawColor(226, 232, 240); doc.setLineWidth(0.6); doc.line(M, H - 30, W - M, H - 30);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(100, 116, 139);
-    doc.text(T(`CPN Sports · Cierre del día ${fechaCorta} · Generado por ${quien}`), M, H - 18);
+    doc.text(T(`CPN Sports · ${rango ? 'Cierre del periodo' : 'Cierre del día'} ${fechaCorta} · Generado por ${quien}`), M, H - 18);
     doc.text(T(`Página ${p} de ${nPag}`), W - M, H - 18, { align: 'right' });
   }
   return doc;
